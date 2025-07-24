@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -14,10 +8,161 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Cert {
+  id            String   @id @unique @default(cuid())
+  name          String
+  description   String?
+  imageUrl      String?
+  acquiredAt    DateTime @default(now())
+  credentialUrl String?
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skills        Skill[]  @relation("CertSkills")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, name])
+  @@map("certs")
+}
+
+model Education {
+  id             String    @id @unique @default(cuid())
+  institution    String
+  degree         String
+  fieldOfStudy   String?
+  startDate      DateTime
+  endDate        DateTime?
+  institutionUrl String?
+  description    String?
+  imageUrl       String?
+  grade          String?
+  activities     String[]
+  userId         String
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  credentialUrl  String?
+  skills         Skill[]   @relation("EducationSkills")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, degree])
+  @@map("educations")
+}
+
+model Experience {
+  id            String    @id @unique @default(cuid())
+  company       String
+  position      String
+  startDate     DateTime
+  endDate       DateTime?
+  companyUrl    String?
+  description   String?
+  imageUrl      String?
+  userId        String
+  credentialUrl String?
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skills        Skill[]   @relation("ExperienceSkills")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, company, position])
+  @@map("experiences")
+}
+
+model Recommendation {
+  id        String @id @unique @default(cuid())
+  givenById String
+  givenToId String
+  content   String
+
+  givenBy User @relation("GivenRecommendations", fields: [givenById], references: [id], onDelete: Cascade)
+  givenTo User @relation("ReceivedRecommendations", fields: [givenToId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([givenById, givenToId])
+  @@map("recommendations")
+}
+
+model Project {
+  id          String  @id @unique @default(cuid())
+  name        String
+  description String?
+  imageUrl    String?
+  url         String?
+  userId      String
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skills      Skill[] @relation("ProjectSkills")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, name])
+  @@map("projects")
+}
+
+model Skill {
+  id          String  @id @unique @default(cuid())
+  name        String
+  description String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  projects    Project[]    @relation("ProjectSkills")
+  certs       Cert[]       @relation("CertSkills")
+  educations  Education[]  @relation("EducationSkills")
+  experiences Experience[] @relation("ExperienceSkills")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, name])
+  @@map("skills")
+}
+
+model SocialLink {
+  id       String @id @unique @default(cuid())
+  platform String
+  url      String
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, platform])
+  @@map("social_links")
+}
+
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
+  id                   String           @id @unique @default(cuid())
+  email                String           @unique
+  name                 String
+  age                  Int?
+  stars                Int              @default(0)
+  isActive             Boolean          @default(true)
+  username             String           @unique
+  avatarUrl            String?
+  bio                  String?
+  available            Boolean          @default(true)
+  location             String?
+  resumeUrl            String?
+  certs                Cert[]
+  skills               Skill[]
+  socialLinks          SocialLink[]
+  badges               String[]
+  languages            String[]
+  causes               String[]
+  educations           Education[]
+  experiences          Experience[]
+  projects             Project[]
+  recommendations      Recommendation[] @relation("ReceivedRecommendations")
+  givenRecommendations Recommendation[] @relation("GivenRecommendations")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
