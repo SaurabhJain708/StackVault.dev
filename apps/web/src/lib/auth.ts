@@ -1,5 +1,6 @@
 import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import { prisma } from "@repo/db";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -17,16 +18,12 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user }) {
-      const existingUser = await User.findOne({ email: user.email });
+      const existingUser = await prisma.user.findUnique({
+        where: { email: user.email! },
+      });
 
       if (!existingUser) {
         // If not found, create a new user
-        await User.create({
-          name: user.name,
-          email: user.email,
-          image: user.image,
-          isAdmin: false, // default
-        });
       }
 
       return true; // allow sign in
