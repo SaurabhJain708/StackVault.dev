@@ -16,9 +16,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user}) {
-      await mongoDb(); // make sure DB is connected
-
+    async signIn({ user }) {
       const existingUser = await User.findOne({ email: user.email });
 
       if (!existingUser) {
@@ -30,7 +28,7 @@ export const authOptions: NextAuthOptions = {
           isAdmin: false, // default
         });
       }
-      
+
       return true; // allow sign in
     },
 
