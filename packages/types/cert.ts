@@ -9,3 +9,7 @@ export type certWithSkills = Cert & {
 export type TemplateCert = Omit<Cert, "createdAt" | "updatedAt"> & {
   skills?: Skill[];
 };
+
+export type certInput = Omit<Cert, "id" | "createdAt" | "updatedAt"> & {
+  skills?: { id: string }[];
+};

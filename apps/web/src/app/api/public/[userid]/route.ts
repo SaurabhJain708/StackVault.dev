@@ -1,7 +1,6 @@
 import { PrismaClient } from "@repo/db";
 import {
   TemplateUser,
-  TemplateSkill,
   TemplateRecommendation,
   TemplateCert,
   TemplateExperience,
@@ -170,7 +169,7 @@ export async function GET(
       projectsWithSkills,
     };
 
-    return Response.json(fullProfile);
+    return Response.json(fullProfile, { status: 200 });
   } catch (error) {
     console.error("Error fetching user data:", error);
     return new Response("Internal Server Error", { status: 500 });

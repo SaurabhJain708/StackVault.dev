@@ -6,7 +6,7 @@ export type {
   experienceWithSkills,
   TemplateExperience,
 } from "./experience";
-export type { cert, TemplateCert, certWithSkills } from "./cert";
+export type { cert, TemplateCert, certWithSkills, certInput } from "./cert";
 export type {
   education,
   TemplateEducation,
