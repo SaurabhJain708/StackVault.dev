@@ -11,6 +11,7 @@ export type {
   education,
   TemplateEducation,
   educationWithSkills,
+  educationInput
 } from "./education";
 export type { recommendation, TemplateRecommendation } from "./recommendation";
 export type { socialLink, TemplateSocialLink } from "./socialLink";

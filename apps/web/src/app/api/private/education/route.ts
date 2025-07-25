@@ -1,0 +1,82 @@
+import { PrismaClient } from "@repo/db";
+import { educationInput } from "@repo/types";
+const prisma = new PrismaClient();
+
+export async function GET(request: Request) {
+  try {
+    const body = await request.json();
+    const { userid } = body;
+
+    const educations = await prisma.education.findMany({
+      where: { userId: userid },
+      include: { skills: true },
+    });
+
+    return Response.json(educations, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching user education:", error);
+    return new Response("Internal Server Error", { status: 500 });
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const { education }: { education: educationInput } = body;
+    const { skills, ...educationData } = education;
+
+    if (!education) {
+      return new Response("Please provide education data", { status: 400 });
+    }
+
+    await prisma.education.create({
+      data: {
+        ...educationData,
+        skills: {
+          connect: skills?.map((skill) => ({ id: skill.id })) ?? [],
+        },
+      },
+    });
+
+    return new Response("Education added successfully", { status: 201 });
+  } catch (error) {
+    console.error("Error creating education:", error);
+    return new Response("Internal Server Error", { status: 500 });
+  }
+}
+export async function PATCH(request: Request) {
+  try {
+    const body = await request.json();
+    const { education }: { education: educationInput & { id: string } } = body;
+    const { id, skills, ...updateData } = education;
+
+    await prisma.education.update({
+      where: { id },
+      data: {
+        ...updateData,
+        skills: {
+          set: [], // clear existing
+          connect: skills?.map((skill) => ({ id: skill.id })) ?? [],
+        },
+      },
+    });
+
+    return new Response("Education updated successfully", { status: 200 });
+  } catch (error) {
+    console.error("Error updating education:", error);
+    return new Response("Internal Server Error", { status: 500 });
+  }
+}
+export async function DELETE(request: Request) {
+  try {
+    const body = await request.json();
+    const { id }: { id: string } = body;
+
+    await prisma.education.delete({ where: { id } });
+
+    return new Response("Education deleted successfully", { status: 200 });
+  } catch (error) {
+    console.error("Error deleting education:", error);
+    return new Response("Internal Server Error", { status: 500 });
+  }
+}
