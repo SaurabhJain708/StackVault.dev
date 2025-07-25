@@ -162,6 +162,8 @@ model User {
   projects             Project[]
   recommendations      Recommendation[] @relation("ReceivedRecommendations")
   givenRecommendations Recommendation[] @relation("GivenRecommendations")
+  isProfileComplete    Boolean          @default(false)
+  TemplateId           String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

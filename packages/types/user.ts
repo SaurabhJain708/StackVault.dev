@@ -1,4 +1,4 @@
-import {
+import type {
   User,
   Cert,
   Education,
@@ -9,13 +9,13 @@ import {
   Project,
 } from "@repo/db/generated/prisma";
 
-import { skillWithRelations, TemplateSkill } from "./skill";
-import { projectWithSkills, TemplateProject } from "./project";
-import { experienceWithSkills, TemplateExperience } from "./experience";
-import { certWithSkills, TemplateCert } from "./cert";
-import { educationWithSkills, TemplateEducation } from "./education";
-import { TemplateRecommendation } from "recommendation";
-import { TemplateSocialLink } from "socialLink";
+import type { skillWithRelations, TemplateSkill } from "./skill";
+import type { projectWithSkills, TemplateProject } from "./project";
+import type { experienceWithSkills, TemplateExperience } from "./experience";
+import type { certWithSkills, TemplateCert } from "./cert";
+import type { educationWithSkills, TemplateEducation } from "./education";
+import type { TemplateRecommendation } from "./recommendation";
+import type { TemplateSocialLink } from "./socialLink";
 
 export type user = User;
 

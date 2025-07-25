@@ -1,4 +1,4 @@
-import { Recommendation } from "@repo/db/generated/prisma";
+import type { Recommendation } from "@repo/db/generated/prisma";
 
 export type recommendation = Recommendation;
 

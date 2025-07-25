@@ -3,6 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "composite": true,
+    "declaration": true,
     "incremental": true,
     "outDir": "./dist",
     "rootDir": "./",

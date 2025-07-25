@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "composite": true,
     "baseUrl": ".",
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -21,9 +22,13 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@repo/db": ["../../packages/db/src"]
+      "@repo/db": ["../../packages/db/src"],
+      "@repo/types": ["../../packages/types"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "references": [
+    { "path": "../../packages/types" }
+  ]
 }
