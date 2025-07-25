@@ -18,3 +18,5 @@ export type TemplateSkill = Omit<Skill, "createdAt" | "updatedAt"> & {
   experiences?: Experience[];
   certs?: Cert[];
 };
+
+export type skillInput = Omit<Skill, "id" | "createdAt" | "updatedAt" | "projects" | "certs" | "educations" | "experiences" | "user">;
