@@ -9,3 +9,7 @@ export type projectWithSkills = Project & {
 export type TemplateProject = Omit<Project, "createdAt" | "updatedAt"> & {
   skills?: Skill[];
 };
+
+export type projectInput = Omit<Project, "createdAt" | "updatedAt" | "id"> & {
+  skills?: { id: string }[];
+};

@@ -10,6 +10,9 @@ export type TemplateEducation = Omit<Education, "createdAt" | "updatedAt"> & {
   skills?: Skill[];
 };
 
-export type educationInput = Omit<Education, "createdAt" | "updatedAt" | "id"> & {
-  skills?: {id:string}[];
+export type educationInput = Omit<
+  Education,
+  "createdAt" | "updatedAt" | "id"
+> & {
+  skills?: { id: string }[];
 };
