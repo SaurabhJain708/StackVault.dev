@@ -1,5 +1,5 @@
 import { PrismaClient } from "@repo/db";
-import { userInput } from "@repo/types";
+import { userInput, userInputSchema } from "@repo/types";
 
 const prisma = new PrismaClient();
 
@@ -8,6 +8,9 @@ export async function POST(request: Request) {
   const { user }: { user: userInput } = body;
   if (!user) {
     return new Response("Please add user data", { status: 400 });
+  }
+  if(userInputSchema.safeParse(user).success === false) {
+    return new Response("Invalid user data", { status: 400 });
   }
   try {
     const existingUser = await prisma.user.findFirst({
@@ -33,6 +36,9 @@ export async function PATCH(request: Request) {
   const { user }: { user: userInput } = body;
   if (!user || !user.email) {
     return new Response("Please provide user data with email", { status: 400 });
+  }
+  if(userInputSchema.safeParse(user).success === false) {
+    return new Response("Invalid user data", { status: 400 });
   }
   try {
     const updatedUser = await prisma.user.update({

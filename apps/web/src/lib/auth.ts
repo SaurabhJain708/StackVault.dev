@@ -1,8 +1,9 @@
-import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { prisma } from "@repo/db";
+import { PrismaClient } from "@repo/db";
 
-export const authOptions: NextAuthOptions = {
+const prisma = new PrismaClient();
+
+export const authOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -17,45 +18,51 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user }) {
+    async signIn({ user }: { user: any }) {
       const existingUser = await prisma.user.findUnique({
         where: { email: user.email! },
       });
 
       if (!existingUser) {
-        // If not found, create a new user
+        await prisma.user.create({
+          data: {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            avatarUrl: user.image,
+            username: user.email?.split("@")[0] || "",
+          },
+        });
       }
 
-      return true; // allow sign in
+      return true;
     },
 
-    async jwt({ token, user }) {
+    async jwt({ token, user }: { token: any; user?: any }) {
       if (user) {
         token.id = user.id;
         token.email = user.email;
         token.name = user.name;
-        token.picture = user.image;
       }
       return token;
     },
 
-    async session({ session, token }) {
+    async session({ session, token }: { session: any; token: any }) {
       if (token) {
         session.user.id = token.id as string;
         session.user.email = token.email as string;
         session.user.name = token.name as string;
-        session.user.image = token.picture as string;
       }
       return session;
     },
   },
   session: {
-    strategy: "jwt", // <-- Important change
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60,
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: "/v1/login",
-    error: "/v1/login", // you can handle errors here if you want
+    signIn: "/auth/login",
+    error: "/auth/login",
   },
 };

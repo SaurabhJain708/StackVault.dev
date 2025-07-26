@@ -1,5 +1,5 @@
 import { PrismaClient } from "@repo/db";
-import { projectInput } from "@repo/types";
+import { projectInput, projectInputSchema } from "@repo/types";
 
 const prisma = new PrismaClient();
 
@@ -29,6 +29,9 @@ export async function POST(request: Request) {
     if (!project) {
       return new Response("Please add a project", { status: 400 });
     }
+    if(projectInputSchema.safeParse(project).success === false) {
+      return new Response("Invalid project data", { status: 400 });
+    }
 
     await prisma.project.create({
       data: {
@@ -51,6 +54,13 @@ export async function PATCH(request: Request) {
     const body = await request.json();
     const { id, project }: { id: string; project: projectInput } = body;
     const { skills, ...projectData } = project;
+
+    if (!id) {
+      return new Response("Project ID is required for update", { status: 400 });
+    }
+    if (projectInputSchema.safeParse(project).success === false) {
+      return new Response("Invalid project data", { status: 400 });
+    }
 
     await prisma.project.update({
       where: { id },

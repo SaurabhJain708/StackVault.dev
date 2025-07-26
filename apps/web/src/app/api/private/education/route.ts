@@ -1,5 +1,5 @@
 import { PrismaClient } from "@repo/db";
-import { educationInput } from "@repo/types";
+import { educationInput, educationInputSchema } from "@repo/types";
 const prisma = new PrismaClient();
 
 export async function GET(request: Request) {
@@ -28,6 +28,9 @@ export async function POST(request: Request) {
     if (!education) {
       return new Response("Please provide education data", { status: 400 });
     }
+    if (educationInputSchema.safeParse(education).success === false) {
+      return new Response("Invalid education data", { status: 400 });
+    }
 
     await prisma.education.create({
       data: {
@@ -50,6 +53,13 @@ export async function PATCH(request: Request) {
     const { education }: { education: educationInput & { id: string } } = body;
     const { id, skills, ...updateData } = education;
 
+    if (!id) {
+      return new Response("Education ID is required for update", { status: 400 });
+    }
+    if (educationInputSchema.safeParse(education).success === false) {
+      return new Response("Invalid education data", { status: 400 });
+    }
+
     await prisma.education.update({
       where: { id },
       data: {
@@ -71,6 +81,9 @@ export async function DELETE(request: Request) {
   try {
     const body = await request.json();
     const { id }: { id: string } = body;
+    if (!id) {
+      return new Response("Education ID is required for deletion", { status: 400 });
+    }
 
     await prisma.education.delete({ where: { id } });
 

@@ -1,5 +1,5 @@
 import { PrismaClient } from "@repo/db";
-import { certInput } from "@repo/types";
+import { certInput, certInputSchema } from "@repo/types";
 const prisma = new PrismaClient();
 
 export async function GET(request: Request) {
@@ -27,6 +27,9 @@ export async function POST(request: Request) {
     if (!cert) {
       return new Response("Please add a cert", { status: 400 });
     }
+    if (certInputSchema.safeParse(cert).success === false) {
+      return new Response("Invalid cert data", { status: 400 });
+    }
     await prisma.cert.create({
       data: {
         ...certData,
@@ -50,6 +53,9 @@ export async function PATCH(request: Request) {
 
     if (!id) {
       return new Response("Cert ID is required for update", { status: 400 });
+    }
+    if (certInputSchema.safeParse(cert).success === false) {
+      return new Response("Invalid cert data", { status: 400 });
     }
 
     // Disconnect all current skills, then reconnect the new ones

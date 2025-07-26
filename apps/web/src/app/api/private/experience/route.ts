@@ -1,5 +1,5 @@
 import { PrismaClient } from "@repo/db";
-import { experienceInput } from "@repo/types";
+import { experienceInput, experienceInputSchema } from "@repo/types";
 
 const prisma = new PrismaClient();
 
@@ -29,6 +29,9 @@ export async function POST(request: Request) {
     if (!experience) {
       return new Response("Please add experience data", { status: 400 });
     }
+    if (experienceInputSchema.safeParse(experience).success === false) {
+      return new Response("Invalid experience data", { status: 400 });
+    }
 
     await prisma.experience.create({
       data: {
@@ -52,6 +55,13 @@ export async function PATCH(request: Request) {
     const { id, experience }: { id: string; experience: experienceInput } =
       body;
     const { skills, ...experienceData } = experience;
+
+    if (!id) {
+      return new Response("Experience ID is required for update", { status: 400 });
+    }
+    if (experienceInputSchema.safeParse(experience).success === false) {
+      return new Response("Invalid experience data", { status: 400 });
+    }
 
     await prisma.experience.update({
       where: { id },

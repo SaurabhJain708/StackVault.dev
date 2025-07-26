@@ -1,5 +1,5 @@
 import { PrismaClient } from "@repo/db";
-import { skillInput } from "@repo/types";
+import { skillInput, skillInputSchema } from "@repo/types";
 
 const prisma = new PrismaClient();
 
@@ -26,6 +26,9 @@ export async function POST(request: Request) {
 
     if (!skill) {
       return new Response("Please add skill data", { status: 400 });
+    }
+    if(skillInputSchema.safeParse(skill).success === false) {
+      return new Response("Invalid skill data", { status: 400 });
     }
 
     await prisma.skill.create({
