@@ -1,58 +1,87 @@
-// e2e/tests/cert-api.spec.ts
-import { test, expect } from "@playwright/test";
+// e2e/tests/cert.spec.ts
+import { test} from "../fixtures";
+import { expect } from "@playwright/test"; // ✅ correct
 
-const BASE_API = "/api/cert";
-const userId = "c1-example-user-id"; // replace with a real test user ID from seed
 
-const mockCert = {
-  name: "Test Cert",
-  description: "For testing purposes",
-  imageUrl: "https://example.com/image.png",
-  acquiredAt: new Date().toISOString(),
-  credentialUrl: "https://example.com/certificate",
-  userId,
-  skills: [{ id: "c1-example-skill-id" }], // replace with test skill
-};
+const baseURL = "http://localhost:3000";
 
-let certId: string;
-
-test.describe("Cert API CRUD", () => {
-  test("POST /cert - create cert", async ({ request }) => {
-    const res = await request.post(BASE_API, {
-      data: { cert: mockCert },
-    });
-    expect(res.status()).toBe(201);
-
-    const certsRes = await request.get(BASE_API, {
-      data: { userid: mockCert.userId },
-    });
-    const certs = await certsRes.json();
-    certId = certs.find((c: any) => c.name === mockCert.name)?.id;
-    expect(certId).toBeTruthy();
+test("POST /api/private/cert should add cert", async ({ authenticatedPage }) => {
+  const res = await authenticatedPage.request.post(`${baseURL}/api/private/cert`, {
+    data: {
+      cert: {
+        name: "Playwright Cert",
+        issuer: "Test Academy",
+        issueDate: new Date().toISOString(),
+        skills: [], // or [{ id: "existing-skill-id" }]
+      },
+    },
   });
 
-  test("PATCH /cert - update cert", async ({ request }) => {
-    const updatedCert = { ...mockCert, id: certId, name: "Updated Cert Name" };
+  expect(res.status()).toBe(201);
+  const text = await res.text();
+  expect(text).toBe("Cert added successfully");
+});
 
-    const res = await request.patch(BASE_API, {
-      data: { cert: updatedCert },
-    });
-    expect(res.status()).toBe(200);
+test("PATCH /api/private/cert should update cert", async ({ authenticatedPage, userId }) => {
+  // First create a cert
+  const createRes = await authenticatedPage.request.post(`${baseURL}/api/private/cert`, {
+    data: {
+      cert: {
+        name: "Temp Cert",
+        issuer: "Test Academy",
+        issueDate: new Date().toISOString(),
+        skills: [],
+      },
+    },
   });
 
-  test("GET /cert - fetch certs", async ({ request }) => {
-    const res = await request.get(BASE_API, {
-      data: { userid: mockCert.userId },
-    });
-    const body = await res.json();
-    expect(Array.isArray(body)).toBe(true);
-    expect(body.some((c: any) => c.id === certId)).toBe(true);
+  expect(createRes.status()).toBe(201);
+
+  // Fetch certs to get the ID
+  const allCerts = await authenticatedPage.request.get(`${baseURL}/api/private/cert?userid=${userId}`);
+  const certs = await allCerts.json();
+  const certId = certs.find((c: any) => c.name === "Temp Cert")?.id;
+
+  expect(certId).toBeTruthy();
+
+  const updateRes = await authenticatedPage.request.patch(`${baseURL}/api/private/cert`, {
+    data: {
+      cert: {
+        id: certId,
+        name: "Updated Cert",
+        issuer: "Test Academy",
+        issueDate: new Date().toISOString(),
+        skills: [],
+      },
+    },
   });
 
-  test("DELETE /cert - delete cert", async ({ request }) => {
-    const res = await request.delete(BASE_API, {
-      data: { id: certId },
-    });
-    expect(res.status()).toBe(200);
+  expect(updateRes.status()).toBe(200);
+});
+
+test("DELETE /api/private/cert should delete cert", async ({ authenticatedPage, userId }) => {
+  // First create
+  const createRes = await authenticatedPage.request.post(`${baseURL}/api/private/cert`, {
+    data: {
+      cert: {
+        name: "Delete Me",
+        issuer: "Test Academy",
+        issueDate: new Date().toISOString(),
+        skills: [],
+      },
+    },
   });
+  expect(createRes.status()).toBe(201);
+
+  // Fetch cert ID
+  const allCerts = await authenticatedPage.request.get(`${baseURL}/api/private/cert?userid=${userId}`);
+  const certs = await allCerts.json();
+  const certId = certs.find((c: any) => c.name === "Delete Me")?.id;
+  expect(certId).toBeTruthy();
+
+  // Now delete
+  const deleteRes = await authenticatedPage.request.delete(`${baseURL}/api/private/cert`, {
+    data: { id: certId },
+  });
+  expect(deleteRes.status()).toBe(200);
 });

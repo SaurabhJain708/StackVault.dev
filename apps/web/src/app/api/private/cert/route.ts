@@ -32,6 +32,8 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { cert }: { cert: certInput } = body;
     const { skills, ...certData } = cert;
+        console.log("BODY:", body);
+
     if (!cert) {
       return new Response("Please add a cert", { status: 400 });
     }

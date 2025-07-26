@@ -22,7 +22,8 @@ export default withAuth(
           pathname.startsWith("/api/public/") ||
           pathname.startsWith("/api/private/") ||
           pathname === "/login" ||
-          pathname.startsWith("/public/")
+          pathname.startsWith("/public/") ||
+          pathname.startsWith("/api/test_login/")
         ) {
           return true;
         }

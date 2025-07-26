@@ -10,7 +10,7 @@ export default defineConfig({
     headless: true,
   },
   webServer: {
-    command: "pnpm dev",
+    command: "pnpm --filter web dev",
     port: 3000,
     timeout: 60 * 1000,
     reuseExistingServer: !process.env.CI,
