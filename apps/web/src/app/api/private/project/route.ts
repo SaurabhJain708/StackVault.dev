@@ -1,9 +1,8 @@
 import { authOptions } from "@/lib/auth";
-import { PrismaClient } from "@repo/db";
+import { prisma } from "@repo/db";
 import { projectInput, projectInputSchema } from "@repo/types";
 import { getServerSession } from "next-auth";
 
-const prisma = new PrismaClient();
 
 export async function GET(request: Request) {
   try {
@@ -102,7 +101,7 @@ export async function DELETE(request: Request) {
     const body = await request.json();
     const { id } = body;
 
-    await prisma.project.delete({ where: { id , userId: session.user.id } });
+    await prisma.project.delete({ where: { id, userId: session.user.id } });
 
     return new Response("Project deleted successfully", { status: 200 });
   } catch (error) {

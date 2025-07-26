@@ -1,8 +1,7 @@
 import { authOptions } from "@/lib/auth";
-import { PrismaClient } from "@repo/db";
+import { prisma } from "@repo/db";
 import { certInput, certInputSchema } from "@repo/types";
 import { getServerSession } from "next-auth";
-const prisma = new PrismaClient();
 
 export async function GET(request: Request) {
   try {

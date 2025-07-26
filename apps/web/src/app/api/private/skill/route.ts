@@ -1,9 +1,8 @@
-import { PrismaClient } from "@repo/db";
+import { prisma } from "@repo/db";
 import { skillInput, skillInputSchema } from "@repo/types";
 import { getServerSession } from "next-auth/";
 import { authOptions } from "@/lib/auth";
 
-const prisma = new PrismaClient();
 
 export async function GET(request: Request) {
   try {

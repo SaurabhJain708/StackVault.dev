@@ -1,4 +1,4 @@
-import { PrismaClient } from "@repo/db";
+import { prisma } from "@repo/db";
 import {
   TemplateUser,
   TemplateRecommendation,
@@ -9,7 +9,6 @@ import {
   TemplateProject,
 } from "@repo/types";
 
-const prisma = new PrismaClient();
 
 export async function GET(
   _request: Request,
