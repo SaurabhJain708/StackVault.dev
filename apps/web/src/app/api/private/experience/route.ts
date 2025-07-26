@@ -57,7 +57,9 @@ export async function PATCH(request: Request) {
     const { skills, ...experienceData } = experience;
 
     if (!id) {
-      return new Response("Experience ID is required for update", { status: 400 });
+      return new Response("Experience ID is required for update", {
+        status: 400,
+      });
     }
     if (experienceInputSchema.safeParse(experience).success === false) {
       return new Response("Invalid experience data", { status: 400 });

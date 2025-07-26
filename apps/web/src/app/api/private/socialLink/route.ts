@@ -27,8 +27,8 @@ export async function POST(request: Request) {
     if (!link) {
       return new Response("Please add social link data", { status: 400 });
     }
-    if(socialLinkInputSchema.safeParse(link).success === false) {
-      return new Response("Invalid social link data", { status: 400 }); 
+    if (socialLinkInputSchema.safeParse(link).success === false) {
+      return new Response("Invalid social link data", { status: 400 });
     }
 
     await prisma.socialLink.create({

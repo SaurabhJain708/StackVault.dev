@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     if (!project) {
       return new Response("Please add a project", { status: 400 });
     }
-    if(projectInputSchema.safeParse(project).success === false) {
+    if (projectInputSchema.safeParse(project).success === false) {
       return new Response("Invalid project data", { status: 400 });
     }
 

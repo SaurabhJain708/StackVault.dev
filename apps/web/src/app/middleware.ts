@@ -44,7 +44,7 @@ export default withAuth(
     pages: {
       signIn: "/auth/login", // 👈 Redirect here if `authorized` returns false
     },
-  }
+  },
 );
 
 // Match everything except public/static/image files

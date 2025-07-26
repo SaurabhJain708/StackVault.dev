@@ -9,7 +9,7 @@ export async function POST(request: Request) {
   if (!user) {
     return new Response("Please add user data", { status: 400 });
   }
-  if(userInputSchema.safeParse(user).success === false) {
+  if (userInputSchema.safeParse(user).success === false) {
     return new Response("Invalid user data", { status: 400 });
   }
   try {
@@ -37,7 +37,7 @@ export async function PATCH(request: Request) {
   if (!user || !user.email) {
     return new Response("Please provide user data with email", { status: 400 });
   }
-  if(userInputSchema.safeParse(user).success === false) {
+  if (userInputSchema.safeParse(user).success === false) {
     return new Response("Invalid user data", { status: 400 });
   }
   try {

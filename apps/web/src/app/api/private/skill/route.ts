@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     if (!skill) {
       return new Response("Please add skill data", { status: 400 });
     }
-    if(skillInputSchema.safeParse(skill).success === false) {
+    if (skillInputSchema.safeParse(skill).success === false) {
       return new Response("Invalid skill data", { status: 400 });
     }
 
