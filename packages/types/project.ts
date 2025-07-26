@@ -11,7 +11,6 @@ export type TemplateProject = Omit<Project, "createdAt" | "updatedAt"> & {
   skills?: Skill[];
 };
 
-
 export const projectInputSchema = z.object({
   name: z.string(),
   description: z.string().optional(),

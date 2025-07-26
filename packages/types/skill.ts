@@ -19,7 +19,6 @@ export type TemplateSkill = Omit<Skill, "createdAt" | "updatedAt"> & {
   certs?: Cert[];
 };
 
-
 export const skillInputSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
