@@ -26,15 +26,11 @@ export async function GET() {
 
   const cookie = `next-auth.session-token=${token}; Path=/; HttpOnly; SameSite=Lax`;
 
-  return new Response(
-    JSON.stringify({ token, cookie, userId: user.id }),
-    {
-      status: 200,
-      headers: {
-        "Set-Cookie": cookie,
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  return new Response(JSON.stringify({ token, cookie, userId: user.id }), {
+    status: 200,
+    headers: {
+      "Set-Cookie": cookie,
+      "Content-Type": "application/json",
+    },
+  });
 }
-

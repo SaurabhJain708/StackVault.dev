@@ -14,11 +14,10 @@ export async function GET(
   context: { params: { userid: string } },
 ) {
   try {
-    const { userid } = await  context.params;
+    const { userid } = await context.params;
     const user = await prisma.user.findUnique({
-      where: { id: userid }
-    }
-  )
+      where: { id: userid },
+    });
     if (!user) {
       return new Response("User not found", { status: 404 });
     }
