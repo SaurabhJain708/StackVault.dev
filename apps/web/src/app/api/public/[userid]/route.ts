@@ -9,7 +9,6 @@ import {
   TemplateProject,
 } from "@repo/types";
 
-
 export async function GET(
   _request: Request,
   context: { params: { userid: string } },

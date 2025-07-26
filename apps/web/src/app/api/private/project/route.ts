@@ -3,7 +3,6 @@ import { prisma } from "@repo/db";
 import { projectInput, projectInputSchema } from "@repo/types";
 import { getServerSession } from "next-auth";
 
-
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);

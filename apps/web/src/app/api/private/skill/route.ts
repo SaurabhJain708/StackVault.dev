@@ -3,7 +3,6 @@ import { skillInput, skillInputSchema } from "@repo/types";
 import { getServerSession } from "next-auth/";
 import { authOptions } from "@/lib/auth";
 
-
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);

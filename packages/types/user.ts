@@ -50,7 +50,6 @@ export const userInputSchema = z.object({
   name: z.string(),
   email: z.email(),
   age: z.number().int().optional(),
-  username: z.string(),
   avatarUrl: z.url().optional(),
   bio: z.string().optional(),
   available: z.boolean().optional(),

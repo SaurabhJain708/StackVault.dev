@@ -3,7 +3,6 @@ import { prisma } from "@repo/db";
 import { userInput, userInputSchema } from "@repo/types";
 import { getServerSession } from "next-auth/";
 
-
 export async function PATCH(request: Request) {
   const session = await getServerSession(authOptions);
 
