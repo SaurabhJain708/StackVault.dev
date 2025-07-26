@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaClient } from "@repo/db";
+import type { NextAuthOptions } from "next-auth/";
 
 const prisma = new PrismaClient();
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -27,7 +28,6 @@ export const authOptions = {
       if (!existingUser) {
         await prisma.user.create({
           data: {
-            id: user.id,
             email: user.email,
             name: user.name,
             avatarUrl: user.image,

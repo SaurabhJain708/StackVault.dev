@@ -1,13 +1,17 @@
+import { authOptions } from "@/lib/auth";
 import { PrismaClient } from "@repo/db";
 import { projectInput, projectInputSchema } from "@repo/types";
+import { getServerSession } from "next-auth";
 
 const prisma = new PrismaClient();
 
 export async function GET(request: Request) {
   try {
-    const body = await request.json();
-    const { userid } = body;
-
+    const { searchParams } = new URL(request.url);
+    const userid = searchParams.get("userid");
+    if (!userid) {
+      return new Response("Please provide a user ID", { status: 400 });
+    }
     const projects = await prisma.project.findMany({
       where: { userId: userid },
       include: { skills: true },
@@ -22,6 +26,10 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return new Response("Unauthorized", { status: 401 });
+    }
     const body = await request.json();
     const { project }: { project: projectInput } = body;
     const { skills, ...projectData } = project;
@@ -36,6 +44,7 @@ export async function POST(request: Request) {
     await prisma.project.create({
       data: {
         ...projectData,
+        userId: session.user.id,
         skills: {
           connect: skills?.map((skill) => ({ id: skill.id })) ?? [],
         },
@@ -51,6 +60,10 @@ export async function POST(request: Request) {
 
 export async function PATCH(request: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return new Response("Unauthorized", { status: 401 });
+    }
     const body = await request.json();
     const { id, project }: { id: string; project: projectInput } = body;
     const { skills, ...projectData } = project;
@@ -63,7 +76,7 @@ export async function PATCH(request: Request) {
     }
 
     await prisma.project.update({
-      where: { id },
+      where: { id, userId: session.user.id },
       data: {
         ...projectData,
         skills: {
@@ -82,10 +95,14 @@ export async function PATCH(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return new Response("Unauthorized", { status: 401 });
+    }
     const body = await request.json();
     const { id } = body;
 
-    await prisma.project.delete({ where: { id } });
+    await prisma.project.delete({ where: { id , userId: session.user.id } });
 
     return new Response("Project deleted successfully", { status: 200 });
   } catch (error) {

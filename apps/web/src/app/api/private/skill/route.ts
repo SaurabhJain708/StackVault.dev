@@ -1,12 +1,17 @@
 import { PrismaClient } from "@repo/db";
 import { skillInput, skillInputSchema } from "@repo/types";
+import { getServerSession } from "next-auth/";
+import { authOptions } from "@/lib/auth";
 
 const prisma = new PrismaClient();
 
 export async function GET(request: Request) {
   try {
-    const body = await request.json();
-    const { userid } = body;
+    const { searchParams } = new URL(request.url);
+    const userid = searchParams.get("userid");
+    if (!userid) {
+      return new Response("Please provide a user ID", { status: 400 });
+    }
 
     const skills = await prisma.skill.findMany({
       where: { userId: userid },
@@ -21,6 +26,11 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+
     const body = await request.json();
     const { skill }: { skill: skillInput } = body;
 
@@ -30,7 +40,7 @@ export async function POST(request: Request) {
     if (skillInputSchema.safeParse(skill).success === false) {
       return new Response("Invalid skill data", { status: 400 });
     }
-
+    skill.userId = session.user.id;
     await prisma.skill.create({
       data: skill,
     });
@@ -44,11 +54,15 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return new Response("Unauthorized", { status: 401 });
+    }
     const body = await request.json();
     const { id } = body;
 
     await prisma.skill.delete({
-      where: { id },
+      where: { id, userId: session.user.id },
     });
 
     return new Response("Skill deleted successfully", { status: 200 });

@@ -1,12 +1,16 @@
+import { authOptions } from "@/lib/auth";
 import { PrismaClient } from "@repo/db";
 import { experienceInput, experienceInputSchema } from "@repo/types";
-
+import { getServerSession } from "next-auth/";
 const prisma = new PrismaClient();
 
 export async function GET(request: Request) {
   try {
-    const body = await request.json();
-    const { userid } = body;
+    const { searchParams } = new URL(request.url);
+    const userid = searchParams.get("userid");
+    if (!userid) {
+      return new Response("Please provide a user ID", { status: 400 });
+    }
 
     const experiences = await prisma.experience.findMany({
       where: { userId: userid },
@@ -22,6 +26,10 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return new Response("Unauthorized", { status: 401 });
+    }
     const body = await request.json();
     const { experience }: { experience: experienceInput } = body;
     const { skills, ...experienceData } = experience;
@@ -36,6 +44,7 @@ export async function POST(request: Request) {
     await prisma.experience.create({
       data: {
         ...experienceData,
+        userId: session.user.id,
         skills: {
           connect: skills?.map((skill) => ({ id: skill.id })) ?? [],
         },
@@ -51,6 +60,10 @@ export async function POST(request: Request) {
 
 export async function PATCH(request: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return new Response("Unauthorized", { status: 401 });
+    }
     const body = await request.json();
     const { id, experience }: { id: string; experience: experienceInput } =
       body;
@@ -66,7 +79,7 @@ export async function PATCH(request: Request) {
     }
 
     await prisma.experience.update({
-      where: { id },
+      where: { id, userId: session.user.id },
       data: {
         ...experienceData,
         skills: {
@@ -85,10 +98,14 @@ export async function PATCH(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return new Response("Unauthorized", { status: 401 });
+    }
     const body = await request.json();
     const { id } = body;
 
-    await prisma.experience.delete({ where: { id } });
+    await prisma.experience.delete({ where: { id, userId: session.user.id } });
 
     return new Response("Experience deleted successfully", { status: 200 });
   } catch (error) {

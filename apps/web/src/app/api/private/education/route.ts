@@ -1,11 +1,16 @@
+import { authOptions } from "@/lib/auth";
 import { PrismaClient } from "@repo/db";
 import { educationInput, educationInputSchema } from "@repo/types";
+import { getServerSession } from "next-auth";
 const prisma = new PrismaClient();
 
 export async function GET(request: Request) {
   try {
-    const body = await request.json();
-    const { userid } = body;
+    const { searchParams } = new URL(request.url);
+    const userid = searchParams.get("userid");
+    if (!userid) {
+      return new Response("Please provide a user ID", { status: 400 });
+    }
 
     const educations = await prisma.education.findMany({
       where: { userId: userid },
@@ -21,6 +26,10 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return new Response("Unauthorized", { status: 401 });
+    }
     const body = await request.json();
     const { education }: { education: educationInput } = body;
     const { skills, ...educationData } = education;
@@ -35,6 +44,7 @@ export async function POST(request: Request) {
     await prisma.education.create({
       data: {
         ...educationData,
+        userId: session.user.id,
         skills: {
           connect: skills?.map((skill) => ({ id: skill.id })) ?? [],
         },
@@ -49,6 +59,10 @@ export async function POST(request: Request) {
 }
 export async function PATCH(request: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return new Response("Unauthorized", { status: 401 });
+    }
     const body = await request.json();
     const { education }: { education: educationInput & { id: string } } = body;
     const { id, skills, ...updateData } = education;
@@ -63,7 +77,7 @@ export async function PATCH(request: Request) {
     }
 
     await prisma.education.update({
-      where: { id },
+      where: { id, userId: session.user.id },
       data: {
         ...updateData,
         skills: {
@@ -81,6 +95,10 @@ export async function PATCH(request: Request) {
 }
 export async function DELETE(request: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return new Response("Unauthorized", { status: 401 });
+    }
     const body = await request.json();
     const { id }: { id: string } = body;
     if (!id) {
@@ -89,7 +107,7 @@ export async function DELETE(request: Request) {
       });
     }
 
-    await prisma.education.delete({ where: { id } });
+    await prisma.education.delete({ where: { id, userId: session.user.id } });
 
     return new Response("Education deleted successfully", { status: 200 });
   } catch (error) {

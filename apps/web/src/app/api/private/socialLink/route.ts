@@ -1,13 +1,17 @@
+import { authOptions } from "@/lib/auth";
 import { PrismaClient } from "@repo/db";
 import { socialLinkInput, socialLinkInputSchema } from "@repo/types";
+import { getServerSession } from "next-auth/";
 
 const prisma = new PrismaClient();
 
 export async function GET(request: Request) {
   try {
-    const body = await request.json();
-    const { userid } = body;
-
+    const { searchParams } = new URL(request.url);
+    const userid = searchParams.get("userid");
+    if (!userid) {
+      return new Response("Please provide a user ID", { status: 400 });
+    }
     const links = await prisma.socialLink.findMany({
       where: { userId: userid },
     });
@@ -21,6 +25,10 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return new Response("Unauthorized", { status: 401 });
+    }
     const body = await request.json();
     const { link }: { link: socialLinkInput } = body;
 
@@ -30,7 +38,7 @@ export async function POST(request: Request) {
     if (socialLinkInputSchema.safeParse(link).success === false) {
       return new Response("Invalid social link data", { status: 400 });
     }
-
+    link.userId = session.user.id;
     await prisma.socialLink.create({
       data: link,
     });
@@ -44,11 +52,15 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return new Response("Unauthorized", { status: 401 });
+    }
     const body = await request.json();
     const { id } = body;
 
     await prisma.socialLink.delete({
-      where: { id },
+      where: { id, userId: session.user.id },
     });
 
     return new Response("Social link deleted successfully", { status: 200 });

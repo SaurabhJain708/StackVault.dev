@@ -1,11 +1,16 @@
+import { authOptions } from "@/lib/auth";
 import { PrismaClient } from "@repo/db";
 import { certInput, certInputSchema } from "@repo/types";
+import { getServerSession } from "next-auth";
 const prisma = new PrismaClient();
 
 export async function GET(request: Request) {
   try {
-    const body = await request.json();
-    const { userid } = body;
+    const { searchParams } = new URL(request.url);
+    const userid = searchParams.get("userid");
+    if (!userid) {
+      return new Response("Please provide a user ID", { status: 400 });
+    }
 
     const certs = await prisma.cert.findMany({
       where: { userId: userid },
@@ -21,6 +26,10 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return new Response("Unauthorized", { status: 401 });
+    }
     const body = await request.json();
     const { cert }: { cert: certInput } = body;
     const { skills, ...certData } = cert;
@@ -33,6 +42,7 @@ export async function POST(request: Request) {
     await prisma.cert.create({
       data: {
         ...certData,
+        userId: session.user.id,
         skills: {
           connect: skills?.map((skill) => ({ id: skill.id })) ?? [],
         },
@@ -47,6 +57,10 @@ export async function POST(request: Request) {
 
 export async function PATCH(request: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return new Response("Unauthorized", { status: 401 });
+    }
     const body = await request.json();
     const { cert }: { cert: certInput & { id: string } } = body;
     const { id, skills, ...certData } = cert;
@@ -60,7 +74,7 @@ export async function PATCH(request: Request) {
 
     // Disconnect all current skills, then reconnect the new ones
     await prisma.cert.update({
-      where: { id },
+      where: { id, userId: session.user.id },
       data: {
         ...certData,
         skills: {
@@ -79,6 +93,10 @@ export async function PATCH(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return new Response("Unauthorized", { status: 401 });
+    }
     const body = await request.json();
     const { id }: { id: string } = body;
 
@@ -87,7 +105,7 @@ export async function DELETE(request: Request) {
     }
 
     await prisma.cert.delete({
-      where: { id },
+      where: { id, userId: session.user.id },
     });
 
     return new Response("Cert deleted successfully", { status: 200 });
