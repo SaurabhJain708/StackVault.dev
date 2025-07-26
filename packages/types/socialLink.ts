@@ -1,7 +1,14 @@
 import type { SocialLink } from "@repo/db/generated/prisma";
+import { z } from "zod";
 
 export type socialLink = SocialLink;
 
 export type TemplateSocialLink = Omit<SocialLink, "createdAt" | "updatedAt">;
 
-export type socialLinkInput = Omit<SocialLink, "createdAt" | "updatedAt" | "id">;
+
+export const socialLinkInputSchema = z.object({
+  platform: z.string(),
+  url: z.url(),
+  userId: z.string().cuid(),
+});
+export type socialLinkInput = z.infer<typeof socialLinkInputSchema>;

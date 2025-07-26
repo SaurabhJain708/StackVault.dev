@@ -43,3 +43,21 @@ export type TemplateUser = User & {
   recommendations?: TemplateRecommendation[];
   socialLinks?: TemplateSocialLink[];
 };
+
+import { z } from "zod";
+
+export const userInputSchema = z.object({
+  name: z.string(),
+  email: z.email(),
+  age: z.number().int().optional(),
+  username: z.string(),
+  avatarUrl: z.url().optional(),
+  bio: z.string().optional(),
+  available: z.boolean().optional(),
+  location: z.string().optional(),
+  resumeUrl: z.url().optional(),
+  languages: z.array(z.string()).optional(),
+  causes: z.array(z.string()).optional(),
+  TemplateId: z.string().optional(),
+});
+export type userInput = z.infer<typeof userInputSchema>;

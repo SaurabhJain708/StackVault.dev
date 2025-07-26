@@ -6,7 +6,7 @@ import type {
 } from "@repo/db/generated/prisma";
 
 export type skill = Skill;
-
+import { z } from "zod";
 export type skillWithRelations = Skill & {
   projects?: Project[];
   experiences?: Experience[];
@@ -19,4 +19,10 @@ export type TemplateSkill = Omit<Skill, "createdAt" | "updatedAt"> & {
   certs?: Cert[];
 };
 
-export type skillInput = Omit<Skill, "id" | "createdAt" | "updatedAt" | "projects" | "certs" | "educations" | "experiences" | "user">;
+
+export const skillInputSchema = z.object({
+  name: z.string(),
+  description: z.string().optional(),
+  userId: z.cuid(),
+});
+export type skillInput = z.infer<typeof skillInputSchema>;
