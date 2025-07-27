@@ -36,8 +36,15 @@ export async function POST(request: Request) {
     if (!experience) {
       return new Response("Please add experience data", { status: 400 });
     }
-    if (experienceInputSchema.safeParse(experience).success === false) {
+    console.log("POST OBJ", experienceData);
+    if (experienceInputSchema.safeParse(experienceData).success === false) {
       return new Response("Invalid experience data", { status: 400 });
+    }
+    const count = await prisma.experience.count({
+      where: { userId: session.user.id },
+    });
+    if (count > 40) {
+      return new Response("Experience limit reached", { status: 403 });
     }
 
     await prisma.experience.create({
@@ -73,7 +80,8 @@ export async function PATCH(request: Request) {
         status: 400,
       });
     }
-    if (experienceInputSchema.safeParse(experience).success === false) {
+    console.log("Updating experience with ID:", experienceData);
+    if (experienceInputSchema.safeParse(experienceData).success === false) {
       return new Response("Invalid experience data", { status: 400 });
     }
 

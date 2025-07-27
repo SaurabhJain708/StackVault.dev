@@ -39,6 +39,12 @@ export async function POST(request: Request) {
     if (certInputSchema.safeParse(certData).success === false) {
       return new Response("Invalid cert data", { status: 400 });
     }
+    const count = await prisma.cert.count({
+      where: { userId: session.user.id },
+    });
+    if (count > 40) {
+      return new Response("Cert limit reached", { status: 403 });
+    }
     await prisma.cert.create({
       data: {
         ...certData,

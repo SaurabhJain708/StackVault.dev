@@ -37,6 +37,12 @@ export async function POST(request: Request) {
       return new Response("Invalid social link data", { status: 400 });
     }
     link.userId = session.user.id;
+    const count = await prisma.socialLink.count({
+      where: { userId: session.user.id },
+    });
+    if (count > 5) {
+      return new Response("Social link limit reached", { status: 403 });
+    }
     await prisma.socialLink.create({
       data: link,
     });

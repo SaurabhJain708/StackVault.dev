@@ -39,6 +39,12 @@ export async function POST(request: Request) {
     if (educationInputSchema.safeParse(educationData).success === false) {
       return new Response("Invalid education data", { status: 400 });
     }
+    const count = await prisma.education.count({
+      where: { userId: session.user.id },
+    });
+    if (count > 15) {
+      return new Response("Education limit reached", { status: 403 });
+    }
 
     await prisma.education.create({
       data: {
@@ -74,7 +80,6 @@ export async function PATCH(request: Request) {
     if (educationInputSchema.safeParse(updateData).success === false) {
       return new Response("Invalid education data", { status: 400 });
     }
-
     await prisma.education.update({
       where: { id, userId: session.user.id },
       data: {

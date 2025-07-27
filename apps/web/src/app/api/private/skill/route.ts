@@ -38,6 +38,12 @@ export async function POST(request: Request) {
     if (skillInputSchema.safeParse(skill).success === false) {
       return new Response("Invalid skill data", { status: 400 });
     }
+    const count = await prisma.skill.count({
+      where: { userId: session.user.id },
+    });
+    if (count > 55) {
+      return new Response("Skill limit reached", { status: 403 });
+    }
     const createdSkill = await prisma.skill.create({
       data: {
         ...skill,
