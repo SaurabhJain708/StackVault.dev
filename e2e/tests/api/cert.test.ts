@@ -18,7 +18,7 @@ test("POST /api/private/cert should add cert", async ({
           skills: [], // or [{ id: "existing-skill-id" }]
         },
       },
-    }
+    },
   );
 
   expect(res.status()).toBe(201);
@@ -44,14 +44,14 @@ test("PATCH /api/private/cert should update cert", async ({
           skills: [],
         },
       },
-    }
+    },
   );
 
   expect(createRes.status()).toBe(201);
 
   // Fetch certs to get the ID
   const allCerts = await authenticatedPage.request.get(
-    `${baseURL}/api/private/cert?userid=${userId}`
+    `${baseURL}/api/private/cert?userid=${userId}`,
   );
   const certs = await allCerts.json();
   const certId = certs.find((c: any) => c.name === `Temp Cert ${date}`)?.id;
@@ -69,7 +69,7 @@ test("PATCH /api/private/cert should update cert", async ({
           skills: [],
         },
       },
-    }
+    },
   );
 
   expect(updateRes.status()).toBe(200);
@@ -92,13 +92,13 @@ test("DELETE /api/private/cert should delete cert", async ({
           imageUrl: "https://example.com/image.png",
         },
       },
-    }
+    },
   );
   expect(createRes.status()).toBe(201);
 
   // Fetch cert ID
   const allCerts = await authenticatedPage.request.get(
-    `${baseURL}/api/private/cert?userid=${userId}`
+    `${baseURL}/api/private/cert?userid=${userId}`,
   );
   const certs = await allCerts.json();
   const certId = certs.find((c: any) => c.name === "Delete Me")?.id;
@@ -109,7 +109,7 @@ test("DELETE /api/private/cert should delete cert", async ({
     `${baseURL}/api/private/cert`,
     {
       data: { id: certId },
-    }
+    },
   );
   expect(deleteRes.status()).toBe(200);
 });
