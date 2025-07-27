@@ -1,8 +1,19 @@
 import { test as base, Page } from "@playwright/test";
 
+type TestUserData = {
+  userId: string;
+  cookie: string;
+  skills: { id: string }[];
+  certs: { id: string }[];
+  educations: { id: string }[];
+  experiences: { id: string }[];
+  projects: { id: string }[];
+  socialLinks: { id: string }[];
+};
 export const test = base.extend<{
   authenticatedPage: Page;
   userId: string;
+  testUserData: TestUserData;
 }>({
   authenticatedPage: async ({ page, context }, use) => {
     const res = await page.request.get("http://localhost:3000/api/test_login");
@@ -26,13 +37,18 @@ export const test = base.extend<{
         secure: false,
       },
     ]);
+    (page as any)._testUserData = parsed;
 
     await use(page);
   },
 
-  userId: async ({ page }, use) => {
-    const res = await page.request.get("http://localhost:3000/api/test_login");
-    const json = await res.json();
-    await use(json.userId);
+  userId: async ({ authenticatedPage }, use) => {
+    const userId = (authenticatedPage as any)._testUserData?.userId;
+    if (!userId) throw new Error("userId not found");
+    await use(userId);
+  },
+  testUserData: async ({ authenticatedPage }, use) => {
+    const data = (authenticatedPage as any)._testUserData as TestUserData;
+    await use(data);
   },
 });

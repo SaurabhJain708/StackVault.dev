@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     if (!cert) {
       return new Response("Please add a cert", { status: 400 });
     }
-    if (certInputSchema.safeParse(cert).success === false) {
+    if (certInputSchema.safeParse(certData).success === false) {
       return new Response("Invalid cert data", { status: 400 });
     }
     await prisma.cert.create({
@@ -68,10 +68,9 @@ export async function PATCH(request: Request) {
     if (!id) {
       return new Response("Cert ID is required for update", { status: 400 });
     }
-    if (certInputSchema.safeParse(cert).success === false) {
+    if (certInputSchema.safeParse(certData).success === false) {
       return new Response("Invalid cert data", { status: 400 });
     }
-    console.log("DATA", cert);
     // Disconnect all current skills, then reconnect the new ones
     await prisma.cert.update({
       where: { id, userId: session.user.id },

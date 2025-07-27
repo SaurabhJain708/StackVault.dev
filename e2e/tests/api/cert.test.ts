@@ -29,6 +29,7 @@ test("POST /api/private/cert should add cert", async ({
 test("PATCH /api/private/cert should update cert", async ({
   authenticatedPage,
   userId,
+  testUserData,
 }) => {
   const date = new Date();
 
@@ -49,36 +50,6 @@ test("PATCH /api/private/cert should update cert", async ({
   );
   expect(createRes.status()).toBe(201);
 
-  // Create two skills
-  const skillRes1 = await authenticatedPage.request.post(
-    `${baseURL}/api/private/skill`,
-    {
-      data: {
-        skill: {
-          name: `Test Skill ${Date.now()}`,
-          description: "very good skills",
-        },
-      },
-    },
-  );
-  const skillRes2 = await authenticatedPage.request.post(
-    `${baseURL}/api/private/skill`,
-    {
-      data: {
-        skill: {
-          name: `Test Skill ${Date.now()}`,
-          description: "very good skills cery",
-        },
-      },
-    },
-  );
-
-  expect(skillRes1.status()).toBe(201);
-  expect(skillRes2.status()).toBe(201);
-
-  const skill1 = await skillRes1.json();
-  const skill2 = await skillRes2.json();
-
   // Get certId
   const allCerts = await authenticatedPage.request.get(
     `${baseURL}/api/private/cert?userid=${userId}`,
@@ -97,7 +68,7 @@ test("PATCH /api/private/cert should update cert", async ({
           id: certId,
           name: `Updated Cert ${Date.now()}`,
           acquiredAt: new Date().toISOString(),
-          skills: [{ id: skill1.id }, { id: skill2.id }],
+          skills: testUserData.skills,
         },
       },
     },
@@ -109,6 +80,7 @@ test("PATCH /api/private/cert should update cert", async ({
 test("DELETE /api/private/cert should delete cert", async ({
   authenticatedPage,
   userId,
+  testUserData,
 }) => {
   // First create
   const date = new Date();
@@ -119,13 +91,14 @@ test("DELETE /api/private/cert should delete cert", async ({
         cert: {
           name: `Delete me ${date}`,
           acquiredAt: new Date().toISOString(),
-          skills: [],
+          skills: testUserData.skills.map((id) => ({ id: id.id })),
           credentialUrl: "https://example.com/credential",
           imageUrl: "https://example.com/image.png",
         },
       },
     },
   );
+
   expect(createRes.status()).toBe(201);
 
   // Fetch cert ID
