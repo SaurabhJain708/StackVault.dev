@@ -8,7 +8,7 @@ export async function GET() {
     where: { email: "test@example.com" },
     update: {},
     create: {
-      id: "test-user-id",
+      id: "cmlv3tzxw001eu77gqz35l4va",
       name: "Test User",
       email: "test@example.com",
       username: "testuser",

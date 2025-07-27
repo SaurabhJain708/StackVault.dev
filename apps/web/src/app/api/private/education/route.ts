@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     if (!education) {
       return new Response("Please provide education data", { status: 400 });
     }
-    if (educationInputSchema.safeParse(education).success === false) {
+    if (educationInputSchema.safeParse(educationData).success === false) {
       return new Response("Invalid education data", { status: 400 });
     }
 
@@ -71,7 +71,7 @@ export async function PATCH(request: Request) {
         status: 400,
       });
     }
-    if (educationInputSchema.safeParse(education).success === false) {
+    if (educationInputSchema.safeParse(updateData).success === false) {
       return new Response("Invalid education data", { status: 400 });
     }
 

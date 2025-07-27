@@ -22,9 +22,9 @@ export const educationInputSchema = z.object({
   imageUrl: z.url().optional(),
   grade: z.string().optional(),
   activities: z.array(z.string()).optional(),
-  userId: z.string().cuid(),
+  userId: z.cuid(),
   credentialUrl: z.url().optional(),
-  skills: z.array(z.object({ id: z.string().cuid() })).optional(),
+  skills: z.array(z.object({ id: z.cuid() })).optional(),
 });
 
 export type educationInput = z.infer<typeof educationInputSchema>;

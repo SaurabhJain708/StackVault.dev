@@ -44,9 +44,7 @@ model Education {
   skills         Skill[]   @relation("EducationSkills")
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([userId, degree])
+  updatedAt DateTime @updatedAt 
   @@map("educations")
 }
 
