@@ -36,7 +36,6 @@ export async function POST(request: Request) {
     if (!experience) {
       return new Response("Please add experience data", { status: 400 });
     }
-    console.log("POST OBJ", experienceData);
     if (experienceInputSchema.safeParse(experienceData).success === false) {
       return new Response("Invalid experience data", { status: 400 });
     }
@@ -80,7 +79,6 @@ export async function PATCH(request: Request) {
         status: 400,
       });
     }
-    console.log("Updating experience with ID:", experienceData);
     if (experienceInputSchema.safeParse(experienceData).success === false) {
       return new Response("Invalid experience data", { status: 400 });
     }
