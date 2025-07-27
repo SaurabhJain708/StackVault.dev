@@ -17,7 +17,6 @@ export const certInputSchema = z.object({
   imageUrl: z.url().optional(),
   acquiredAt: z.coerce.date().optional(), // optional if not passed from client
   credentialUrl: z.url().optional(),
-  userId: z.uuid(), // or `z.string().uuid()` if you're not using cuid
   skills: z.array(z.object({ id: z.cuid() })).optional(),
 });
 
