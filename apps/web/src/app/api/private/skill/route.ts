@@ -38,12 +38,25 @@ export async function POST(request: Request) {
     if (skillInputSchema.safeParse(skill).success === false) {
       return new Response("Invalid skill data", { status: 400 });
     }
-    skill.userId = session.user.id;
-    await prisma.skill.create({
-      data: skill,
+    const createdSkill = await prisma.skill.create({
+      data: {
+        ...skill,
+        userId: session.user.id,
+      },
     });
 
-    return new Response("Skill added successfully", { status: 201 });
+    return new Response(
+      JSON.stringify({
+        message: "Skill added successfully",
+        id: createdSkill.id,
+      }),
+      {
+        status: 201,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (error) {
     console.error("Error adding skill:", error);
     return new Response("Internal Server Error", { status: 500 });

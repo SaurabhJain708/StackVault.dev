@@ -32,7 +32,6 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { cert }: { cert: certInput } = body;
     const { skills, ...certData } = cert;
-    console.log("BODY:", body);
 
     if (!cert) {
       return new Response("Please add a cert", { status: 400 });
@@ -72,7 +71,7 @@ export async function PATCH(request: Request) {
     if (certInputSchema.safeParse(cert).success === false) {
       return new Response("Invalid cert data", { status: 400 });
     }
-
+    console.log("DATA",cert)
     // Disconnect all current skills, then reconnect the new ones
     await prisma.cert.update({
       where: { id, userId: session.user.id },

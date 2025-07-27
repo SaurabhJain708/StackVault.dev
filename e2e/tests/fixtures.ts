@@ -8,8 +8,6 @@ export const test = base.extend<{
     const res = await page.request.get("http://localhost:3000/api/test_login");
     const jsonText = await res.text();
 
-    console.log("DEBUG: /api/test_login response:", jsonText);
-
     const parsed = JSON.parse(jsonText);
     const cookieString = parsed.cookie;
 
