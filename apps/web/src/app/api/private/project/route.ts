@@ -35,7 +35,7 @@ export async function POST(request: Request) {
     if (!project) {
       return new Response("Please add a project", { status: 400 });
     }
-    if (projectInputSchema.safeParse(project).success === false) {
+    if (projectInputSchema.safeParse(projectData).success === false) {
       return new Response("Invalid project data", { status: 400 });
     }
     const count = await prisma.project.count({
@@ -74,7 +74,7 @@ export async function PATCH(request: Request) {
     if (!id) {
       return new Response("Project ID is required for update", { status: 400 });
     }
-    if (projectInputSchema.safeParse(project).success === false) {
+    if (projectInputSchema.safeParse(projectData).success === false) {
       return new Response("Invalid project data", { status: 400 });
     }
 
