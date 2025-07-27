@@ -76,7 +76,7 @@ export async function GET() {
         position: "Software Engineer",
         startDate: new Date("2023-06-01"),
         userId,
-      }
+      },
     ],
     skipDuplicates: true,
   });
@@ -97,7 +97,7 @@ export async function GET() {
         id: "proj-3",
         name: "NextAuth Example",
         userId,
-      }
+      },
     ],
     skipDuplicates: true,
   });
@@ -121,7 +121,7 @@ export async function GET() {
         platform: "Twitter",
         url: "https://twitter.com/testuser",
         userId,
-      }
+      },
     ],
     skipDuplicates: true,
   });

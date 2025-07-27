@@ -71,7 +71,7 @@ export async function PATCH(request: Request) {
     if (certInputSchema.safeParse(cert).success === false) {
       return new Response("Invalid cert data", { status: 400 });
     }
-    console.log("DATA",cert)
+    console.log("DATA", cert);
     // Disconnect all current skills, then reconnect the new ones
     await prisma.cert.update({
       where: { id, userId: session.user.id },
