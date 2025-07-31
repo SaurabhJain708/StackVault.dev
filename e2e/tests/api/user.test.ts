@@ -24,7 +24,6 @@ test("PATCH /api/private/user should update user", async ({
       },
     },
   );
-
   expect(res.status()).toBe(200);
   const message = await res.text();
   expect(message).toBe("User updated successfully");
@@ -42,7 +41,7 @@ test("PATCH /api/private/user should return 400 if user object missing", async (
 
   expect(res.status()).toBe(400);
   const message = await res.text();
-  expect(message).toBe("Invalid user data");
+  expect(message).toBe("Please provide user data");
 });
 
 test("PATCH /api/private/user should return 400 on invalid data", async ({

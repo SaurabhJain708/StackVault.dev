@@ -10,10 +10,11 @@ export async function PATCH(request: Request) {
     return new Response("Unauthorized", { status: 401 });
   }
   const body = await request.json();
-  const { _email, ...user }: { _email: string; user: userInput } = body;
+  const { user }: { user: userInput } = body;
   if (!user) {
-    return new Response("Please provide user data with email", { status: 400 });
+    return new Response("Please provide user data", { status: 400 });
   }
+
   if (userInputSchema.safeParse(user).success === false) {
     return new Response("Invalid user data", { status: 400 });
   }
@@ -22,7 +23,7 @@ export async function PATCH(request: Request) {
       where: { id: session.user.id },
       data: user,
     });
-    return Response.json("User updated successfully", { status: 200 });
+    return new Response("User updated successfully", { status: 200 });
   } catch (error) {
     console.error("Error updating user:", error);
     return new Response("Internal Server Error", { status: 500 });

@@ -48,7 +48,6 @@ import { z } from "zod";
 
 export const userInputSchema = z.object({
   name: z.string(),
-  email: z.email().optional(),
   age: z.number().int().optional(),
   avatarUrl: z.url().optional(),
   bio: z.string().optional(),
