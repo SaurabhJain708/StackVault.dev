@@ -10,7 +10,7 @@ export async function PATCH(request: Request) {
     return new Response("Unauthorized", { status: 401 });
   }
   const body = await request.json();
-  const { email, ...user }: { email: string; user: userInput } = body;
+  const { _email, ...user }: { _email: string; user: userInput } = body;
   if (!user) {
     return new Response("Please provide user data with email", { status: 400 });
   }

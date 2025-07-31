@@ -1,103 +1,791 @@
-import Image from "next/image";
+"use client";
+import React, { useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import Link from "next/link";
 
-export default function Home() {
+// Main App component for the landing page
+const App = () => {
+  // Refs for sections to trigger animations on scroll
+  const heroRef = useRef(null);
+  const isHeroInView = useInView(heroRef, { once: true, amount: 0.5 });
+
+  const featuresRef = useRef(null);
+  const isFeaturesInView = useInView(featuresRef, { once: true, amount: 0.3 });
+
+  const howItWorksRef = useRef(null);
+  const isHowItWorksInView = useInView(howItWorksRef, {
+    once: true,
+    amount: 0.3,
+  });
+
+  const templatesRef = useRef(null);
+  const isTemplatesInView = useInView(templatesRef, {
+    once: true,
+    amount: 0.2,
+  });
+
+  const ctaRef = useRef(null);
+  const isCtaInView = useInView(ctaRef, { once: true, amount: 0.5 });
+
+  // Variants for text animations (staggered reveal)
+  const textVariants = {
+    hidden: { opacity: 0, y: 40, filter: "blur(10px)" },
+    visible: {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      transition: {
+        duration: 0.9,
+        ease: [0.22, 1, 0.36, 1] as [number, number, number, number], // ✅ Fix here
+      },
+    },
+  };
+
+  // Variants for button animations
+  const buttonVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.7,
+        delay: 0.8,
+        ease: [0.22, 1, 0.36, 1] as [number, number, number, number], // ✅ Typed tuple
+      },
+    },
+    hover: {
+      scale: 1.07,
+      boxShadow: "0px 0px 30px rgba(124, 58, 237, 1)",
+      transition: { duration: 0.3 },
+    },
+    tap: { scale: 0.93 },
+  };
+
+  // Variants for feature cards (slide up and fade in with enhanced hover)
+  const cardVariants = {
+    hidden: { opacity: 0, y: 80, scale: 0.9 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.9,
+        ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+      },
+    },
+    hover: {
+      scale: 1.05,
+      boxShadow: "0px 0px 40px rgba(124, 58, 237, 0.9)", // Stronger card glow on hover
+      borderColor: "rgba(124, 58, 237, 0.9)", // Stronger border glow
+      rotateY: 5, // Subtle 3D tilt
+      rotateX: 2, // Subtle 3D tilt
+      transition: { duration: 0.3 },
+    },
+  };
+
+  const stepVariants = {
+    hidden: { opacity: 0, x: -70 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.8,
+        ease: [0.22, 1, 0.36, 1] as [number, number, number, number], // ✅ Cast it here
+      },
+    },
+    hover: {
+      scale: 1.05,
+      boxShadow: "0px 0px 25px rgba(236, 72, 153, 0.7)",
+      transition: { duration: 0.3 },
+    },
+  };
+
+  // Feature data for easy mapping
+  const features = [
+    {
+      icon: (
+        <svg
+          className="w-16 h-16 text-purple-400 mb-4 drop-shadow-lg"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M9.75 17L9.25 21L14.75 21L15.25 17M12 14V17M12 14C14.2091 14 16 12.2091 16 10C16 7.79086 14.2091 6 12 6C9.79086 6 8 7.79086 8 10C8 12.2091 9.79086 14 12 14Z"
+          ></path>
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M19 10C19 14.9706 12 22 12 22C12 22 5 14.9706 5 10C5 6.13401 8.13401 3 12 3C15.866 3 19 6.13401 19 10Z"
+          ></path>
+        </svg>
+      ),
+      title: "Stunning Templates",
+      description:
+        "Choose from a curated collection of modern, responsive, and visually striking templates designed to make your work shine.",
+    },
+    {
+      icon: (
+        <svg
+          className="w-16 h-16 text-blue-400 mb-4 drop-shadow-lg"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M10.325 4.317c.515-1.33 1.958-2.182 3.464-2.182 1.506 0 2.949.852 3.464 2.182M10.325 4.317C12.012 5.617 14 7 14 7s2.012-1.383 3.699-2.683m-4.374 15.362a2.25 2.25 0 01-3.182 0A2.25 2.25 0 0112 19.25c.801 0 1.563-.317 2.121-.879a2.25 2.25 0 010-3.182m-4.374 15.362c-1.33.515-2.182 1.958-2.182 3.464 0 1.506.852 2.949 2.182 3.464M10.325 4.317c.515-1.33 1.958-2.182 3.464-2.182 1.506 0 2.949.852 3.464 2.182M10.325 4.317C12.012 5.617 14 7 14 7s2.012-1.383 3.699-2.683m-4.374 15.362a2.25 2.25 0 01-3.182 0A2.25 2.25 0 0112 19.25c.801 0 1.563-.317 2.121-.879a2.25 2.25 0 010-3.182"
+          ></path>
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M12 22C12 22 5 14.9706 5 10C5 6.13401 8.13401 3 12 3C15.866 3 19 6.13401 19 10C19 14.9706 12 22 12 22Z"
+          ></path>
+        </svg>
+      ),
+      title: "Effortless Customization",
+      description:
+        "Our intuitive drag-and-drop editor allows you to personalize every aspect of your portfolio without writing a single line of code.",
+    },
+    {
+      icon: (
+        <svg
+          className="w-16 h-16 text-pink-400 mb-4 drop-shadow-lg"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+          ></path>
+        </svg>
+      ),
+      title: "Dynamic Showcases",
+      description:
+        "Embed your projects, code snippets, videos, and interactive demos directly into your portfolio, bringing your work to life.",
+    },
+    {
+      icon: (
+        <svg
+          className="w-16 h-16 text-green-400 mb-4 drop-shadow-lg"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M16 8v8m-4-5v5m-4-2v2m-2-4h12a2 2 0 012 2v8a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h12a2 2 0 012 2v2"
+          ></path>
+        </svg>
+      ),
+      title: "Insightful Analytics",
+      description:
+        "Track visitor engagement, popular sections, and referral sources with built-in analytics to optimize your portfolio’s impact.",
+    },
+  ];
+
+  const howItWorksSteps = [
+    {
+      title: "1. Choose Your Template",
+      description:
+        "Browse our diverse library of professionally designed templates, each crafted to highlight different skill sets and industries.",
+      icon: (
+        <svg
+          className="w-12 h-12 text-purple-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2
+          2 0 01-2 2z"
+          ></path>
+        </svg>
+      ),
+    },
+    {
+      title: "2. Customize with Ease",
+      description:
+        "Our intuitive drag-and-drop editor makes it simple to add your content, change colors, fonts, and layouts without any coding.",
+      icon: (
+        <svg
+          className="w-12 h-12 text-blue-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+          ></path>
+        </svg>
+      ),
+    },
+    {
+      title: "3. Publish & Share",
+      description:
+        "Go live with a single click! Share your unique StackVault.dev URL with recruiters, clients, and your network.",
+      icon: (
+        <svg
+          className="w-12 h-12 text-pink-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M5 12h14M12 5l7 7-7 7"
+          ></path>
+        </svg>
+      ),
+    },
+  ];
+
+  const templatePlaceholders = [
+    {
+      name: "Nebula",
+      color: "from-purple-500 to-indigo-500",
+      image: "https://placehold.co/400x250/8B5CF6/FFFFFF?text=Nebula+Template",
+    },
+    {
+      name: "Aurora",
+      color: "from-blue-500 to-cyan-500",
+      image: "https://placehold.co/400x250/3B82F6/FFFFFF?text=Aurora+Template",
+    },
+    {
+      name: "Quantum",
+      color: "from-green-500 to-teal-500",
+      image: "https://placehold.co/400x250/10B981/FFFFFF?text=Quantum+Template",
+    },
+    {
+      name: "Vortex",
+      color: "from-red-500 to-orange-500",
+      image: "https://placehold.co/400x250/EF4444/FFFFFF?text=Vortex+Template",
+    },
+  ];
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white font-inter overflow-hidden relative">
+      {/* Global Background Particles (Subtle) */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <div className="absolute w-full h-full bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-5"></div>
+        {/* Animated Grid Overlay */}
+        <div className="absolute inset-0 z-0 opacity-10 animate-grid-fade">
+          <div className="grid-overlay"></div>
+        </div>
+      </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
+      {/* Navigation Bar */}
+      <motion.nav
+        className="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-md py-4 px-8 flex justify-between items-center border-b border-gray-700 shadow-lg"
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">
+          StackVault.dev
+        </div>
+        <div className="space-x-6 hidden md:flex">
+          <a href="#features">Features</a>
           <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#templates"
+            className="text-gray-300 hover:text-blue-400 transition-colors text-lg"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
+            Templates
           </a>
           <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#"
+            className="text-gray-300 hover:text-pink-400 transition-colors text-lg"
           >
-            Read our docs
+            Pricing
+          </a>
+          <a
+            href="#"
+            className="text-gray-300 hover:text-green-400 transition-colors text-lg"
+          >
+            Contact
           </a>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link href="/login">
+          <button className="px-4 ml-2 py-2 sm:px-6 sm:py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-sm sm:text-base text-white rounded-full font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-300 shadow-md min-w-[100px]">
+            Sign In
+          </button>
+        </Link>
+      </motion.nav>
+
+      {/* Hero Section */}
+      <section
+        ref={heroRef}
+        className="relative flex flex-col items-center justify-center min-h-screen px-4 py-16 pt-32 text-center overflow-hidden z-10"
+      >
+        {/* Background Gradients/Shapes - Enhanced */}
+        <motion.div
+          className="absolute inset-0 z-0 opacity-20"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.2 }}
+          transition={{ duration: 2.5, ease: [0.22, 1, 0.36, 1] }}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob"></div>
+          <div className="absolute top-1/2 right-1/4 w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000"></div>
+          <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-pink-600 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-4000"></div>
+        </motion.div>
+
+        <div className="relative z-10 max-w-6xl mx-auto px-4">
+          <motion.h1
+            className="text-3xl sm:text-5xl lg:text-7xl font-extrabold mb-6 leading-tight tracking-tight text-center"
+            variants={textVariants}
+            initial="hidden"
+            animate={isHeroInView ? "visible" : "hidden"}
+            transition={{ staggerChildren: 0.1 }}
+          >
+            <motion.span
+              variants={textVariants}
+              className="block text-transparent max-w-full bg-clip-text bg-gradient-to-r from-purple-300 to-blue-400"
+            >
+              StackVault.dev
+            </motion.span>
+            <motion.span
+              variants={textVariants}
+              className="block mt-4 text-gray-100"
+            >
+              Your Portfolio, Reimagined.
+            </motion.span>
+          </motion.h1>
+
+          <motion.p
+            className="text-base sm:text-lg lg:text-xl text-gray-300 mb-10 sm:mb-12 max-w-2xl mx-auto text-center font-light"
+            variants={textVariants}
+            initial="hidden"
+            animate={isHeroInView ? "visible" : "hidden"}
+            transition={{ delay: 0.4, ...textVariants.visible.transition }}
+          >
+            Break free from static resumes. Create dynamic, interactive web
+            experiences that truly showcase your skills, projects, and
+            personality.
+          </motion.p>
+          <Link href="/login">
+            <motion.button
+              className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-purple-700 to-blue-700 text-white font-semibold sm:font-bold text-base sm:text-xl rounded-full shadow-xl hover:shadow-purple-500/50 transition-all duration-300 ease-in-out transform hover:-translate-y-1 sm:hover:-translate-y-2 focus:outline-none focus:ring-4 focus:ring-purple-600 focus:ring-opacity-75 relative overflow-hidden group mx-auto block"
+              variants={buttonVariants}
+              initial="hidden"
+              animate={isHeroInView ? "visible" : "hidden"}
+              whileHover="hover"
+              whileTap="tap"
+            >
+              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-purple-800 to-blue-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+              <span className="relative z-10">Get Started Free</span>
+            </motion.button>
+          </Link>
+
+          <motion.div
+            className="mt-16 sm:mt-20 w-full max-w-3xl mx-auto bg-gray-800/50 border border-gray-600 rounded-lg sm:rounded-xl shadow-2xl overflow-hidden p-4 relative"
+            initial={{ opacity: 0, y: 150, scale: 0.8 }}
+            animate={isHeroInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+            transition={{ delay: 1.2, duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="flex items-center space-x-2 mb-4">
+              <span className="block w-3 h-3 bg-red-500 rounded-full"></span>
+              <span className="block w-3 h-3 bg-yellow-500 rounded-full"></span>
+              <span className="block w-3 h-3 bg-green-500 rounded-full"></span>
+            </div>
+            <div className="w-full h-60 sm:h-72 md:h-80 lg:h-96 bg-gray-700 rounded-md flex items-center justify-center text-gray-400 text-sm sm:text-base md:text-xl font-mono relative overflow-hidden">
+              <div
+                className="absolute inset-0 bg-repeat bg-[size:20px_20px] opacity-10"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(to right, #4a4a4a 1px, transparent 1px), linear-gradient(to bottom, #4a4a4a 1px, transparent 1px)",
+                }}
+              ></div>
+              <span className="animate-pulse relative z-10">
+                {"<YourInteractivePortfolioHere />"}
+              </span>
+            </div>
+            <div
+              className="absolute inset-0 rounded-xl pointer-events-none"
+              style={{ boxShadow: "0 0 50px rgba(124, 58, 237, 0.3) inset" }}
+            ></div>
+          </motion.div>
+
+          <motion.div
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center text-gray-400"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              delay: 2,
+              duration: 0.8,
+              repeat: Infinity,
+              repeatType: "reverse",
+            }}
+          >
+            <svg
+              className="w-5 h-5 sm:w-6 sm:h-6 mb-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M19 14l-7 7m0 0l-7-7m7 7V3"
+              ></path>
+            </svg>
+            <span className="text-xs sm:text-sm">Scroll Down</span>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section
+        id="features"
+        ref={featuresRef}
+        className="py-28 px-4 relative z-10 bg-gray-950/50"
+      >
+        <div className="max-w-7xl mx-auto text-center">
+          <motion.h2
+            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-16 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 leading-tight"
+            initial={{ opacity: 0, y: 50 }}
+            animate={isFeaturesInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          >
+            Unlock Your Potential with StackVault.dev
+          </motion.h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+            {features.map((feature, index) => (
+              <motion.div
+                key={index}
+                className="bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-700 hover:border-purple-600 transition-all duration-300 ease-in-out flex flex-col items-center text-center relative overflow-hidden group transform-gpu"
+                variants={cardVariants}
+                initial="hidden"
+                animate={isFeaturesInView ? "visible" : "hidden"}
+                transition={{
+                  delay: index * 0.15 + 0.3,
+                  ...cardVariants.visible.transition,
+                }} // Staggered delay for cards
+                whileHover="hover"
+              >
+                {/* Card background glow on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-900 to-blue-900 opacity-0 group-hover:opacity-30 transition-opacity duration-300 rounded-2xl"></div>
+                <div className="relative z-10 flex flex-col items-center">
+                  <div className="mb-4 p-4 rounded-full bg-gray-700 group-hover:bg-purple-800 transition-colors duration-300">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-2xl font-semibold mb-3 text-white group-hover:text-purple-300 transition-colors duration-300">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-400 text-base">
+                    {feature.description}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section
+        ref={howItWorksRef}
+        className="py-28 px-4 bg-gray-950 relative z-10"
+      >
+        <div className="max-w-6xl mx-auto text-center">
+          <motion.h2
+            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-16 text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-500 leading-tight"
+            initial={{ opacity: 0, y: 50 }}
+            animate={isHowItWorksInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          >
+            Your Journey to an Amazing Portfolio
+          </motion.h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+            {/* Connecting Lines */}
+            <div className="hidden md:block absolute top-1/2 left-0 right-0 -translate-y-1/2 h-0.5 bg-gray-700">
+              <motion.div
+                className="absolute top-0 left-0 h-full bg-gradient-to-r from-purple-500 to-blue-500"
+                initial={{ width: 0 }}
+                animate={isHowItWorksInView ? { width: "100%" } : {}}
+                transition={{
+                  delay: 0.5,
+                  duration: 1.5,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              ></motion.div>
+            </div>
+            <div className="hidden md:flex absolute top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-purple-500 z-20 shadow-lg"></div>
+            <div className="hidden md:flex absolute top-1/2 left-2/3 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-blue-500 z-20 shadow-lg"></div>
+
+            {howItWorksSteps.map((step, index) => (
+              <motion.div
+                key={index}
+                className="bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-700 flex flex-col items-center text-center relative z-10"
+                variants={stepVariants}
+                initial="hidden"
+                animate={isHowItWorksInView ? "visible" : "hidden"}
+                transition={{
+                  delay: index * 0.2 + 0.3,
+                  ...stepVariants.visible.transition,
+                }}
+                whileHover="hover"
+              >
+                <div className="mb-6 p-4 rounded-full bg-gray-700 border border-purple-600 flex items-center justify-center shadow-md group-hover:bg-purple-700 transition-colors duration-300">
+                  {step.icon}
+                </div>
+                <h3 className="text-2xl font-semibold mb-4 text-white">
+                  {step.title}
+                </h3>
+                <p className="text-gray-400 text-base">{step.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Templates Showcase Section */}
+      <section
+        id="templates"
+        ref={templatesRef}
+        className="py-28 px-4 relative z-10 bg-gray-900/50"
+      >
+        <div className="max-w-7xl mx-auto text-center">
+          <motion.h2
+            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-16 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-500 leading-tight"
+            initial={{ opacity: 0, y: 50 }}
+            animate={isTemplatesInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <a href="#templates">Templates</a>
+          </motion.h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+            {templatePlaceholders.map((template, index) => (
+              <motion.div
+                key={index}
+                className={`bg-gray-800 p-6 rounded-2xl shadow-xl border border-gray-700 overflow-hidden flex flex-col group relative`}
+                initial={{ opacity: 0, y: 50 }}
+                animate={isTemplatesInView ? { opacity: 1, y: 0 } : {}}
+                transition={{
+                  delay: index * 0.1 + 0.3,
+                  duration: 0.8,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: "0px 0px 50px rgba(0, 255, 255, 0.7)",
+                  borderColor: "rgba(0, 255, 255, 0.7)",
+                }} // Cyan glow
+              >
+                {/* Image placeholder */}
+                <img
+                  src={template.image}
+                  alt={`${template.name} Template Preview`}
+                  className="w-full h-48 object-cover rounded-lg mb-4 border border-gray-600 group-hover:border-cyan-500 transition-colors duration-300"
+                />
+                <h3 className="text-xl font-semibold mb-2 text-white">
+                  {template.name}
+                </h3>
+                <p className="text-gray-400 text-sm flex-grow">
+                  A sleek and modern template perfect for showcasing your
+                  projects and skills with a futuristic touch.
+                </p>
+                <button className="mt-6 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full text-sm font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-300 shadow-md">
+                  Preview
+                </button>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.button
+            className="mt-20 px-10 py-5 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold text-xl rounded-full shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 ease-in-out transform hover:-translate-y-2 focus:outline-none focus:ring-4 focus:ring-blue-600 focus:ring-opacity-75 relative overflow-hidden group"
+            variants={buttonVariants}
+            initial="hidden"
+            animate={isTemplatesInView ? "visible" : "hidden"}
+            transition={{
+              ...structuredClone(buttonVariants.visible.transition),
+              delay: 0.8,
+            }}
+            whileHover="hover"
+            whileTap="tap"
+          >
+            <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-purple-700 to-blue-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+            <span className="relative z-10">View All Templates</span>
+          </motion.button>
+        </div>
+      </section>
+
+      {/* Testimonial Section */}
+      <section className="py-24 px-4 bg-gray-950 relative z-10">
+        <div className="max-w-3xl mx-auto text-center">
+          <motion.p
+            className="text-2xl sm:text-3xl italic text-gray-200 mb-8 leading-relaxed font-light"
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          >
+            &quot;StackVault.dev transformed how I present my work. It&apos;s
+            not just a portfolio, it&apos;s an experience that truly gets
+            noticed and opens doors!&quot;
+          </motion.p>
+          <motion.p
+            className="text-lg font-semibold text-purple-300"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          >
+            — Alex Chen, Lead Product Designer at InnovateTech
+          </motion.p>
+        </div>
+      </section>
+
+      {/* Final Call to Action Section */}
+      <section ref={ctaRef} className="py-28 px-4 text-center relative z-10">
+        <div className="max-w-4xl mx-auto">
+          <motion.h2
+            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-500 leading-tight"
+            initial={{ opacity: 0, y: 50 }}
+            animate={isCtaInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          >
+            Ready to Elevate Your Professional Presence?
+          </motion.h2>
+          <motion.p
+            className="text-lg sm:text-xl lg:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto font-light"
+            initial={{ opacity: 0, y: 30 }}
+            animate={isCtaInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          >
+            Join StackVault.dev today and build an interactive portfolio that
+            truly stands out and opens new opportunities. Your future starts
+            now.
+          </motion.p>
+          <Link href="/login">
+            <motion.button
+              className="px-12 py-6 bg-gradient-to-r from-pink-600 to-purple-600 text-white font-bold text-2xl rounded-full shadow-2xl hover:shadow-pink-500/50 transition-all duration-300 ease-in-out transform hover:-translate-y-2 focus:outline-none focus:ring-4 focus:ring-pink-600 focus:ring-opacity-75 relative overflow-hidden group"
+              variants={buttonVariants}
+              initial="hidden"
+              animate={isCtaInView ? "visible" : "hidden"}
+              whileHover="hover"
+              whileTap="tap"
+              transition={{
+                ...structuredClone(buttonVariants.visible.transition),
+                delay: 0.6,
+              }}
+            >
+              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-pink-700 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+              <span className="relative z-10">Build Your Portfolio Now</span>
+            </motion.button>
+          </Link>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-10 px-4 bg-gray-950 text-center text-gray-500 text-sm relative z-10">
+        <div className="max-w-6xl mx-auto">
+          <p>
+            &copy; {new Date().getFullYear()} StackVault.dev. All rights
+            reserved.
+          </p>
+          <div className="flex justify-center space-x-6 mt-6 text-base">
+            <a href="#" className="hover:text-white transition-colors">
+              Privacy Policy
+            </a>
+            <a href="#" className="hover:text-white transition-colors">
+              Terms of Service
+            </a>
+            <a href="#" className="hover:text-white transition-colors">
+              Contact Us
+            </a>
+          </div>
+        </div>
       </footer>
+
+      {/* Custom CSS for blob animation, font, and grid overlay */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
+
+        body {
+          font-family: 'Inter', sans-serif;
+        }
+
+        @keyframes blob {
+          0% {
+            transform: translate(0px, 0px) scale(1);
+          }
+          33% {
+            transform: translate(30px, -50px) scale(1.1);
+          }
+          66% {
+            transform: translate(-20px, 20px) scale(0.9);
+          }
+          100% {
+            transform: translate(0px, 0px) scale(1);
+          }
+        }
+
+        .animate-blob {
+          animation: blob 7s infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+
+        .animation-delay-4000 {
+          animation-delay: 4s;
+        }
+
+        /* Grid Overlay Animation */
+        .grid-overlay {
+          width: 100%;
+          height: 100%;
+          background-image: linear-gradient(to right, #333 1px, transparent 1px),
+                            linear-gradient(to bottom, #333 1px, transparent 1px);
+          background-size: 40px 40px;
+          opacity: 0.3;
+          animation: gridPan 60s linear infinite;
+        }
+
+        @keyframes gridPan {
+          0% {
+            background-position: 0 0;
+          }
+          100% {
+            background-position: -400px -400px;
+          }
+        }
+      `}</style>
     </div>
   );
-}
+};
+
+export default App;
