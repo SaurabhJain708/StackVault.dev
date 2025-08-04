@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@auth/core": "^0.40.0",
+    "@auth/nextjs": "0.0.0-380f8d56",
     "@hookform/resolvers": "^5.2.1",
     "@repo/db": "workspace:*",
     "@repo/types": "workspace:*",

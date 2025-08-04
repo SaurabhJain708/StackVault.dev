@@ -10,6 +10,7 @@ import {
 } from "@repo/types";
 import { NextRequest } from "next/server";
 
+// @ts-expect-error - TSErrors are expected here due to the way Next.js handles dynamic routes
 export async function GET(
   _request: NextRequest,
   context: { params: { userid: string } },
