@@ -380,8 +380,7 @@ const Dashboard = () => {
                   </div>
                   <button
                     onClick={(e) => {
-                      e.preventDefault();
-                      handleDeleteSocialLink(link.id);
+                      setActiveModal("deletesocialLink");
                     }}
                     className="text-gray-400 hover:text-white ml-2"
                   >
@@ -504,7 +503,10 @@ const Dashboard = () => {
                       <button className="text-blue-400 hover:text-blue-300">
                         Edit
                       </button>
-                      <button className="text-red-400 hover:text-red-300">
+                      <button
+                        onClick={() => setActiveModal("deleteeducation")}
+                        className="text-red-400 hover:text-red-300"
+                      >
                         Delete
                       </button>
                     </div>
@@ -563,7 +565,10 @@ const Dashboard = () => {
                       <button className="text-blue-400 hover:text-blue-300">
                         Edit
                       </button>
-                      <button className="text-red-400 hover:text-red-300">
+                      <button
+                        onClick={() => setActiveModal("deleteexperience")}
+                        className="text-red-400 hover:text-red-300"
+                      >
                         Delete
                       </button>
                     </div>
@@ -619,7 +624,10 @@ const Dashboard = () => {
                     <button className="text-blue-400 hover:text-blue-300">
                       Edit
                     </button>
-                    <button className="text-red-400 hover:text-red-300">
+                    <button
+                      onClick={() => setActiveModal("deleteproject")}
+                      className="text-red-400 hover:text-red-300"
+                    >
                       Delete
                     </button>
                   </div>

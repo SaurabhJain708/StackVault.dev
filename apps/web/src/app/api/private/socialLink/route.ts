@@ -1,7 +1,7 @@
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@repo/db";
 import { socialLinkInput, socialLinkInputSchema } from "@repo/types";
-import { getServerSession } from "next-auth/";
+import { getServerSession } from "next-auth";
 
 export async function GET(request: Request) {
   try {
@@ -36,7 +36,6 @@ export async function POST(request: Request) {
     if (socialLinkInputSchema.safeParse(link).success === false) {
       return new Response("Invalid social link data", { status: 400 });
     }
-    link.userId = session.user.id;
     const count = await prisma.socialLink.count({
       where: { userId: session.user.id },
     });
@@ -44,7 +43,7 @@ export async function POST(request: Request) {
       return new Response("Social link limit reached", { status: 403 });
     }
     await prisma.socialLink.create({
-      data: link,
+      data: { ...link, userId: session.user.id },
     });
 
     return new Response("Social link added successfully", { status: 201 });

@@ -8,13 +8,14 @@ import {
   TemplateSocialLink,
   TemplateProject,
 } from "@repo/types";
+import { NextRequest } from "next/server";
 
 export async function GET(
-  _request: Request,
+  _request: NextRequest,
   context: { params: { userid: string } },
 ) {
   try {
-    const { userid } = await context.params;
+    const { userid } = context.params;
     const user = await prisma.user.findUnique({
       where: { id: userid },
     });
