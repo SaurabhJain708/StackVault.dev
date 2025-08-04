@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
+import { signIn } from "next-auth/react";
 
 // Main App component for the login page
 const Login = () => {
@@ -102,6 +103,13 @@ const Login = () => {
     tap: { scale: 0.93 },
   };
 
+  // Function to handle Google login (to be implemented)
+  const handleGoogleLogin = async () => {
+    await signIn("google", {
+      callbackUrl: "/dashboard",
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white font-inter overflow-hidden relative flex flex-col items-center justify-center">
       {/* Global Background Particles & Grid (Subtle) */}
@@ -192,6 +200,7 @@ const Login = () => {
           animate={isInView ? "visible" : "hidden"}
           whileHover="hover"
           whileTap="tap"
+          onClick={handleGoogleLogin}
         >
           {/* Button inner glow on hover */}
           <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-500 to-green-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>

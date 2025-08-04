@@ -8,6 +8,5 @@ export type TemplateSocialLink = Omit<SocialLink, "createdAt" | "updatedAt">;
 export const socialLinkInputSchema = z.object({
   platform: z.string(),
   url: z.url(),
-  userId: z.string().cuid(),
 });
 export type socialLinkInput = z.infer<typeof socialLinkInputSchema>;
