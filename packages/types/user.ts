@@ -47,12 +47,12 @@ export type TemplateUser = User & {
 import { z } from "zod";
 
 export const userInputSchema = z.object({
-  name: z.string(),
+  name: z.string().max(50),
   age: z.number().int().optional(),
   avatarUrl: z.url().optional(),
-  bio: z.string().optional(),
+  bio: z.string().max(200).optional(),
   available: z.boolean().optional(),
-  location: z.string().optional(),
+  location: z.string().max(100).optional(),
   resumeUrl: z.url().optional(),
   languages: z.array(z.string()).optional(),
   causes: z.array(z.string()).optional(),

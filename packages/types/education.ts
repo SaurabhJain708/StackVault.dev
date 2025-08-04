@@ -12,19 +12,21 @@ export type TemplateEducation = Omit<Education, "createdAt" | "updatedAt"> & {
 };
 
 export const educationInputSchema = z.object({
-  institution: z.string(),
-  degree: z.string(),
-  fieldOfStudy: z.string().optional(),
+  institution: z.string().max(100),
+  degree: z.string().max(100),
+  fieldOfStudy: z.string().max(100).optional(),
   startDate: z.coerce.date(),
   endDate: z.coerce.date().optional(),
   institutionUrl: z.url().optional(),
-  description: z.string().optional(),
+  description: z.string().max(200).optional(),
   imageUrl: z.url().optional(),
-  grade: z.string().optional(),
-  activities: z.array(z.string()).optional(),
-  userId: z.cuid(),
+  grade: z.string().max(10).optional(),
+  activities: z.array(z.string()).max(5).optional(),
   credentialUrl: z.url().optional(),
-  skills: z.array(z.object({ id: z.cuid() })).optional(),
+  skills: z
+    .array(z.object({ id: z.cuid() }))
+    .max(5)
+    .optional(),
 });
 
 export type educationInput = z.infer<typeof educationInputSchema>;

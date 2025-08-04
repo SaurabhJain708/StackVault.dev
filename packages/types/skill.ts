@@ -20,7 +20,7 @@ export type TemplateSkill = Omit<Skill, "createdAt" | "updatedAt"> & {
 };
 
 export const skillInputSchema = z.object({
-  name: z.string(),
-  description: z.string().optional(),
+  name: z.string().max(50),
+  description: z.string().max(200).optional(),
 });
 export type skillInput = z.infer<typeof skillInputSchema>;

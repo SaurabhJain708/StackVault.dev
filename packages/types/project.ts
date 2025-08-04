@@ -12,11 +12,10 @@ export type TemplateProject = Omit<Project, "createdAt" | "updatedAt"> & {
 };
 
 export const projectInputSchema = z.object({
-  name: z.string(),
-  description: z.string().optional(),
+  name: z.string().max(100),
+  description: z.string().max(200).optional(),
   imageUrl: z.url().optional(),
   url: z.url().optional(),
-  userId: z.cuid(),
   skills: z.array(z.object({ id: z.cuid() })).optional(),
 });
 export type projectInput = z.infer<typeof projectInputSchema>;

@@ -6,8 +6,19 @@ import { Modal } from "@/components/modals/dashboard.modal";
 import { CertForm } from "@/components/dashboard/certForm";
 import { SkillForm } from "@/components/dashboard/skillForm";
 import { SocialLinkForm } from "@/components/dashboard/socialLinkForm";
-import { certInput, skillInput, socialLinkInput } from "@repo/types";
+import {
+  certInput,
+  educationInput,
+  experienceInput,
+  projectInput,
+  skillInput,
+  socialLinkInput,
+} from "@repo/types";
 import { easeOut } from "framer-motion"; // if available in your version
+import { ExperienceForm } from "@/components/dashboard/experienceForm";
+import { EducationForm } from "@/components/dashboard/educationForm";
+import { ProjectForm } from "@/components/dashboard/projectForm";
+import { DeleteForm } from "@/components/dashboard/deleteForm";
 
 // Mock data to demonstrate the layout
 const mockUser = {
@@ -111,7 +122,19 @@ const mockProjects = [
 
 const Dashboard = () => {
   const [activeModal, setActiveModal] = useState<
-    null | "cert" | "skill" | "socialLink"
+    | null
+    | "cert"
+    | "skill"
+    | "socialLink"
+    | "experience"
+    | "education"
+    | "project"
+    | "deletecert"
+    | "deleteskill"
+    | "deletesocialLink"
+    | "deleteexperience"
+    | "deleteeducation"
+    | "deleteproject"
   >(null);
 
   const containerRef = useRef(null);
@@ -168,6 +191,37 @@ const Dashboard = () => {
   const handleDeleteSocialLink = (id: string) => {
     console.log("Deleting social link with ID:", id);
     // You would call your DELETE /api/socialLinks endpoint here
+  };
+
+  const handleAddExperience = (formData: experienceInput) => {
+    console.log("Adding new experience:", formData);
+    // You would call your POST /api/experiences endpoint here
+    setActiveModal(null);
+  };
+
+  const handleAddEducation = (formData: educationInput) => {
+    console.log("Adding new education:", formData);
+    // You would call your POST /api/educations endpoint here
+    setActiveModal(null);
+  };
+
+  const handleAddProject = (formData: projectInput) => {
+    console.log("Adding new project:", formData);
+    // You would call your POST /api/projects endpoint here
+    setActiveModal(null);
+  };
+
+  const handleDeleteExperience = (id: string) => {
+    console.log("Deleting experience with ID:", id);
+    // You would call your DELETE /api/experiences endpoint here
+  };
+  const handleDeleteEducation = (id: string) => {
+    console.log("Deleting education with ID:", id);
+    // You would call your DELETE /api/educations endpoint here
+  };
+  const handleDeleteProject = (id: string) => {
+    console.log("Deleting project with ID:", id);
+    // You would call your DELETE /api/projects endpoint here
   };
 
   return (
@@ -379,7 +433,7 @@ const Dashboard = () => {
                         Edit
                       </button>
                       <button
-                        onClick={() => handleDeleteCert(cert.id)}
+                        onClick={() => setActiveModal("deletecert")}
                         className="text-red-400 hover:text-red-300"
                       >
                         Delete
@@ -401,7 +455,12 @@ const Dashboard = () => {
           >
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold text-white">Education</h2>
-              <button className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors text-sm">
+              <button
+                onClick={() => {
+                  setActiveModal("education");
+                }}
+                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors text-sm"
+              >
                 <Plus size={16} />
               </button>
             </div>
@@ -457,7 +516,12 @@ const Dashboard = () => {
           >
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold text-white">Experience</h2>
-              <button className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors text-sm">
+              <button
+                onClick={() => {
+                  setActiveModal("experience");
+                }}
+                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors text-sm"
+              >
                 <Plus size={16} />
               </button>
             </div>
@@ -511,7 +575,12 @@ const Dashboard = () => {
           >
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold text-white">Projects</h2>
-              <button className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors text-sm">
+              <button
+                onClick={() => {
+                  setActiveModal("project");
+                }}
+                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors text-sm"
+              >
                 <Plus size={16} />
               </button>
             </div>
@@ -574,6 +643,84 @@ const Dashboard = () => {
             onClose={() => setActiveModal(null)}
           >
             <SocialLinkForm onSubmit={handleAddSocialLink} />
+          </Modal>
+        )}
+        {activeModal === "experience" && (
+          <Modal
+            title="Add New Experience"
+            onClose={() => setActiveModal(null)}
+          >
+            <ExperienceForm onSubmit={handleAddExperience} />
+          </Modal>
+        )}
+        {activeModal === "education" && (
+          <Modal title="Add New Education" onClose={() => setActiveModal(null)}>
+            <EducationForm onSubmit={handleAddEducation} />
+          </Modal>
+        )}
+        {activeModal === "project" && (
+          <Modal title="Add New Project" onClose={() => setActiveModal(null)}>
+            <ProjectForm onSubmit={handleAddProject} />
+          </Modal>
+        )}
+        {activeModal === "deletecert" && (
+          <Modal
+            title="Delete Certification"
+            onClose={() => setActiveModal(null)}
+          >
+            <DeleteForm
+              Title="Certification"
+              id="cert-id"
+              onDelete={handleDeleteCert}
+            />
+          </Modal>
+        )}
+        {activeModal === "deleteskill" && (
+          <Modal title="Delete Skill" onClose={() => setActiveModal(null)}>
+            <DeleteForm
+              Title="Skill"
+              id="skill-id"
+              onDelete={handleDeleteSkill}
+            />
+          </Modal>
+        )}
+        {activeModal === "deletesocialLink" && (
+          <Modal
+            title="Delete Social Link"
+            onClose={() => setActiveModal(null)}
+          >
+            <DeleteForm
+              Title="Social Link"
+              id="social-link-id"
+              onDelete={handleDeleteSocialLink}
+            />
+          </Modal>
+        )}
+        {activeModal === "deleteexperience" && (
+          <Modal title="Delete Experience" onClose={() => setActiveModal(null)}>
+            <DeleteForm
+              Title="Experience"
+              id="experience-id"
+              onDelete={handleDeleteExperience}
+            />
+          </Modal>
+        )}
+        {activeModal === "deleteeducation" && (
+          <Modal title="Delete Education" onClose={() => setActiveModal(null)}>
+            <DeleteForm
+              Title="Education"
+              id="education-id"
+              onDelete={handleDeleteEducation}
+            />
+          </Modal>
+        )}
+        {activeModal === "deleteproject" && (
+          <Modal title="Delete Project" onClose={() => setActiveModal(null)}>
+            <DeleteForm
+              Title="Project"
+              id="project-id"
+              onDelete={handleDeleteProject}
+            />
           </Modal>
         )}
       </AnimatePresence>

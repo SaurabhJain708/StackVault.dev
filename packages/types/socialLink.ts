@@ -6,7 +6,7 @@ export type socialLink = SocialLink;
 export type TemplateSocialLink = Omit<SocialLink, "createdAt" | "updatedAt">;
 
 export const socialLinkInputSchema = z.object({
-  platform: z.string(),
+  platform: z.string().max(20),
   url: z.url(),
 });
 export type socialLinkInput = z.infer<typeof socialLinkInputSchema>;

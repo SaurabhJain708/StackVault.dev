@@ -12,14 +12,13 @@ export type TemplateExperience = Omit<Experience, "createdAt" | "updatedAt"> & {
 };
 
 export const experienceInputSchema = z.object({
-  company: z.string(),
-  position: z.string(),
+  company: z.string().max(100),
+  position: z.string().max(100),
   startDate: z.coerce.date(),
   endDate: z.coerce.date().optional(),
   companyUrl: z.url().optional(),
-  description: z.string().optional(),
+  description: z.string().max(200).optional(),
   imageUrl: z.url().optional(),
-  userId: z.cuid(),
   credentialUrl: z.url().optional(),
   skills: z.array(z.object({ id: z.cuid() })).optional(),
 });

@@ -36,7 +36,10 @@ export async function POST(request: Request) {
     if (!education) {
       return new Response("Please provide education data", { status: 400 });
     }
-    if (educationInputSchema.safeParse(educationData).success === false) {
+    if (
+      educationInputSchema.safeParse(educationData).success === false ||
+      (skills?.length && skills.length > 5)
+    ) {
       return new Response("Invalid education data", { status: 400 });
     }
     const count = await prisma.education.count({
@@ -77,7 +80,10 @@ export async function PATCH(request: Request) {
         status: 400,
       });
     }
-    if (educationInputSchema.safeParse(updateData).success === false) {
+    if (
+      educationInputSchema.safeParse(updateData).success === false ||
+      (skills?.length && skills.length > 5)
+    ) {
       return new Response("Invalid education data", { status: 400 });
     }
     await prisma.education.update({
