@@ -8,15 +8,15 @@ import {
   TemplateSocialLink,
   TemplateProject,
 } from "@repo/types";
-import { NextRequest } from "next/server";
 
-// @ts-expect-error - TSErrors are expected here due to the way Next.js handles dynamic routes
-export async function GET(
-  _request: NextRequest,
-  context: { params: { userid: string } },
-) {
+export async function GET(request: Request) {
   try {
-    const { userid } = context.params;
+    const { searchParams } = new URL(request.url);
+
+    const userid = searchParams.get("userid");
+    if (!userid) {
+      return new Response("Please provide a user ID", { status: 400 });
+    }
     const user = await prisma.user.findUnique({
       where: { id: userid },
     });

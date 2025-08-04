@@ -7,7 +7,7 @@ import type {
   Skill,
   SocialLink,
   Project,
-} from "@repo/db/generated/prisma";
+} from "../db/generated/prisma";
 
 import type { skillWithRelations, TemplateSkill } from "./skill";
 import type { projectWithSkills, TemplateProject } from "./project";

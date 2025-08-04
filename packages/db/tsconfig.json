@@ -6,9 +6,10 @@
         "outDir": "dist",
         "rootDir": "src",
         "types": ["node"],
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "incremental": true
       },
-      "include": ["src"],
+      "include": ["src","generated"],
       "exclude": ["node_modules", "dist"]
 
 }

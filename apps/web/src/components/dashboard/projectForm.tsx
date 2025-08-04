@@ -94,9 +94,6 @@ export const ProjectForm = ({
         )}
       </div>
 
-      {/* Hidden userId */}
-      <input type="hidden" {...register("userId")} />
-
       <div className="flex justify-end">
         <button
           type="submit"

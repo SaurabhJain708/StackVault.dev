@@ -1,4 +1,4 @@
-import type { Cert, Skill } from "@repo/db/generated/prisma";
+import type { Cert, Skill } from "../db/generated/prisma";
 import { z } from "zod";
 
 export type cert = Cert;

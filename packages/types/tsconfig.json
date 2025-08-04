@@ -10,7 +10,8 @@
     "types": ["node"],
     "esModuleInterop": true,
     "paths": {
-      "@repo/db/*": ["../db/*"]
+      "@repo/db/*": ["../db/*"],
+      "@repo/db/generated/prisma": ["../db/generated/prisma"]
     }
   },
   "include": ["."],

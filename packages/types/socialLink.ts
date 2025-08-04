@@ -1,4 +1,4 @@
-import type { SocialLink } from "@repo/db/generated/prisma";
+import type { SocialLink } from "../db/generated/prisma";
 import { z } from "zod";
 
 export type socialLink = SocialLink;
