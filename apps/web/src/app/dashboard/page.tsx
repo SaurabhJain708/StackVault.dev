@@ -224,6 +224,14 @@ const Dashboard = () => {
     // You would call your DELETE /api/projects endpoint here
   };
 
+  useEffect(() => {
+    if (activeModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [activeModal]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 to-black text-gray-200 font-inter overflow-x-hidden relative">
       {/* Background patterns */}
