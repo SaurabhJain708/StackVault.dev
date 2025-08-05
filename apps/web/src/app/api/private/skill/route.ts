@@ -44,6 +44,26 @@ export async function POST(request: Request) {
     if (count > 55) {
       return new Response("Skill limit reached", { status: 403 });
     }
+    const existingSkill = await prisma.skill.findFirst({
+      where: {
+        userId: session.user.id,
+        name: skill.name,
+      },
+    });
+    if (existingSkill) {
+      return new Response(
+        JSON.stringify({
+          message: "Skill already exists",
+          id: existingSkill.id,
+        }),
+        {
+          status: 200,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+    }
     const createdSkill = await prisma.skill.create({
       data: {
         ...skill,

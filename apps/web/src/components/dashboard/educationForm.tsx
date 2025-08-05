@@ -25,6 +25,7 @@ export const EducationForm = ({
     handleSubmit,
     formState: { errors },
     reset,
+    getValues,
   } = useForm({
     resolver: zodResolver(educationInputSchema),
     defaultValues,
@@ -44,6 +45,15 @@ export const EducationForm = ({
       }));
     }
   }, [fileUrl]);
+  useEffect(() => {
+    if (skillId.length > 0) {
+      const currentVal = getValues();
+      reset({
+        ...currentVal,
+        skills: skillId.map((skill) => ({ id: skill.id })),
+      });
+    }
+  }, [skillId]);
 
   return (
     <>

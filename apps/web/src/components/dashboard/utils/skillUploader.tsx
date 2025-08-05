@@ -1,4 +1,5 @@
 "use client";
+import { useCreateSkill } from "@/lib/query/createSkill";
 import React, { useState } from "react";
 
 export const SkillsUploader = ({
@@ -10,6 +11,8 @@ export const SkillsUploader = ({
   >;
   skills?: { id: string; name: string }[];
 }) => {
+  const { mutateAsync } = useCreateSkill();
+
   const [skill, setSkill] = useState("");
   const [status, setStatus] = useState<
     "idle" | "submitting" | "done" | "error"
@@ -23,10 +26,11 @@ export const SkillsUploader = ({
 
     setStatus("submitting");
     try {
-      setSkillId((prev) => [
-        ...prev,
-        { id: crypto.randomUUID(), name: skill.trim() },
-      ]);
+      const response = await mutateAsync({ name: skill.trim() });
+
+      // Use actual ID from API response if available
+      setSkillId((prev) => [...prev, { id: response.id, name: skill.trim() }]);
+
       setStatus("done");
       setSkill("");
     } catch (err) {
