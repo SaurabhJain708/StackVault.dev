@@ -6,8 +6,12 @@ import { skillInput, skillInputSchema } from "@repo/types";
 
 export const SkillForm = ({
   onSubmit,
+  isEdit,
+  defaultValues,
 }: {
   onSubmit: (data: skillInput) => void;
+  isEdit?: boolean;
+  defaultValues?: skillInput;
 }) => {
   const {
     register,
@@ -62,7 +66,7 @@ export const SkillForm = ({
           type="submit"
           className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors"
         >
-          Add Skill
+          {isEdit ? "Update Skill" : "Add Skill"}
         </button>
       </div>
     </form>

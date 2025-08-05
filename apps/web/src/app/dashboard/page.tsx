@@ -33,7 +33,6 @@ const mockUser = {
   languages: ["English", "Spanish"],
   causes: ["Open Source"],
 };
-
 const mockSkills = [
   { id: "skill1", name: "Next.js" },
   { id: "skill2", name: "Microservices" },
@@ -41,12 +40,10 @@ const mockSkills = [
   { id: "skill4", name: "Framer Motion" },
   { id: "skill5", name: "Docker" },
 ];
-
 const mockSocialLinks = [
   { id: "link1", platform: "LinkedIn", url: "https://linkedin.com/in/johndoe" },
   { id: "link2", platform: "GitHub", url: "https://github.com/johndoe" },
 ];
-
 const mockCerts = [
   {
     id: "cert1",
@@ -63,7 +60,6 @@ const mockCerts = [
     skills: [{ id: "skill5", name: "Docker" }],
   },
 ];
-
 const mockEducations = [
   {
     id: "edu1",
@@ -75,7 +71,6 @@ const mockEducations = [
     skills: [{ id: "skill6", name: "Data Science" }],
   },
 ];
-
 const mockExperiences = [
   {
     id: "exp1",
@@ -90,7 +85,6 @@ const mockExperiences = [
     ],
   },
 ];
-
 const mockProjects = [
   {
     id: "proj1",
@@ -114,31 +108,40 @@ const mockProjects = [
   },
 ];
 
-// Re-usable Modal component
-
-// Form for adding/editing a new Certification
-
-// Form for adding/editing a new Skill
-
-// Form for adding/editing a new Social Link
-
+type EditProjectState = { type: "editproject"; data: projectInput };
+type EditEducationState = { type: "editeducation"; data: educationInput };
+type EditSkillState = { type: "editskill"; data: skillInput };
+type EditCertState = { type: "editcert"; data: certInput };
+type EditExperienceState = { type: "editexperience"; data: experienceInput };
+type EditProfileState = { type: "profile"; data: userInput };
+type DeleteCertState = { type: "deletecert"; id: string };
+type DeleteSkillState = { type: "deleteskill"; id: string };
+type DeleteSocialLinkState = { type: "deletesocialLink"; id: string };
+type DeleteExperienceState = { type: "deleteexperience"; id: string };
+type DeleteEducationState = { type: "deleteeducation"; id: string };
+type DeleteProjectState = { type: "deleteproject"; id: string };
+type ModalState =
+  | null
+  | "cert"
+  | "skill"
+  | "socialLink"
+  | "experience"
+  | "education"
+  | "project"
+  | EditProjectState
+  | EditEducationState
+  | EditSkillState
+  | EditCertState
+  | EditExperienceState
+  | EditProfileState
+  | DeleteCertState
+  | DeleteSkillState
+  | DeleteSocialLinkState
+  | DeleteExperienceState
+  | DeleteEducationState
+  | DeleteProjectState;
 const Dashboard = () => {
-  const [activeModal, setActiveModal] = useState<
-    | null
-    | "cert"
-    | "skill"
-    | "socialLink"
-    | "experience"
-    | "education"
-    | "project"
-    | "deletecert"
-    | "deleteskill"
-    | "deletesocialLink"
-    | "deleteexperience"
-    | "deleteeducation"
-    | "deleteproject"
-    | "profile"
-  >(null);
+  const [activeModal, setActiveModal] = useState<ModalState>(null);
 
   const containerRef = useRef(null);
   const isInView = useInView(containerRef, { once: true, amount: 0.1 });
@@ -290,7 +293,9 @@ const Dashboard = () => {
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold text-white">User Profile</h2>
               <button
-                onClick={() => setActiveModal("profile")}
+                onClick={() =>
+                  setActiveModal({ type: "profile", data: mockUser })
+                }
                 className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors text-sm"
               >
                 Edit Profile
@@ -345,7 +350,9 @@ const Dashboard = () => {
                     {skill.name}
                   </span>
                   <button
-                    onClick={() => handleDeleteSkill(skill.id)}
+                    onClick={() =>
+                      setActiveModal({ type: "deleteskill", id: skill.id })
+                    }
                     className="text-gray-400 hover:text-white ml-2"
                   >
                     <X size={16} />
@@ -390,8 +397,8 @@ const Dashboard = () => {
                     <span className="text-sm font-medium">{link.platform}</span>
                   </div>
                   <button
-                    onClick={(e) => {
-                      setActiveModal("deletesocialLink");
+                    onClick={() => {
+                      setActiveModal({ type: "deletesocialLink", id: link.id });
                     }}
                     className="text-gray-400 hover:text-white ml-2"
                   >
@@ -447,11 +454,18 @@ const Dashboard = () => {
                       {new Date(cert.acquiredAt).toLocaleDateString()}
                     </p>
                     <div className="flex space-x-2">
-                      <button className="text-blue-400 hover:text-blue-300">
+                      <button
+                        onClick={() =>
+                          setActiveModal({ type: "editcert", data: cert })
+                        }
+                        className="text-blue-400 hover:text-blue-300"
+                      >
                         Edit
                       </button>
                       <button
-                        onClick={() => setActiveModal("deletecert")}
+                        onClick={() =>
+                          setActiveModal({ type: "deletecert", id: cert.id })
+                        }
                         className="text-red-400 hover:text-red-300"
                       >
                         Delete
@@ -511,11 +525,21 @@ const Dashboard = () => {
                       {new Date(edu.endDate).getFullYear()}
                     </p>
                     <div className="flex space-x-2">
-                      <button className="text-blue-400 hover:text-blue-300">
+                      <button
+                        onClick={() =>
+                          setActiveModal({ type: "editeducation", data: edu })
+                        }
+                        className="text-blue-400 hover:text-blue-300"
+                      >
                         Edit
                       </button>
                       <button
-                        onClick={() => setActiveModal("deleteeducation")}
+                        onClick={() =>
+                          setActiveModal({
+                            type: "deleteeducation",
+                            id: edu.id,
+                          })
+                        }
                         className="text-red-400 hover:text-red-300"
                       >
                         Delete
@@ -573,11 +597,21 @@ const Dashboard = () => {
                       {new Date(exp.endDate).getFullYear()}
                     </p>
                     <div className="flex space-x-2">
-                      <button className="text-blue-400 hover:text-blue-300">
+                      <button
+                        onClick={() =>
+                          setActiveModal({ type: "editexperience", data: exp })
+                        }
+                        className="text-blue-400 hover:text-blue-300"
+                      >
                         Edit
                       </button>
                       <button
-                        onClick={() => setActiveModal("deleteexperience")}
+                        onClick={() =>
+                          setActiveModal({
+                            type: "deleteexperience",
+                            id: exp.id,
+                          })
+                        }
                         className="text-red-400 hover:text-red-300"
                       >
                         Delete
@@ -632,11 +666,21 @@ const Dashboard = () => {
                     ))}
                   </div>
                   <div className="flex justify-end items-center space-x-2 text-sm">
-                    <button className="text-blue-400 hover:text-blue-300">
+                    <button
+                      onClick={() =>
+                        setActiveModal({ type: "editproject", data: project })
+                      }
+                      className="text-blue-400 hover:text-blue-300"
+                    >
                       Edit
                     </button>
                     <button
-                      onClick={() => setActiveModal("deleteproject")}
+                      onClick={() =>
+                        setActiveModal({
+                          type: "deleteproject",
+                          id: project.id,
+                        })
+                      }
                       className="text-red-400 hover:text-red-300"
                     >
                       Delete
@@ -690,67 +734,79 @@ const Dashboard = () => {
             <ProjectForm onSubmit={handleAddProject} />
           </Modal>
         )}
-        {activeModal === "deletecert" && (
-          <Modal
-            title="Delete Certification"
-            onClose={() => setActiveModal(null)}
-          >
-            <DeleteForm
-              Title="Certification"
-              id="cert-id"
-              onDelete={handleDeleteCert}
-            />
-          </Modal>
-        )}
-        {activeModal === "deleteskill" && (
-          <Modal title="Delete Skill" onClose={() => setActiveModal(null)}>
-            <DeleteForm
-              Title="Skill"
-              id="skill-id"
-              onDelete={handleDeleteSkill}
-            />
-          </Modal>
-        )}
-        {activeModal === "deletesocialLink" && (
-          <Modal
-            title="Delete Social Link"
-            onClose={() => setActiveModal(null)}
-          >
-            <DeleteForm
-              Title="Social Link"
-              id="social-link-id"
-              onDelete={handleDeleteSocialLink}
-            />
-          </Modal>
-        )}
-        {activeModal === "deleteexperience" && (
-          <Modal title="Delete Experience" onClose={() => setActiveModal(null)}>
-            <DeleteForm
-              Title="Experience"
-              id="experience-id"
-              onDelete={handleDeleteExperience}
-            />
-          </Modal>
-        )}
-        {activeModal === "deleteeducation" && (
-          <Modal title="Delete Education" onClose={() => setActiveModal(null)}>
-            <DeleteForm
-              Title="Education"
-              id="education-id"
-              onDelete={handleDeleteEducation}
-            />
-          </Modal>
-        )}
-        {activeModal === "deleteproject" && (
-          <Modal title="Delete Project" onClose={() => setActiveModal(null)}>
-            <DeleteForm
-              Title="Project"
-              id="project-id"
-              onDelete={handleDeleteProject}
-            />
-          </Modal>
-        )}
-        {activeModal === "profile" && (
+        {typeof activeModal === "object" &&
+          activeModal?.type === "deletecert" && (
+            <Modal
+              title="Delete Certification"
+              onClose={() => setActiveModal(null)}
+            >
+              <DeleteForm
+                Title="Certification"
+                id={activeModal.id}
+                onDelete={handleDeleteCert}
+              />
+            </Modal>
+          )}
+        {typeof activeModal === "object" &&
+          activeModal?.type === "deleteskill" && (
+            <Modal title="Delete Skill" onClose={() => setActiveModal(null)}>
+              <DeleteForm
+                Title="Skill"
+                id={activeModal.id}
+                onDelete={handleDeleteSkill}
+              />
+            </Modal>
+          )}
+        {typeof activeModal === "object" &&
+          activeModal?.type === "deletesocialLink" && (
+            <Modal
+              title="Delete Social Link"
+              onClose={() => setActiveModal(null)}
+            >
+              <DeleteForm
+                Title="Social Link"
+                id={activeModal.id}
+                onDelete={handleDeleteSocialLink}
+              />
+            </Modal>
+          )}
+        {typeof activeModal === "object" &&
+          activeModal?.type === "deleteexperience" && (
+            <Modal
+              title="Delete Experience"
+              onClose={() => setActiveModal(null)}
+            >
+              <DeleteForm
+                Title="Experience"
+                id={activeModal.id}
+                onDelete={handleDeleteExperience}
+              />
+            </Modal>
+          )}
+        {typeof activeModal === "object" &&
+          activeModal?.type === "deleteeducation" && (
+            <Modal
+              title="Delete Education"
+              onClose={() => setActiveModal(null)}
+            >
+              <DeleteForm
+                Title="Education"
+                id={activeModal.id}
+                onDelete={handleDeleteEducation}
+              />
+            </Modal>
+          )}
+        {typeof activeModal === "object" &&
+          activeModal?.type === "deleteproject" && (
+            <Modal title="Delete Project" onClose={() => setActiveModal(null)}>
+              <DeleteForm
+                Title="Project"
+                id={activeModal.id}
+                onDelete={handleDeleteProject}
+              />
+            </Modal>
+          )}
+        {typeof activeModal === "object" && activeModal?.type === "profile" && (
           <Modal title="Edit Profile" onClose={() => setActiveModal(null)}>
             <UserProfileForm
               defaultValues={mockUser}
@@ -758,6 +814,59 @@ const Dashboard = () => {
             />
           </Modal>
         )}
+        {typeof activeModal === "object" &&
+          activeModal?.type === "editskill" && (
+            <Modal title="Edit Skill" onClose={() => setActiveModal(null)}>
+              <SkillForm
+                isEdit={true}
+                defaultValues={activeModal.data}
+                onSubmit={handleAddSkill}
+              />
+            </Modal>
+          )}
+        {typeof activeModal === "object" &&
+          activeModal?.type === "editcert" && (
+            <Modal
+              title="Edit Certification"
+              onClose={() => setActiveModal(null)}
+            >
+              <CertForm
+                isEdit={true}
+                defaultValues={activeModal.data}
+                onSubmit={handleAddCert}
+              />
+            </Modal>
+          )}
+        {typeof activeModal === "object" &&
+          activeModal?.type === "editproject" && (
+            <Modal title="Edit Project" onClose={() => setActiveModal(null)}>
+              <ProjectForm
+                isEdit={true}
+                defaultValues={activeModal.data}
+                onSubmit={handleAddProject}
+              />
+            </Modal>
+          )}
+        {typeof activeModal === "object" &&
+          activeModal?.type === "editexperience" && (
+            <Modal title="Edit Experience" onClose={() => setActiveModal(null)}>
+              <ExperienceForm
+                isEdit={true}
+                defaultValues={activeModal.data}
+                onSubmit={handleAddExperience}
+              />
+            </Modal>
+          )}
+        {typeof activeModal === "object" &&
+          activeModal?.type === "editeducation" && (
+            <Modal title="Edit Education" onClose={() => setActiveModal(null)}>
+              <EducationForm
+                isEdit={true}
+                defaultValues={activeModal.data}
+                onSubmit={handleAddEducation}
+              />
+            </Modal>
+          )}
       </AnimatePresence>
 
       {/* Custom CSS for base styles and animations */}

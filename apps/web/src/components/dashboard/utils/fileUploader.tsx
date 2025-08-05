@@ -1,4 +1,6 @@
 "use client";
+import { UploadFile } from "@/lib/uploadFile";
+import axios from "axios";
 import React, { useState } from "react";
 
 export const FileUploader = ({
@@ -19,8 +21,19 @@ export const FileUploader = ({
 
     setStatus("uploading");
     try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const { data } = await axios.post("/api/private/fileUpload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (!data.url) throw new Error("Upload failed");
+
+      setUploadUrl(data.url); // Cloudinary URL
       setStatus("done");
-      setUploadUrl(URL.createObjectURL(file)); // Simulate upload by creating a local URL
     } catch (err) {
       console.error("Upload failed:", err);
       setStatus("error");
