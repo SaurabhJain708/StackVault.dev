@@ -25,7 +25,6 @@ export const EducationForm = ({
     handleSubmit,
     formState: { errors },
     reset,
-    getValues,
     setValue,
   } = useForm({
     resolver: zodResolver(educationInputSchema),

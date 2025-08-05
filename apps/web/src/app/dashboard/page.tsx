@@ -13,12 +13,14 @@ import {
   projectInput,
   skillInput,
   socialLinkInput,
+  userInput,
 } from "@repo/types";
 import { easeOut } from "framer-motion"; // if available in your version
 import { ExperienceForm } from "@/components/dashboard/experienceForm";
 import { EducationForm } from "@/components/dashboard/educationForm";
 import { ProjectForm } from "@/components/dashboard/projectForm";
 import { DeleteForm } from "@/components/dashboard/deleteForm";
+import { UserProfileForm } from "@/components/dashboard/profileForm";
 
 // Mock data to demonstrate the layout
 const mockUser = {
@@ -135,6 +137,7 @@ const Dashboard = () => {
     | "deleteexperience"
     | "deleteeducation"
     | "deleteproject"
+    | "profile"
   >(null);
 
   const containerRef = useRef(null);
@@ -223,6 +226,11 @@ const Dashboard = () => {
     console.log("Deleting project with ID:", id);
     // You would call your DELETE /api/projects endpoint here
   };
+  const handleEditProfile = (formData: userInput) => {
+    console.log("Editing profile:", formData);
+    // You would call your PUT /api/user endpoint here
+    setActiveModal(null);
+  };
 
   useEffect(() => {
     if (activeModal) {
@@ -281,7 +289,10 @@ const Dashboard = () => {
           >
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold text-white">User Profile</h2>
-              <button className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors text-sm">
+              <button
+                onClick={() => setActiveModal("profile")}
+                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors text-sm"
+              >
                 Edit Profile
               </button>
             </div>
@@ -737,6 +748,11 @@ const Dashboard = () => {
               id="project-id"
               onDelete={handleDeleteProject}
             />
+          </Modal>
+        )}
+        {activeModal === "profile" && (
+          <Modal title="Edit Profile" onClose={() => setActiveModal(null)}>
+            <UserProfileForm onSubmit={handleEditProfile} />
           </Modal>
         )}
       </AnimatePresence>

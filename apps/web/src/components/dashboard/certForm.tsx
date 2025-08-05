@@ -133,7 +133,7 @@ export const CertForm = ({
             type="submit"
             className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors"
           >
-            Add Cert
+            {isEdit ? "Update Cert" : "Add Cert"}
           </button>
         </div>
       </form>
