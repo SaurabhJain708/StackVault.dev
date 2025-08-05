@@ -2,6 +2,7 @@
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
+import { useIsMobile } from "@/components/hooks/isMobile";
 
 // Template data with image placeholders for easy management
 const templatesData = [
@@ -74,6 +75,8 @@ const templatesData = [
 
 const Templates = () => {
   const templatesRef = useRef(null);
+  const isMobile = useIsMobile();
+
   const isTemplatesInView = useInView(templatesRef, {
     once: true,
     amount: 0.2,
@@ -133,6 +136,8 @@ const Templates = () => {
     }
   };
 
+  const shouldAnimate = isMobile || isTemplatesInView;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white font-inter overflow-hidden relative">
       {/* Global Background Particles (Subtle) */}
@@ -175,7 +180,7 @@ const Templates = () => {
         </div>
         <Link
           href="/login"
-          className="px-4 ml-2 py-2 sm:px-6 sm:py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-sm sm:text-base text-white rounded-full font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-300 shadow-md min-w-[100px]"
+          className="px-4 items-center ml-2 py-2 sm:px-6 sm:py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-sm sm:text-base text-white rounded-full font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-300 shadow-md min-w-[100px]"
         >
           Sign In
         </Link>
@@ -216,7 +221,7 @@ const Templates = () => {
                   className="bg-gray-800 p-6 rounded-2xl shadow-xl border border-gray-700 overflow-hidden flex flex-col relative group transform-gpu"
                   variants={cardVariants}
                   initial="hidden"
-                  animate={isTemplatesInView ? "visible" : "hidden"}
+                  animate={shouldAnimate ? "visible" : "hidden"}
                   transition={{
                     delay: index * 0.15 + 0.3,
                     ...cardVariants.visible.transition,
