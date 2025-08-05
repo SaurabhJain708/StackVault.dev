@@ -752,7 +752,10 @@ const Dashboard = () => {
         )}
         {activeModal === "profile" && (
           <Modal title="Edit Profile" onClose={() => setActiveModal(null)}>
-            <UserProfileForm onSubmit={handleEditProfile} />
+            <UserProfileForm
+              defaultValues={mockUser}
+              onSubmit={handleEditProfile}
+            />
           </Modal>
         )}
       </AnimatePresence>
