@@ -31,12 +31,12 @@ export const useGetSkills = (userId: string) => {
 };
 
 // Hook to create skill
-export const useCreateSkill = (userId: string) => {
+export const useCreateSkill = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createSkill,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["skills", userId] });
+      queryClient.invalidateQueries({ queryKey: ["skills"] });
     },
   });
 };
