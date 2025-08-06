@@ -21,29 +21,42 @@ import { EducationForm } from "@/components/dashboard/educationForm";
 import { ProjectForm } from "@/components/dashboard/projectForm";
 import { DeleteForm } from "@/components/dashboard/deleteForm";
 import { UserProfileForm } from "@/components/dashboard/profileForm";
-import { useCreateCert, useDeleteCert, useUpdateCert } from "@/lib/query/cert";
+import {
+  useCreateCert,
+  useDeleteCert,
+  useGetCerts,
+  useUpdateCert,
+} from "@/lib/query/cert";
 import {
   useCreateSocialLink,
   useDeleteSocialLink,
+  useGetSocialLinks,
 } from "@/lib/query/socialLink";
 import { useSession } from "next-auth/react";
 import {
   useCreateProject,
   useDeleteProject,
+  useGetProjects,
   useUpdateProject,
 } from "@/lib/query/project";
 import {
   useCreateExperience,
   useDeleteExperience,
+  useGetExperiences,
   useUpdateExperience,
 } from "@/lib/query/experience";
-import { useCreateSkill, useDeleteSkill } from "@/lib/query/createSkill";
+import {
+  useCreateSkill,
+  useDeleteSkill,
+  useGetSkills,
+} from "@/lib/query/createSkill";
 import {
   useCreateEducation,
   useDeleteEducation,
+  useGetEducations,
   useUpdateEducation,
 } from "@/lib/query/education";
-import { useUpdateUser } from "@/lib/query/user";
+import { useGetUser, useUpdateUser } from "@/lib/query/user";
 
 // Mock data to demonstrate the layout
 const mockUser = {
@@ -183,15 +196,6 @@ const Dashboard = () => {
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: easeOut } },
   };
 
-  const [data, setData] = useState({
-    user: mockUser,
-    skills: mockSkills,
-    socialLinks: mockSocialLinks,
-    certs: mockCerts,
-    educations: mockEducations,
-    experiences: mockExperiences,
-    projects: mockProjects,
-  });
   const deleteCert = useDeleteCert(userId);
   const deleteSocialLink = useDeleteSocialLink(userId);
   const deleteProject = useDeleteProject(userId);
@@ -208,7 +212,24 @@ const Dashboard = () => {
   const addExperience = useCreateExperience(userId);
   const addEducation = useCreateEducation(userId);
   const addProject = useCreateProject(userId);
-  const addUser = useUpdateUser();
+  const { data: certData } = useGetCerts(userId);
+  const { data: skillData } = useGetSkills(userId);
+  const { data: socialLinkData } = useGetSocialLinks(userId);
+  const { data: educationData } = useGetEducations(userId);
+  const { data: experienceData } = useGetExperiences(userId);
+  const { data: projectData } = useGetProjects(userId);
+  const { data: userData } = useGetUser();
+
+  const [data, setData] = useState({
+    user: mockUser,
+    skills: mockSkills,
+    socialLinks: mockSocialLinks,
+    certs: mockCerts,
+    educations: mockEducations,
+    experiences: mockExperiences,
+    projects: mockProjects,
+  });
+
   const addSkill = useCreateSkill();
 
   const handleAddCert = (formData: certInput) => {
