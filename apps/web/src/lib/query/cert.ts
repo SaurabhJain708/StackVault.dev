@@ -1,6 +1,8 @@
 import { certInput } from "@repo/types";
 import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import type { AxiosError } from "axios";
 
 // Create cert
 const createCert = async (newCert: certInput) => {
@@ -44,6 +46,10 @@ export const useCreateCert = (userId: string) => {
     mutationFn: createCert,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["certs", userId] });
+      toast.success("Certificate added!");
+    },
+    onError: (error: AxiosError) => {
+      toast.error(`Failed to add certificate: ${error.message}`);
     },
   });
 };
@@ -55,6 +61,10 @@ export const useUpdateCert = (userId: string) => {
     mutationFn: updateCert,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["certs", userId] });
+      toast.success("Certificate updated!");
+    },
+    onError: (error: AxiosError) => {
+      toast.error(`Failed to update certificate: ${error.message}`);
     },
   });
 };
@@ -66,6 +76,10 @@ export const useDeleteCert = (userId: string) => {
     mutationFn: deleteCert,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["certs", userId] });
+      toast.success("Certificate deleted!");
+    },
+    onError: (error: AxiosError) => {
+      toast.error(`Failed to delete certificate: ${error.message}`);
     },
   });
 };

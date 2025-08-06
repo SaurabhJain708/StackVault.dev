@@ -1,6 +1,7 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { socialLinkInput } from "@repo/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 // Create a social link
 const createSocialLink = async (link: socialLinkInput) => {
@@ -38,6 +39,10 @@ export const useCreateSocialLink = (userId: string) => {
     mutationFn: createSocialLink,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["socialLinks", userId] });
+      toast.success("Social link added!");
+    },
+    onError: (error: AxiosError) => {
+      toast.error(`Failed to add social link: ${error.message}`);
     },
   });
 };
@@ -49,6 +54,10 @@ export const useDeleteSocialLink = (userId: string) => {
     mutationFn: deleteSocialLink,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["socialLinks", userId] });
+      toast.success("Social link deleted!");
+    },
+    onError: (error: AxiosError) => {
+      toast.error(`Failed to delete social link: ${error.message}`);
     },
   });
 };

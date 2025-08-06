@@ -1,6 +1,7 @@
 import { userInput } from "@repo/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { toast } from "sonner";
 
 // GET
 const getUser = async () => {
@@ -29,6 +30,10 @@ export const useUpdateUser = () => {
     mutationFn: updateUser,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
+      toast.success("User updated!");
+    },
+    onError: (error: AxiosError) => {
+      toast.error(`Failed to update user: ${error.message}`);
     },
   });
 };

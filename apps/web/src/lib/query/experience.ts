@@ -1,7 +1,8 @@
 // lib/hooks/useExperience.ts
 import { experienceInput } from "@repo/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { toast } from "sonner";
 
 // CREATE
 const createExperience = async (experience: experienceInput) => {
@@ -40,6 +41,10 @@ export const useCreateExperience = (userId: string) => {
     mutationFn: createExperience,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["experience", userId] });
+      toast.success("Experience added!");
+    },
+    onError: (error: AxiosError) => {
+      toast.error(`Failed to add experience: ${error.message}`);
     },
   });
 };
@@ -50,6 +55,10 @@ export const useUpdateExperience = (userId: string) => {
     mutationFn: updateExperience,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["experience", userId] });
+      toast.success("Experience updated!");
+    },
+    onError: (error: AxiosError) => {
+      toast.error(`Failed to update experience: ${error.message}`);
     },
   });
 };
@@ -60,6 +69,10 @@ export const useDeleteExperience = (userId: string) => {
     mutationFn: deleteExperience,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["experience", userId] });
+      toast.success("Experience deleted!");
+    },
+    onError: (error: AxiosError) => {
+      toast.error(`Failed to delete experience: ${error.message}`);
     },
   });
 };

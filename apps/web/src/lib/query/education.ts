@@ -2,7 +2,8 @@
 
 import { educationInput } from "@repo/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { toast } from "sonner";
 
 // --- API Functions ---
 
@@ -38,8 +39,12 @@ export const useCreateEducation = (userId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createEducation,
-    onSuccess: (_data, _variables, _context) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["educations", userId] });
+      toast.success("Education added!");
+    },
+    onError: (error: AxiosError) => {
+      toast.error(`Failed to add education: ${error.message}`);
     },
   });
 };
@@ -48,8 +53,12 @@ export const useUpdateEducation = (userId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: updateEducation,
-    onSuccess: (_data, _variables, _context) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["educations", userId] });
+      toast.success("Education updated!");
+    },
+    onError: (error: AxiosError) => {
+      toast.error(`Failed to update education: ${error.message}`);
     },
   });
 };
@@ -58,8 +67,12 @@ export const useDeleteEducation = (userId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteEducation,
-    onSuccess: (_data, _variables, _context) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["educations", userId] });
+      toast.success("Education deleted!");
+    },
+    onError: (error: AxiosError) => {
+      toast.error(`Failed to delete education: ${error.message}`);
     },
   });
 };

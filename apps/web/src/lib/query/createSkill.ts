@@ -1,6 +1,7 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { skillInput } from "@repo/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 // Create a skill
 const createSkill = async (skill: skillInput) => {
   const response = await axios.post("/api/private/skill", { skill });
@@ -37,6 +38,10 @@ export const useCreateSkill = () => {
     mutationFn: createSkill,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["skills"] });
+      toast.success("Skill added!");
+    },
+    onError: (error: AxiosError) => {
+      toast.error(`Failed to add skill: ${error.message}`);
     },
   });
 };
@@ -48,6 +53,10 @@ export const useDeleteSkill = (userId: string) => {
     mutationFn: deleteSkill,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["skills", userId] });
+      toast.success("Skill deleted!");
+    },
+    onError: (error: AxiosError) => {
+      toast.error(`Failed to delete skill: ${error.message}`);
     },
   });
 };

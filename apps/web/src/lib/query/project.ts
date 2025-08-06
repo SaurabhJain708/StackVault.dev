@@ -1,7 +1,8 @@
 // lib/hooks/useProject.ts
 import { projectInput } from "@repo/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { toast } from "sonner";
 
 // CREATE
 const createProject = async (project: projectInput) => {
@@ -48,6 +49,10 @@ export const useCreateProject = (userId: string) => {
     mutationFn: createProject,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["projects", userId] });
+      toast.success("Project added!");
+    },
+    onError: (error: AxiosError) => {
+      toast.error(`Failed to add project: ${error.message}`);
     },
   });
 };
@@ -58,6 +63,10 @@ export const useUpdateProject = (userId: string) => {
     mutationFn: updateProject,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["projects", userId] });
+      toast.success("Project updated!");
+    },
+    onError: (error: AxiosError) => {
+      toast.error(`Failed to update project: ${error.message}`);
     },
   });
 };
@@ -68,6 +77,10 @@ export const useDeleteProject = (userId: string) => {
     mutationFn: deleteProject,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["projects", userId] });
+      toast.success("Project deleted!");
+    },
+    onError: (error: AxiosError) => {
+      toast.error(`Failed to delete project: ${error.message}`);
     },
   });
 };
