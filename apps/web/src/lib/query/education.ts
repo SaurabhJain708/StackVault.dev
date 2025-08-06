@@ -13,7 +13,7 @@ const createEducation = async (education: educationInput) => {
 };
 
 // Update education
-const updateEducation = async (education: educationInput & { id: string }) => {
+const updateEducation = async (education: educationInput) => {
   const response = await axios.patch("/api/private/education", { education });
   return response.data;
 };

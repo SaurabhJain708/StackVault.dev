@@ -30,6 +30,7 @@ export const CertForm = ({
   useEffect(() => {
     if (isEdit && defaultValues) {
       reset(defaultValues);
+      setValue("id", defaultValues.id);
     }
   }, [isEdit, defaultValues, reset]);
 

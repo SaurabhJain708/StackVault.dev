@@ -34,6 +34,7 @@ export const EducationForm = ({
   useEffect(() => {
     if (isEdit && defaultValues) {
       reset(defaultValues);
+      setValue("id", defaultValues.id);
     }
   }, [isEdit, defaultValues, reset]);
 

@@ -31,6 +31,7 @@ export const ProjectForm = ({
   useEffect(() => {
     if (isEdit && defaultValues) {
       reset(defaultValues);
+      setValue("id", defaultValues.id);
     }
   }, [isEdit, defaultValues, reset]);
 

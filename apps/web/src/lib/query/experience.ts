@@ -10,9 +10,7 @@ const createExperience = async (experience: experienceInput) => {
 };
 
 // UPDATE
-const updateExperience = async (
-  experience: experienceInput & { id: string },
-) => {
+const updateExperience = async (experience: experienceInput) => {
   const response = await axios.patch("/api/private/experience", {
     id: experience.id,
     experience,

@@ -21,13 +21,29 @@ import { EducationForm } from "@/components/dashboard/educationForm";
 import { ProjectForm } from "@/components/dashboard/projectForm";
 import { DeleteForm } from "@/components/dashboard/deleteForm";
 import { UserProfileForm } from "@/components/dashboard/profileForm";
-import { useDeleteCert } from "@/lib/query/cert";
-import { useDeleteSocialLink } from "@/lib/query/socialLink";
+import { useCreateCert, useDeleteCert, useUpdateCert } from "@/lib/query/cert";
+import {
+  useCreateSocialLink,
+  useDeleteSocialLink,
+} from "@/lib/query/socialLink";
 import { useSession } from "next-auth/react";
-import { useDeleteProject } from "@/lib/query/project";
-import { useDeleteExperience } from "@/lib/query/experience";
-import { useDeleteSkill } from "@/lib/query/createSkill";
-import { useDeleteEducation } from "@/lib/query/education";
+import {
+  useCreateProject,
+  useDeleteProject,
+  useUpdateProject,
+} from "@/lib/query/project";
+import {
+  useCreateExperience,
+  useDeleteExperience,
+  useUpdateExperience,
+} from "@/lib/query/experience";
+import { useCreateSkill, useDeleteSkill } from "@/lib/query/createSkill";
+import {
+  useCreateEducation,
+  useDeleteEducation,
+  useUpdateEducation,
+} from "@/lib/query/education";
+import { useUpdateUser } from "@/lib/query/user";
 
 // Mock data to demonstrate the layout
 const mockUser = {
@@ -182,78 +198,80 @@ const Dashboard = () => {
   const deleteExperience = useDeleteExperience(userId);
   const deleteEducation = useDeleteEducation(userId);
   const deleteSkill = useDeleteSkill(userId);
+  const editProfile = useUpdateUser();
+  const editCert = useUpdateCert(userId);
+  const editProject = useUpdateProject(userId);
+  const editEducation = useUpdateEducation(userId);
+  const editExperience = useUpdateExperience(userId);
+  const addCert = useCreateCert(userId);
+  const addSocialLink = useCreateSocialLink(userId);
+  const addExperience = useCreateExperience(userId);
+  const addEducation = useCreateEducation(userId);
+  const addProject = useCreateProject(userId);
+  const addUser = useUpdateUser();
+  const addSkill = useCreateSkill();
 
   const handleAddCert = (formData: certInput) => {
-    console.log("Adding new cert:", formData);
-    // You would call your POST /api/certs endpoint here
+    addCert.mutate(formData);
     setActiveModal(null);
   };
-
   const handleAddSkill = (formData: skillInput) => {
-    console.log("Adding new skill:", formData);
-    // You would call your POST /api/skills endpoint here
+    addSkill.mutate(formData);
     setActiveModal(null);
   };
-
   const handleAddSocialLink = (formData: socialLinkInput) => {
-    console.log("Adding new social link:", formData);
-    // You would call your POST /api/socialLinks endpoint here
+    addSocialLink.mutate(formData);
     setActiveModal(null);
   };
-
   const handleAddExperience = (formData: experienceInput) => {
-    console.log("Adding new experience:", formData);
-    // You would call your POST /api/experiences endpoint here
+    addExperience.mutate(formData);
     setActiveModal(null);
   };
-
   const handleAddEducation = (formData: educationInput) => {
-    console.log("Adding new education:", formData);
-    // You would call your POST /api/educations endpoint here
+    addEducation.mutate(formData);
     setActiveModal(null);
   };
-
   const handleAddProject = (formData: projectInput) => {
-    console.log("Adding new project:", formData);
-    // You would call your POST /api/projects endpoint here
+    addProject.mutate(formData);
     setActiveModal(null);
   };
 
   const handleDeleteExperience = (id: string) => {
     deleteExperience.mutate(id);
+    setActiveModal(null);
   };
   const handleDeleteEducation = (id: string) => {
     deleteEducation.mutate(id);
+    setActiveModal(null);
   };
   const handleDeleteProject = (id: string) => {
     deleteProject.mutate(id);
+    setActiveModal(null);
   };
-
   const handleDeleteCert = (id: string) => {
     deleteCert.mutate(id);
+    setActiveModal(null);
   };
-
   const handleDeleteSkill = (id: string) => {
     deleteSkill.mutate(id);
+    setActiveModal(null);
   };
-
   const handleDeleteSocialLink = (id: string) => {
     deleteSocialLink.mutate(id);
+    setActiveModal(null);
   };
 
   const handleEditProfile = (formData: userInput) => {
-    console.log("Editing profile:", formData);
-    // You would call your PUT /api/user endpoint here
+    editProfile.mutate(formData);
     setActiveModal(null);
   };
   const handleEditProject = (formData: projectInput) => {
-    console.log("Editing project:", formData);
-    // You would call your PUT /api/projects endpoint here
+    if (!formData.id) return;
+    editProject.mutate(formData);
     setActiveModal(null);
   };
   const handleEditEducation = (formData: educationInput) => {
-    console.log("Editing education:", formData);
-    // You would call your PUT /api/educations endpoint here
+    editEducation.mutate(formData);
     setActiveModal(null);
   };
   const handleEditSkill = (formData: skillInput) => {
@@ -262,13 +280,11 @@ const Dashboard = () => {
     setActiveModal(null);
   };
   const handleEditCert = (formData: certInput) => {
-    console.log("Editing cert:", formData);
-    // You would call your PUT /api/certs endpoint here
+    editCert.mutate(formData);
     setActiveModal(null);
   };
   const handleEditExperience = (formData: experienceInput) => {
-    console.log("Editing experience:", formData);
-    // You would call your PUT /api/experiences endpoint here
+    editExperience.mutate(formData);
     setActiveModal(null);
   };
 

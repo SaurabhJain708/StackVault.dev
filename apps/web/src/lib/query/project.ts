@@ -10,7 +10,7 @@ const createProject = async (project: projectInput) => {
 };
 
 // UPDATE
-const updateProject = async (project: projectInput & { id: string }) => {
+const updateProject = async (project: projectInput) => {
   const response = await axios.patch("/api/private/project", {
     id: project.id,
     project,

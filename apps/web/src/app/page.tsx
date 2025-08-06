@@ -325,12 +325,6 @@ const App = () => {
           >
             Pricing
           </a>
-          <a
-            href="#"
-            className="text-gray-300 hover:text-green-400 transition-colors text-lg"
-          >
-            Contact
-          </a>
         </div>
         <Link href="/login">
           <button className="px-4 ml-2 py-2 sm:px-6 sm:py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-sm sm:text-base text-white rounded-full font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-300 shadow-md min-w-[100px]">
