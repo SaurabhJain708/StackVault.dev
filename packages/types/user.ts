@@ -47,6 +47,7 @@ export type TemplateUser = User & {
 import { z } from "zod";
 
 export const userInputSchema = z.object({
+  id: z.string().optional(),
   name: z.string().max(50),
   age: z.number().int().optional(),
   avatarUrl: z.url().optional(),

@@ -5,9 +5,7 @@ import axios from "axios";
 
 // CREATE
 const createExperience = async (experience: experienceInput) => {
-  const response = await axios.post("/api/private/experience", {
-    experience,
-  });
+  const response = await axios.post("/api/private/experience", { experience });
   return response.data;
 };
 
@@ -38,32 +36,32 @@ const getExperiences = async (userId: string) => {
 
 // HOOKS
 
-export const useCreateExperience = () => {
+export const useCreateExperience = (userId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createExperience,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["experience"] });
+      queryClient.invalidateQueries({ queryKey: ["experience", userId] });
     },
   });
 };
 
-export const useUpdateExperience = () => {
+export const useUpdateExperience = (userId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: updateExperience,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["experience"] });
+      queryClient.invalidateQueries({ queryKey: ["experience", userId] });
     },
   });
 };
 
-export const useDeleteExperience = () => {
+export const useDeleteExperience = (userId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteExperience,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["experience"] });
+      queryClient.invalidateQueries({ queryKey: ["experience", userId] });
     },
   });
 };
@@ -72,5 +70,6 @@ export const useGetExperiences = (userId: string) => {
   return useQuery({
     queryKey: ["experience", userId],
     queryFn: () => getExperiences(userId),
+    enabled: !!userId,
   });
 };

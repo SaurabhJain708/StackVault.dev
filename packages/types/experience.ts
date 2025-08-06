@@ -21,5 +21,6 @@ export const experienceInputSchema = z.object({
   imageUrl: z.url().optional(),
   credentialUrl: z.url().optional(),
   skills: z.array(z.object({ id: z.cuid() })).optional(),
+  id: z.string().optional(),
 });
 export type experienceInput = z.infer<typeof experienceInputSchema>;

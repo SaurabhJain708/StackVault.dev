@@ -21,6 +21,13 @@ import { EducationForm } from "@/components/dashboard/educationForm";
 import { ProjectForm } from "@/components/dashboard/projectForm";
 import { DeleteForm } from "@/components/dashboard/deleteForm";
 import { UserProfileForm } from "@/components/dashboard/profileForm";
+import { useDeleteCert } from "@/lib/query/cert";
+import { useDeleteSocialLink } from "@/lib/query/socialLink";
+import { useSession } from "next-auth/react";
+import { useDeleteProject } from "@/lib/query/project";
+import { useDeleteExperience } from "@/lib/query/experience";
+import { useDeleteSkill } from "@/lib/query/createSkill";
+import { useDeleteEducation } from "@/lib/query/education";
 
 // Mock data to demonstrate the layout
 const mockUser = {
@@ -140,7 +147,11 @@ type ModalState =
   | DeleteExperienceState
   | DeleteEducationState
   | DeleteProjectState;
+
 const Dashboard = () => {
+  const session = useSession();
+  const userId = session?.data?.user?.id ?? ``;
+
   const [activeModal, setActiveModal] = useState<ModalState>(null);
 
   const containerRef = useRef(null);
@@ -165,6 +176,12 @@ const Dashboard = () => {
     experiences: mockExperiences,
     projects: mockProjects,
   });
+  const deleteCert = useDeleteCert(userId);
+  const deleteSocialLink = useDeleteSocialLink(userId);
+  const deleteProject = useDeleteProject(userId);
+  const deleteExperience = useDeleteExperience(userId);
+  const deleteEducation = useDeleteEducation(userId);
+  const deleteSkill = useDeleteSkill(userId);
 
   const handleAddCert = (formData: certInput) => {
     console.log("Adding new cert:", formData);
@@ -182,21 +199,6 @@ const Dashboard = () => {
     console.log("Adding new social link:", formData);
     // You would call your POST /api/socialLinks endpoint here
     setActiveModal(null);
-  };
-
-  const handleDeleteCert = (id: string) => {
-    console.log("Deleting cert with ID:", id);
-    // You would call your DELETE /api/certs endpoint here
-  };
-
-  const handleDeleteSkill = (id: string) => {
-    console.log("Deleting skill with ID:", id);
-    // You would call your DELETE /api/skills endpoint here
-  };
-
-  const handleDeleteSocialLink = (id: string) => {
-    console.log("Deleting social link with ID:", id);
-    // You would call your DELETE /api/socialLinks endpoint here
   };
 
   const handleAddExperience = (formData: experienceInput) => {
@@ -218,20 +220,55 @@ const Dashboard = () => {
   };
 
   const handleDeleteExperience = (id: string) => {
-    console.log("Deleting experience with ID:", id);
-    // You would call your DELETE /api/experiences endpoint here
+    deleteExperience.mutate(id);
   };
   const handleDeleteEducation = (id: string) => {
-    console.log("Deleting education with ID:", id);
-    // You would call your DELETE /api/educations endpoint here
+    deleteEducation.mutate(id);
   };
   const handleDeleteProject = (id: string) => {
-    console.log("Deleting project with ID:", id);
-    // You would call your DELETE /api/projects endpoint here
+    deleteProject.mutate(id);
   };
+
+  const handleDeleteCert = (id: string) => {
+    deleteCert.mutate(id);
+  };
+
+  const handleDeleteSkill = (id: string) => {
+    deleteSkill.mutate(id);
+  };
+
+  const handleDeleteSocialLink = (id: string) => {
+    deleteSocialLink.mutate(id);
+  };
+
   const handleEditProfile = (formData: userInput) => {
     console.log("Editing profile:", formData);
     // You would call your PUT /api/user endpoint here
+    setActiveModal(null);
+  };
+  const handleEditProject = (formData: projectInput) => {
+    console.log("Editing project:", formData);
+    // You would call your PUT /api/projects endpoint here
+    setActiveModal(null);
+  };
+  const handleEditEducation = (formData: educationInput) => {
+    console.log("Editing education:", formData);
+    // You would call your PUT /api/educations endpoint here
+    setActiveModal(null);
+  };
+  const handleEditSkill = (formData: skillInput) => {
+    console.log("Editing skill:", formData);
+    // You would call your PUT /api/skills endpoint here
+    setActiveModal(null);
+  };
+  const handleEditCert = (formData: certInput) => {
+    console.log("Editing cert:", formData);
+    // You would call your PUT /api/certs endpoint here
+    setActiveModal(null);
+  };
+  const handleEditExperience = (formData: experienceInput) => {
+    console.log("Editing experience:", formData);
+    // You would call your PUT /api/experiences endpoint here
     setActiveModal(null);
   };
 
@@ -820,7 +857,7 @@ const Dashboard = () => {
               <SkillForm
                 isEdit={true}
                 defaultValues={activeModal.data}
-                onSubmit={handleAddSkill}
+                onSubmit={handleEditSkill}
               />
             </Modal>
           )}
@@ -833,7 +870,7 @@ const Dashboard = () => {
               <CertForm
                 isEdit={true}
                 defaultValues={activeModal.data}
-                onSubmit={handleAddCert}
+                onSubmit={handleEditCert}
               />
             </Modal>
           )}
@@ -843,7 +880,7 @@ const Dashboard = () => {
               <ProjectForm
                 isEdit={true}
                 defaultValues={activeModal.data}
-                onSubmit={handleAddProject}
+                onSubmit={handleEditProject}
               />
             </Modal>
           )}
@@ -853,7 +890,7 @@ const Dashboard = () => {
               <ExperienceForm
                 isEdit={true}
                 defaultValues={activeModal.data}
-                onSubmit={handleAddExperience}
+                onSubmit={handleEditExperience}
               />
             </Modal>
           )}
@@ -863,7 +900,7 @@ const Dashboard = () => {
               <EducationForm
                 isEdit={true}
                 defaultValues={activeModal.data}
-                onSubmit={handleAddEducation}
+                onSubmit={handleEditEducation}
               />
             </Modal>
           )}

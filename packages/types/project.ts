@@ -17,5 +17,6 @@ export const projectInputSchema = z.object({
   imageUrl: z.url().optional(),
   url: z.url().optional(),
   skills: z.array(z.object({ id: z.cuid() })).optional(),
+  id: z.string().optional(),
 });
 export type projectInput = z.infer<typeof projectInputSchema>;

@@ -3,6 +3,28 @@ import { prisma } from "@repo/db";
 import { userInput, userInputSchema } from "@repo/types";
 import { getServerSession } from "next-auth";
 
+export async function GET(_request: Request) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+    });
+
+    if (!user) {
+      return new Response("User not found", { status: 404 });
+    }
+
+    return Response.json(user, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return new Response("Internal Server Error", { status: 500 });
+  }
+}
+
 export async function PATCH(request: Request) {
   const session = await getServerSession(authOptions);
 

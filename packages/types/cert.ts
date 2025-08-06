@@ -15,9 +15,10 @@ export const certInputSchema = z.object({
   name: z.string().max(100),
   description: z.string().max(200).optional(),
   imageUrl: z.url().optional(),
-  acquiredAt: z.coerce.date().optional(), // optional if not passed from client
+  acquiredAt: z.coerce.date().optional(),
   credentialUrl: z.url().optional(),
   skills: z.array(z.object({ id: z.cuid() })).optional(),
+  id: z.string().optional(),
 });
 
 export type certInput = z.infer<typeof certInputSchema>;

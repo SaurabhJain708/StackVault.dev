@@ -26,7 +26,7 @@ const deleteProject = async (id: string) => {
   return response.data;
 };
 
-// GET (for current user or public profile user)
+// GET
 const getProjects = async (userId: string) => {
   const response = await axios.get(`/api/private/project?userid=${userId}`);
   return response.data;
@@ -34,40 +34,40 @@ const getProjects = async (userId: string) => {
 
 // HOOKS
 
-export const useCreateProject = () => {
+export const useGetProjects = (userId: string) => {
+  return useQuery({
+    queryKey: ["projects", userId],
+    queryFn: () => getProjects(userId),
+    enabled: !!userId,
+  });
+};
+
+export const useCreateProject = (userId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createProject,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["project"] });
+      queryClient.invalidateQueries({ queryKey: ["projects", userId] });
     },
   });
 };
 
-export const useUpdateProject = () => {
+export const useUpdateProject = (userId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: updateProject,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["project"] });
+      queryClient.invalidateQueries({ queryKey: ["projects", userId] });
     },
   });
 };
 
-export const useDeleteProject = () => {
+export const useDeleteProject = (userId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteProject,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["project"] });
+      queryClient.invalidateQueries({ queryKey: ["projects", userId] });
     },
-  });
-};
-
-export const useGetProjects = (userId: string) => {
-  return useQuery({
-    queryKey: ["project", userId],
-    queryFn: () => getProjects(userId),
-    enabled: !!userId,
   });
 };

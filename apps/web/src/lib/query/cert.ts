@@ -1,63 +1,71 @@
 import { certInput } from "@repo/types";
-import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+// Create cert
 const createCert = async (newCert: certInput) => {
-  const response = await axios.post("/api/private/cert", newCert);
+  const response = await axios.post("/api/private/cert", { cert: newCert });
   return response.data;
 };
 
-const updateCert = async (cert: certInput & { id: string }) => {
-  const response = await axios.patch(`/api/private/cert`, { cert });
+// Update cert
+const updateCert = async (cert: certInput) => {
+  const response = await axios.patch("/api/private/cert", { cert });
   return response.data;
 };
-const deleteCert = async (certId: string) => {
-  const response = await axios.delete(`/api/private/cert`, {
-    data: { id: certId },
+
+// Delete cert
+const deleteCert = async (id: string) => {
+  const response = await axios.delete("/api/private/cert", {
+    data: { id },
   });
   return response.data;
 };
 
-const getCerts = async () => {
-  const response = await axios.get(`/api/private/cert`);
+// Get certs
+const getCerts = async (userId: string) => {
+  const response = await axios.get(`/api/private/cert?userid=${userId}`);
   return response.data;
 };
 
-export const useCreateCert = () => {
+// useQuery to fetch certs
+export const useGetCerts = (userId: string) => {
+  return useQuery({
+    queryKey: ["certs", userId],
+    queryFn: () => getCerts(userId),
+    enabled: !!userId,
+  });
+};
+
+// useMutation to create cert
+export const useCreateCert = (userId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createCert,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["certs"] });
+      queryClient.invalidateQueries({ queryKey: ["certs", userId] });
     },
   });
 };
 
-export const useUpdateCert = () => {
+// useMutation to update cert
+export const useUpdateCert = (userId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: updateCert,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["certs"] });
+      queryClient.invalidateQueries({ queryKey: ["certs", userId] });
     },
   });
 };
 
-export const useDeleteCert = () => {
+// useMutation to delete cert
+export const useDeleteCert = (userId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteCert,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["certs"] });
+      queryClient.invalidateQueries({ queryKey: ["certs", userId] });
     },
-  });
-};
-
-export const useGetCerts = () => {
-  return useQuery({
-    queryKey: ["certs"],
-    queryFn: getCerts,
   });
 };

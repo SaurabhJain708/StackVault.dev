@@ -30,6 +30,7 @@ export const educationInputSchema = z.object({
     .array(z.object({ id: z.cuid() }))
     .max(5)
     .optional(),
+  id: z.string().optional(),
 });
 
 export type educationInput = z.infer<typeof educationInputSchema>;

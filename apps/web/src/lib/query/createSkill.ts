@@ -1,7 +1,6 @@
 import axios from "axios";
 import { skillInput } from "@repo/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
 // Create a skill
 const createSkill = async (skill: skillInput) => {
   const response = await axios.post("/api/private/skill", { skill });
