@@ -26,7 +26,8 @@
       "@repo/types": ["../../packages/types"],
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts","next-env.d.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts","next-env.d.ts","types/**/*.d.ts"
+],
   "exclude": ["node_modules"],
   "references": [
     { "path": "../../packages/types" },
