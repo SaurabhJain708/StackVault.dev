@@ -57,6 +57,8 @@ import {
   useUpdateEducation,
 } from "@/lib/query/education";
 import { useGetUser, useUpdateUser } from "@/lib/query/user";
+import Header from "@/components/dashboard/ui/header";
+import UserProfile from "@/components/dashboard/ui/userProfile";
 
 // Mock data to demonstrate the layout
 const mockUser = {
@@ -156,7 +158,7 @@ type DeleteSocialLinkState = { type: "deletesocialLink"; id: string };
 type DeleteExperienceState = { type: "deleteexperience"; id: string };
 type DeleteEducationState = { type: "deleteeducation"; id: string };
 type DeleteProjectState = { type: "deleteproject"; id: string };
-type ModalState =
+export type ModalState =
   | null
   | "cert"
   | "skill"
@@ -297,7 +299,6 @@ const Dashboard = () => {
   };
   const handleEditSkill = (formData: skillInput) => {
     console.log("Editing skill:", formData);
-    // You would call your PUT /api/skills endpoint here
     setActiveModal(null);
   };
   const handleEditCert = (formData: certInput) => {
@@ -330,71 +331,19 @@ const Dashboard = () => {
       {/* Main Content */}
       <div className="relative z-10 w-full min-h-screen pt-16 pb-8 px-4 sm:px-6 md:px-8">
         {/* Header */}
-        <motion.header
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-md py-4 px-8 flex justify-between items-center border-b border-gray-800 shadow-lg"
-        >
-          <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">
-            StackVault
-          </div>
-          <div className="flex items-center space-x-4">
-            <span className="text-gray-400 text-sm hidden sm:block">
-              Welcome, {data.user.name.split(" ")[0]}
-            </span>
-            <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-sm font-semibold">
-              {data.user.name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")}
-            </div>
-          </div>
-        </motion.header>
+        <Header />
 
         <motion.div
           ref={containerRef}
           className="max-w-6xl mx-auto space-y-12 mt-16 md:mt-24"
         >
           {/* Section: User Profile */}
-          <motion.div
-            id="user"
-            className="space-y-6"
-            variants={sectionVariants}
-            initial="hidden"
-            animate={isInView ? "visible" : "hidden"}
-          >
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-white">User Profile</h2>
-              <button
-                onClick={() =>
-                  setActiveModal({ type: "profile", data: mockUser })
-                }
-                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors text-sm"
-              >
-                Edit Profile
-              </button>
-            </div>
-            <motion.div
-              variants={itemVariants}
-              className="bg-gray-800/70 p-6 rounded-2xl shadow-lg border border-gray-700 flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6"
-            >
-              <img
-                src={data.user.avatarUrl}
-                alt="User Avatar"
-                className="w-24 h-24 rounded-full bg-gray-700 flex-shrink-0 object-cover"
-              />
-              <div className="flex-1 text-center sm:text-left">
-                <h3 className="text-2xl font-bold text-white">
-                  {data.user.name}
-                </h3>
-                <p className="text-sm text-gray-400 mb-2">
-                  {data.user.location}
-                </p>
-                <p className="text-sm text-gray-300">{data.user.bio}</p>
-              </div>
-            </motion.div>
-          </motion.div>
+          <UserProfile
+            sectionVariants={sectionVariants}
+            isInView={isInView}
+            itemVariants={itemVariants}
+            setActiveModal={setActiveModal}
+          />
 
           {/* Section: Skills */}
           <motion.div

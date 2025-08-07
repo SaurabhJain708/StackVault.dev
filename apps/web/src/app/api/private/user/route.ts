@@ -15,7 +15,9 @@ export async function GET(_request: Request) {
     });
 
     if (!user) {
-      return new Response("User not found", { status: 404 });
+      console.log("User not found:", session?.user.id);
+
+      return new Response("User not found", { status: 400 });
     }
 
     return Response.json(user, { status: 200 });
