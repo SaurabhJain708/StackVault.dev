@@ -8,7 +8,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
     "prepare": "husky install",
-    "test:e2e": "pnpm --filter e2e exec playwright test"
+    "test:e2e": "pnpm --filter e2e exec playwright test",
+    "postinstall": "pnpm turbo db:generate"
   },
   "devDependencies": {
     "@playwright/test": "^1.54.1",

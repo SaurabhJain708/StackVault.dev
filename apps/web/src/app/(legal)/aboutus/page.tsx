@@ -81,7 +81,7 @@ export default function AboutUs() {
       >
         <p className="text-sm text-gray-500">
           Built with 💻 + ☕ by{" "}
-          <span className="text-purple-400 font-medium">Saurabh Jain</span>
+          <span className="text-purple-400 font-medium">Saurav Jain</span>
         </p>
       </motion.div>
     </div>
