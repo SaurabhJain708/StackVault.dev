@@ -9,7 +9,7 @@ import { SkillsUploader } from "./utils/skillUploader";
 
 type skills = { id: string; name: string }[];
 
-export const EducationForm = ({
+export default function EducationForm({
   onSubmit,
   isEdit,
   defaultValues,
@@ -17,7 +17,7 @@ export const EducationForm = ({
   onSubmit: (data: educationInput) => void;
   isEdit?: boolean;
   defaultValues?: educationInput;
-}) => {
+}) {
   const [fileUrl, setFileUrl] = useState<string | null>(null);
   const [skillId, setSkillId] = useState<skills>([]);
   const {
@@ -234,4 +234,4 @@ export const EducationForm = ({
       </form>
     </>
   );
-};
+}

@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { FileUploader } from "./utils/fileUploader";
 import { SkillsUploader } from "./utils/skillUploader";
 
-export const ProjectForm = ({
+export default function ProjectForm({
   onSubmit,
   isEdit,
   defaultValues,
@@ -16,7 +16,7 @@ export const ProjectForm = ({
   onSubmit: (data: projectInput) => void;
   isEdit?: boolean;
   defaultValues?: projectInput;
-}) => {
+}) {
   const [skills, setSkills] = useState<{ id: string; name: string }[]>([]);
   const [certUrl, setCertUrl] = useState("");
   const {
@@ -141,4 +141,4 @@ export const ProjectForm = ({
       </form>
     </>
   );
-};
+}

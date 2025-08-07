@@ -4,11 +4,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { socialLinkInput, socialLinkInputSchema } from "@repo/types";
 
-export const SocialLinkForm = ({
+export default function SocialLinkForm({
   onSubmit,
 }: {
   onSubmit: (data: socialLinkInput) => void;
-}) => {
+}) {
   const {
     register,
     handleSubmit,
@@ -65,4 +65,4 @@ export const SocialLinkForm = ({
       </div>
     </form>
   );
-};
+}

@@ -1,4 +1,4 @@
-export const DeleteForm = ({
+export default function DeleteForm({
   onDelete,
   Title,
   id,
@@ -6,7 +6,7 @@ export const DeleteForm = ({
   onDelete: (id: string) => void;
   Title: string;
   id: string;
-}) => {
+}) {
   return (
     <>
       <p>Are you sure you want to delete this {Title}?</p>
@@ -20,4 +20,4 @@ export const DeleteForm = ({
       </button>
     </>
   );
-};
+}

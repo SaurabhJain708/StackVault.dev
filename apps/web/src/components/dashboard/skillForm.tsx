@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { skillInput, skillInputSchema } from "@repo/types";
 
-export const SkillForm = ({
+export default function SkillForm({
   onSubmit,
   isEdit,
   defaultValues,
@@ -12,7 +12,7 @@ export const SkillForm = ({
   onSubmit: (data: skillInput) => void;
   isEdit?: boolean;
   defaultValues?: skillInput;
-}) => {
+}) {
   const {
     register,
     handleSubmit,
@@ -71,4 +71,4 @@ export const SkillForm = ({
       </div>
     </form>
   );
-};
+}

@@ -8,7 +8,7 @@ import { FileUploader } from "./utils/fileUploader";
 import { SkillsUploader } from "./utils/skillUploader";
 import { useEffect, useState } from "react";
 
-export const ExperienceForm = ({
+export default function ExperienceForm({
   onSubmit,
   isEdit,
   defaultValues,
@@ -16,7 +16,7 @@ export const ExperienceForm = ({
   onSubmit: (data: experienceInput) => void;
   isEdit?: boolean;
   defaultValues?: experienceInput;
-}) => {
+}) {
   const [fileUrl, setFileUrl] = useState("");
   const [skills, setSkills] = useState<{ id: string; name: string }[]>([]);
   const {
@@ -210,4 +210,4 @@ export const ExperienceForm = ({
       </form>
     </>
   );
-};
+}

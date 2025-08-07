@@ -6,13 +6,13 @@ import { userInput, userInputSchema } from "@repo/types";
 import { useEffect, useState } from "react";
 import { FileUploader } from "./utils/fileUploader";
 
-export const UserProfileForm = ({
+export default function UserProfileForm({
   onSubmit,
   defaultValues,
 }: {
   onSubmit: (data: userInput) => void;
   defaultValues: userInput;
-}) => {
+}) {
   const {
     register,
     handleSubmit,
@@ -119,4 +119,4 @@ export const UserProfileForm = ({
       </form>
     </>
   );
-};
+}

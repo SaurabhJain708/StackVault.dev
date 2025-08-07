@@ -1,10 +1,8 @@
 "use client";
+import dynamic from "next/dynamic";
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { Modal } from "@/components/modals/dashboard.modal";
-import { CertForm } from "@/components/dashboard/certForm";
-import { SkillForm } from "@/components/dashboard/skillForm";
-import { SocialLinkForm } from "@/components/dashboard/socialLinkForm";
 import {
   certInput,
   educationInput,
@@ -14,12 +12,48 @@ import {
   socialLinkInput,
   userInput,
 } from "@repo/types";
-import { easeOut } from "framer-motion"; // if available in your version
-import { ExperienceForm } from "@/components/dashboard/experienceForm";
-import { EducationForm } from "@/components/dashboard/educationForm";
-import { ProjectForm } from "@/components/dashboard/projectForm";
-import { DeleteForm } from "@/components/dashboard/deleteForm";
-import { UserProfileForm } from "@/components/dashboard/profileForm";
+import { easeOut } from "framer-motion";
+
+const CertForm = dynamic(() => import("@/components/dashboard/certForm"), {
+  loading: () => <Spinner />,
+});
+const SkillForm = dynamic(() => import("@/components/dashboard/skillForm"), {
+  loading: () => <Spinner />,
+});
+const SocialLinkForm = dynamic(
+  () => import("@/components/dashboard/socialLinkForm"),
+  {
+    loading: () => <Spinner />,
+  },
+);
+const ExperienceForm = dynamic(
+  () => import("@/components/dashboard/experienceForm"),
+  {
+    loading: () => <Spinner />,
+  },
+);
+const EducationForm = dynamic(
+  () => import("@/components/dashboard/educationForm"),
+  {
+    loading: () => <Spinner />,
+  },
+);
+const ProjectForm = dynamic(
+  () => import("@/components/dashboard/projectForm"),
+  {
+    loading: () => <Spinner />,
+  },
+);
+const DeleteForm = dynamic(() => import("@/components/dashboard/deleteForm"), {
+  loading: () => <Spinner />,
+});
+const UserProfileForm = dynamic(
+  () => import("@/components/dashboard/profileForm"),
+  {
+    loading: () => <Spinner />,
+  },
+);
+
 import { useCreateCert, useDeleteCert, useUpdateCert } from "@/lib/query/cert";
 import {
   useCreateSocialLink,
@@ -51,6 +85,8 @@ import CertSection from "@/components/dashboard/ui/certSection";
 import EducationSection from "@/components/dashboard/ui/educationSection";
 import ExperienceSection from "@/components/dashboard/ui/experienceSection";
 import ProjectSection from "@/components/dashboard/ui/projectSection";
+import TemplateSection from "@/components/dashboard/ui/templateSection";
+import Spinner from "@/components/spinner";
 
 type EditProjectState = { type: "editproject"; data: projectInput };
 type EditEducationState = { type: "editeducation"; data: educationInput };
@@ -288,6 +324,12 @@ const Dashboard = () => {
             userId={userId}
           />
         </motion.div>
+
+        <TemplateSection
+          sectionVariants={sectionVariants}
+          isInView={isInView}
+          itemVariants={itemVariants}
+        />
       </div>
 
       {/* Modal for Forms */}

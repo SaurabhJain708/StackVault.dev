@@ -7,7 +7,7 @@ import { FileUploader } from "./utils/fileUploader";
 import { SkillsUploader } from "./utils/skillUploader";
 import { useEffect, useState } from "react";
 
-export const CertForm = ({
+export default function CertForm({
   onSubmit,
   isEdit,
   defaultValues,
@@ -15,7 +15,7 @@ export const CertForm = ({
   onSubmit: (data: certInput) => void;
   isEdit?: boolean;
   defaultValues?: certInput;
-}) => {
+}) {
   const {
     register,
     handleSubmit,
@@ -140,4 +140,4 @@ export const CertForm = ({
       </form>
     </>
   );
-};
+}
