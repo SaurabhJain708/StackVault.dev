@@ -2,9 +2,20 @@
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import {
+  SparklesIcon,
+  AdjustmentsHorizontalIcon,
+  PlayCircleIcon,
+  ChartBarIcon,
+} from "@heroicons/react/24/outline";
+import { useRouter } from "next/navigation";
 
 // Main App component for the landing page
 const App = () => {
+  const router = useRouter();
+  const session = useSession();
+  const userId = session?.data?.user?.id ?? ``;
   // Refs for sections to trigger animations on scroll
   const heroRef = useRef(null);
   const isHeroInView = useInView(heroRef, { once: true, amount: 0.5 });
@@ -104,26 +115,7 @@ const App = () => {
   const features = [
     {
       icon: (
-        <svg
-          className="w-16 h-16 text-purple-400 mb-4 drop-shadow-lg"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M9.75 17L9.25 21L14.75 21L15.25 17M12 14V17M12 14C14.2091 14 16 12.2091 16 10C16 7.79086 14.2091 6 12 6C9.79086 6 8 7.79086 8 10C8 12.2091 9.79086 14 12 14Z"
-          ></path>
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M19 10C19 14.9706 12 22 12 22C12 22 5 14.9706 5 10C5 6.13401 8.13401 3 12 3C15.866 3 19 6.13401 19 10Z"
-          ></path>
-        </svg>
+        <SparklesIcon className="w-16 h-16 text-purple-500 mb-4 drop-shadow-lg" />
       ),
       title: "Stunning Templates",
       description:
@@ -131,72 +123,27 @@ const App = () => {
     },
     {
       icon: (
-        <svg
-          className="w-16 h-16 text-blue-400 mb-4 drop-shadow-lg"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M10.325 4.317c.515-1.33 1.958-2.182 3.464-2.182 1.506 0 2.949.852 3.464 2.182M10.325 4.317C12.012 5.617 14 7 14 7s2.012-1.383 3.699-2.683m-4.374 15.362a2.25 2.25 0 01-3.182 0A2.25 2.25 0 0112 19.25c.801 0 1.563-.317 2.121-.879a2.25 2.25 0 010-3.182m-4.374 15.362c-1.33.515-2.182 1.958-2.182 3.464 0 1.506.852 2.949 2.182 3.464M10.325 4.317c.515-1.33 1.958-2.182 3.464-2.182 1.506 0 2.949.852 3.464 2.182M10.325 4.317C12.012 5.617 14 7 14 7s2.012-1.383 3.699-2.683m-4.374 15.362a2.25 2.25 0 01-3.182 0A2.25 2.25 0 0112 19.25c.801 0 1.563-.317 2.121-.879a2.25 2.25 0 010-3.182"
-          ></path>
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M12 22C12 22 5 14.9706 5 10C5 6.13401 8.13401 3 12 3C15.866 3 19 6.13401 19 10C19 14.9706 12 22 12 22Z"
-          ></path>
-        </svg>
+        <AdjustmentsHorizontalIcon className="w-16 h-16 text-blue-500 mb-4 drop-shadow-lg" />
       ),
       title: "Effortless Customization",
       description:
-        "Our intuitive drag-and-drop editor allows you to personalize every aspect of your portfolio without writing a single line of code.",
+        "Our intuitive editor allows you to personalize every aspect of your portfolio without writing a single line of code.",
     },
     {
       icon: (
-        <svg
-          className="w-16 h-16 text-pink-400 mb-4 drop-shadow-lg"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-          ></path>
-        </svg>
+        <PlayCircleIcon className="w-16 h-16 text-pink-500 mb-4 drop-shadow-lg" />
       ),
       title: "Dynamic Showcases",
       description:
-        "Embed your projects, code snippets, videos, and interactive demos directly into your portfolio, bringing your work to life.",
+        "Embed projects, code snippets, videos, and interactive demos to bring your portfolio to life.",
     },
     {
       icon: (
-        <svg
-          className="w-16 h-16 text-green-400 mb-4 drop-shadow-lg"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M16 8v8m-4-5v5m-4-2v2m-2-4h12a2 2 0 012 2v8a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h12a2 2 0 012 2v2"
-          ></path>
-        </svg>
+        <ChartBarIcon className="w-16 h-16 text-green-500 mb-4 drop-shadow-lg" />
       ),
       title: "Insightful Analytics",
       description:
-        "Track visitor engagement, popular sections, and referral sources with built-in analytics to optimize your portfolio’s impact.",
+        "Track visitor engagement and optimize your portfolio’s performance with built-in analytics.",
     },
   ];
 
@@ -326,9 +273,9 @@ const App = () => {
             Pricing
           </a>
         </div>
-        <Link href="/login">
+        <Link href="/dashboard">
           <button className="px-4 ml-2 py-2 sm:px-6 sm:py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-sm sm:text-base text-white rounded-full font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-300 shadow-md min-w-[100px]">
-            Sign In
+            {userId ? "Dashboard" : "Sign In"}
           </button>
         </Link>
       </motion.nav>
@@ -383,7 +330,7 @@ const App = () => {
             experiences that truly showcase your skills, projects, and
             personality.
           </motion.p>
-          <Link href="/login">
+          <Link href="/dashboard">
             <motion.button
               className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-purple-700 to-blue-700 text-white font-semibold sm:font-bold text-base sm:text-xl rounded-full shadow-xl hover:shadow-purple-500/50 transition-all duration-300 ease-in-out transform hover:-translate-y-1 sm:hover:-translate-y-2 focus:outline-none focus:ring-4 focus:ring-purple-600 focus:ring-opacity-75 relative overflow-hidden group mx-auto block"
               variants={buttonVariants}
@@ -576,7 +523,7 @@ const App = () => {
             animate={isTemplatesInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
-            <a href="#templates">Templates</a>
+            <Link href="/templates">Templates</Link>
           </motion.h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
@@ -626,6 +573,7 @@ const App = () => {
               ...structuredClone(buttonVariants.visible.transition),
               delay: 0.8,
             }}
+            onClick={() => router.push("/templates")}
             whileHover="hover"
             whileTap="tap"
           >
@@ -656,7 +604,7 @@ const App = () => {
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
           >
-            — Alex Chen, Lead Product Designer at InnovateTech
+            — Alex Chen, Lead Product Designer
           </motion.p>
         </div>
       </section>
@@ -710,15 +658,24 @@ const App = () => {
             reserved.
           </p>
           <div className="flex justify-center space-x-6 mt-6 text-base">
-            <a href="#" className="hover:text-white transition-colors">
+            <Link
+              href="/privacypolicy"
+              className="hover:text-white transition-colors"
+            >
               Privacy Policy
-            </a>
-            <a href="#" className="hover:text-white transition-colors">
+            </Link>
+            <Link
+              href="/termsofservice"
+              className="hover:text-white transition-colors"
+            >
               Terms of Service
-            </a>
-            <a href="#" className="hover:text-white transition-colors">
+            </Link>
+            <Link
+              href="/contact"
+              className="hover:text-white transition-colors"
+            >
               Contact Us
-            </a>
+            </Link>
           </div>
         </div>
       </footer>
