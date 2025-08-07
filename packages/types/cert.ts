@@ -22,3 +22,25 @@ export const certInputSchema = z.object({
 });
 
 export type certInput = z.infer<typeof certInputSchema>;
+
+export type FrontendCert = {
+  name: string;
+  description: string | undefined;
+  imageUrl: string | undefined;
+  acquiredAt: Date;
+  credentialUrl: string | undefined;
+  id: string;
+  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  skills:
+    | {
+        name: string;
+        id: string;
+        description: string | undefined;
+        userId: string;
+        createdAt: Date;
+        updatedAt: Date;
+      }[]
+    | undefined;
+};

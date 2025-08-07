@@ -59,6 +59,8 @@ import {
 import { useGetUser, useUpdateUser } from "@/lib/query/user";
 import Header from "@/components/dashboard/ui/header";
 import UserProfile from "@/components/dashboard/ui/userProfile";
+import SkillsSection from "@/components/dashboard/ui/skillsSection";
+import SocialLinkSection from "@/components/dashboard/ui/socialLinkSection";
 
 // Mock data to demonstrate the layout
 const mockUser = {
@@ -346,91 +348,22 @@ const Dashboard = () => {
           />
 
           {/* Section: Skills */}
-          <motion.div
-            id="skills"
-            className="space-y-6"
-            variants={sectionVariants}
-            initial="hidden"
-            animate={isInView ? "visible" : "hidden"}
-          >
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-white">Skills</h2>
-              <button
-                onClick={() => setActiveModal("skill")}
-                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors text-sm"
-              >
-                <Plus size={16} />
-              </button>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {data.skills.map((skill) => (
-                <motion.div
-                  key={skill.id}
-                  variants={itemVariants}
-                  className="bg-gray-800/70 p-4 rounded-xl shadow-lg border border-gray-700 flex items-center justify-between hover:border-purple-600 transition-colors"
-                >
-                  <span className="text-sm text-gray-300 font-medium">
-                    {skill.name}
-                  </span>
-                  <button
-                    onClick={() =>
-                      setActiveModal({ type: "deleteskill", id: skill.id })
-                    }
-                    className="text-gray-400 hover:text-white ml-2"
-                  >
-                    <X size={16} />
-                  </button>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+          <SkillsSection
+            sectionVariants={sectionVariants}
+            isInView={isInView}
+            itemVariants={itemVariants}
+            setActiveModal={setActiveModal}
+            userId={userId}
+          />
 
           {/* Section: Social Links */}
-          <motion.div
-            id="socialLinks"
-            className="space-y-6"
-            variants={sectionVariants}
-            initial="hidden"
-            animate={isInView ? "visible" : "hidden"}
-          >
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-white">Social Links</h2>
-              <button
-                onClick={() => setActiveModal("socialLink")}
-                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors text-sm"
-              >
-                <Plus size={16} />
-              </button>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {data.socialLinks.map((link) => (
-                <motion.a
-                  key={link.id}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variants={itemVariants}
-                  className="bg-gray-800/70 p-4 rounded-xl shadow-lg border border-gray-700 flex items-center justify-between hover:border-purple-600 transition-colors"
-                >
-                  <div className="flex items-center space-x-3">
-                    {/* Placeholder for SVG icon based on platform */}
-                    <div className="w-6 h-6 rounded-full bg-gray-700 flex items-center justify-center">
-                      {link.platform.substring(0, 1)}
-                    </div>
-                    <span className="text-sm font-medium">{link.platform}</span>
-                  </div>
-                  <button
-                    onClick={() => {
-                      setActiveModal({ type: "deletesocialLink", id: link.id });
-                    }}
-                    className="text-gray-400 hover:text-white ml-2"
-                  >
-                    <X size={16} />
-                  </button>
-                </motion.a>
-              ))}
-            </div>
-          </motion.div>
+          <SocialLinkSection
+            sectionVariants={sectionVariants}
+            isInView={isInView}
+            itemVariants={itemVariants}
+            setActiveModal={setActiveModal}
+            userId={userId}
+          />
 
           {/* Section: Certifications */}
           <motion.div
