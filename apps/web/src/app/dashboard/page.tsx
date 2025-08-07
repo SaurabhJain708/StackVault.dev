@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
-import { Plus, X } from "lucide-react";
 import { Modal } from "@/components/modals/dashboard.modal";
 import { CertForm } from "@/components/dashboard/certForm";
 import { SkillForm } from "@/components/dashboard/skillForm";
@@ -21,132 +20,37 @@ import { EducationForm } from "@/components/dashboard/educationForm";
 import { ProjectForm } from "@/components/dashboard/projectForm";
 import { DeleteForm } from "@/components/dashboard/deleteForm";
 import { UserProfileForm } from "@/components/dashboard/profileForm";
-import {
-  useCreateCert,
-  useDeleteCert,
-  useGetCerts,
-  useUpdateCert,
-} from "@/lib/query/cert";
+import { useCreateCert, useDeleteCert, useUpdateCert } from "@/lib/query/cert";
 import {
   useCreateSocialLink,
   useDeleteSocialLink,
-  useGetSocialLinks,
 } from "@/lib/query/socialLink";
 import { useSession } from "next-auth/react";
 import {
   useCreateProject,
   useDeleteProject,
-  useGetProjects,
   useUpdateProject,
 } from "@/lib/query/project";
 import {
   useCreateExperience,
   useDeleteExperience,
-  useGetExperiences,
   useUpdateExperience,
 } from "@/lib/query/experience";
-import {
-  useCreateSkill,
-  useDeleteSkill,
-  useGetSkills,
-} from "@/lib/query/createSkill";
+import { useCreateSkill, useDeleteSkill } from "@/lib/query/createSkill";
 import {
   useCreateEducation,
   useDeleteEducation,
-  useGetEducations,
   useUpdateEducation,
 } from "@/lib/query/education";
-import { useGetUser, useUpdateUser } from "@/lib/query/user";
+import { useUpdateUser } from "@/lib/query/user";
 import Header from "@/components/dashboard/ui/header";
 import UserProfile from "@/components/dashboard/ui/userProfile";
 import SkillsSection from "@/components/dashboard/ui/skillsSection";
 import SocialLinkSection from "@/components/dashboard/ui/socialLinkSection";
-
-// Mock data to demonstrate the layout
-const mockUser = {
-  name: "John Doe",
-  bio: "A passionate developer building the future of interactive portfolios with microservices and cloud-native solutions.",
-  available: true,
-  location: "New York, NY",
-  avatarUrl: "https://placehold.co/100x100/581c87/FFFFFF?text=JD",
-  resumeUrl: "https://example.com/resume",
-  languages: ["English", "Spanish"],
-  causes: ["Open Source"],
-};
-const mockSkills = [
-  { id: "skill1", name: "Next.js" },
-  { id: "skill2", name: "Microservices" },
-  { id: "skill3", name: "AWS" },
-  { id: "skill4", name: "Framer Motion" },
-  { id: "skill5", name: "Docker" },
-];
-const mockSocialLinks = [
-  { id: "link1", platform: "LinkedIn", url: "https://linkedin.com/in/johndoe" },
-  { id: "link2", platform: "GitHub", url: "https://github.com/johndoe" },
-];
-const mockCerts = [
-  {
-    id: "cert1",
-    name: "AWS Certified Cloud Practitioner",
-    organization: "Amazon Web Services",
-    acquiredAt: new Date("2023-01-15"),
-    skills: [{ id: "skill3", name: "AWS" }],
-  },
-  {
-    id: "cert2",
-    name: "Docker Certified Associate",
-    organization: "Docker",
-    acquiredAt: new Date("2023-08-22"),
-    skills: [{ id: "skill5", name: "Docker" }],
-  },
-];
-const mockEducations = [
-  {
-    id: "edu1",
-    institution: "IIT Madras",
-    degree: "B.S.",
-    fieldOfStudy: "Data Science",
-    startDate: new Date("2023-08-01"),
-    endDate: new Date("2027-06-30"),
-    skills: [{ id: "skill6", name: "Data Science" }],
-  },
-];
-const mockExperiences = [
-  {
-    id: "exp1",
-    company: "Innovative Solutions Inc.",
-    position: "Software Engineer Intern",
-    startDate: new Date("2024-05-01"),
-    endDate: new Date("2024-08-30"),
-    description: "Developed scalable APIs and user interfaces.",
-    skills: [
-      { id: "skill1", name: "Next.js" },
-      { id: "skill2", name: "Microservices" },
-    ],
-  },
-];
-const mockProjects = [
-  {
-    id: "proj1",
-    name: "StackVault.dev",
-    description: "A portfolio-making SaaS with microservices and CI/CD.",
-    url: "https://stackvault.dev",
-    skills: [
-      { id: "skill1", name: "Next.js" },
-      { id: "skill4", name: "Framer Motion" },
-    ],
-  },
-  {
-    id: "proj2",
-    name: "Open-Source Contribution",
-    description: "Merged PRs in Formbricks and Cal.com.",
-    url: "https://github.com/johndoe",
-    skills: [
-      { id: "skill1", name: "Next.js" },
-      { id: "skill7", name: "TypeScript" },
-    ],
-  },
-];
+import CertSection from "@/components/dashboard/ui/certSection";
+import EducationSection from "@/components/dashboard/ui/educationSection";
+import ExperienceSection from "@/components/dashboard/ui/experienceSection";
+import ProjectSection from "@/components/dashboard/ui/projectSection";
 
 type EditProjectState = { type: "editproject"; data: projectInput };
 type EditEducationState = { type: "editeducation"; data: educationInput };
@@ -216,23 +120,6 @@ const Dashboard = () => {
   const addExperience = useCreateExperience(userId);
   const addEducation = useCreateEducation(userId);
   const addProject = useCreateProject(userId);
-  const { data: certData } = useGetCerts(userId);
-  const { data: skillData } = useGetSkills(userId);
-  const { data: socialLinkData } = useGetSocialLinks(userId);
-  const { data: educationData } = useGetEducations(userId);
-  const { data: experienceData } = useGetExperiences(userId);
-  const { data: projectData } = useGetProjects(userId);
-  const { data: userData } = useGetUser();
-
-  const [data, setData] = useState({
-    user: mockUser,
-    skills: mockSkills,
-    socialLinks: mockSocialLinks,
-    certs: mockCerts,
-    educations: mockEducations,
-    experiences: mockExperiences,
-    projects: mockProjects,
-  });
 
   const addSkill = useCreateSkill();
 
@@ -366,286 +253,40 @@ const Dashboard = () => {
           />
 
           {/* Section: Certifications */}
-          <motion.div
-            id="certs"
-            className="space-y-6"
-            variants={sectionVariants}
-            initial="hidden"
-            animate={isInView ? "visible" : "hidden"}
-          >
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-white">Certifications</h2>
-              <button
-                onClick={() => setActiveModal("cert")}
-                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors text-sm"
-              >
-                <Plus size={16} />
-              </button>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {data.certs.map((cert) => (
-                <motion.div
-                  key={cert.id}
-                  variants={itemVariants}
-                  className="bg-gray-800/70 p-6 rounded-2xl shadow-lg border border-gray-700 hover:border-purple-600 transition-colors"
-                >
-                  <h3 className="text-lg font-semibold text-white">
-                    {cert.name}
-                  </h3>
-                  <p className="text-sm text-gray-400 mb-2">
-                    {cert.organization}
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {cert.skills.map((skill) => (
-                      <span
-                        key={skill.id}
-                        className="px-2 py-1 bg-gray-700 rounded-full text-xs text-gray-300"
-                      >
-                        {skill.name}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <p className="text-gray-500">
-                      {new Date(cert.acquiredAt).toLocaleDateString()}
-                    </p>
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={() =>
-                          setActiveModal({ type: "editcert", data: cert })
-                        }
-                        className="text-blue-400 hover:text-blue-300"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() =>
-                          setActiveModal({ type: "deletecert", id: cert.id })
-                        }
-                        className="text-red-400 hover:text-red-300"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+          <CertSection
+            sectionVariants={sectionVariants}
+            isInView={isInView}
+            setActiveModal={setActiveModal}
+            itemVariants={itemVariants}
+            userId={userId}
+          />
 
           {/* Section: Education */}
-          <motion.div
-            id="education"
-            className="space-y-6"
-            variants={sectionVariants}
-            initial="hidden"
-            animate={isInView ? "visible" : "hidden"}
-          >
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-white">Education</h2>
-              <button
-                onClick={() => {
-                  setActiveModal("education");
-                }}
-                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors text-sm"
-              >
-                <Plus size={16} />
-              </button>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {data.educations.map((edu) => (
-                <motion.div
-                  key={edu.id}
-                  variants={itemVariants}
-                  className="bg-gray-800/70 p-6 rounded-2xl shadow-lg border border-gray-700 hover:border-blue-600 transition-colors"
-                >
-                  <h3 className="text-lg font-semibold text-white">
-                    {edu.degree} in {edu.fieldOfStudy}
-                  </h3>
-                  <p className="text-sm text-gray-400 mb-2">
-                    {edu.institution}
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {edu.skills.map((skill) => (
-                      <span
-                        key={skill.id}
-                        className="px-2 py-1 bg-gray-700 rounded-full text-xs text-gray-300"
-                      >
-                        {skill.name}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <p className="text-gray-500">
-                      {new Date(edu.startDate).getFullYear()} -{" "}
-                      {new Date(edu.endDate).getFullYear()}
-                    </p>
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={() =>
-                          setActiveModal({ type: "editeducation", data: edu })
-                        }
-                        className="text-blue-400 hover:text-blue-300"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() =>
-                          setActiveModal({
-                            type: "deleteeducation",
-                            id: edu.id,
-                          })
-                        }
-                        className="text-red-400 hover:text-red-300"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+          <EducationSection
+            sectionVariants={sectionVariants}
+            isInView={isInView}
+            setActiveModal={setActiveModal}
+            itemVariants={itemVariants}
+            userId={userId}
+          />
 
           {/* Section: Experience */}
-          <motion.div
-            id="experience"
-            className="space-y-6"
-            variants={sectionVariants}
-            initial="hidden"
-            animate={isInView ? "visible" : "hidden"}
-          >
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-white">Experience</h2>
-              <button
-                onClick={() => {
-                  setActiveModal("experience");
-                }}
-                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors text-sm"
-              >
-                <Plus size={16} />
-              </button>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {data.experiences.map((exp) => (
-                <motion.div
-                  key={exp.id}
-                  variants={itemVariants}
-                  className="bg-gray-800/70 p-6 rounded-2xl shadow-lg border border-gray-700 hover:border-pink-600 transition-colors"
-                >
-                  <h3 className="text-lg font-semibold text-white">
-                    {exp.position}
-                  </h3>
-                  <p className="text-sm text-gray-400 mb-2">{exp.company}</p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {exp.skills.map((skill) => (
-                      <span
-                        key={skill.id}
-                        className="px-2 py-1 bg-gray-700 rounded-full text-xs text-gray-300"
-                      >
-                        {skill.name}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <p className="text-gray-500">
-                      {new Date(exp.startDate).getFullYear()} -{" "}
-                      {new Date(exp.endDate).getFullYear()}
-                    </p>
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={() =>
-                          setActiveModal({ type: "editexperience", data: exp })
-                        }
-                        className="text-blue-400 hover:text-blue-300"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() =>
-                          setActiveModal({
-                            type: "deleteexperience",
-                            id: exp.id,
-                          })
-                        }
-                        className="text-red-400 hover:text-red-300"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+          <ExperienceSection
+            sectionVariants={sectionVariants}
+            isInView={isInView}
+            setActiveModal={setActiveModal}
+            itemVariants={itemVariants}
+            userId={userId}
+          />
 
           {/* Section: Projects */}
-          <motion.div
-            id="projects"
-            className="space-y-6"
-            variants={sectionVariants}
-            initial="hidden"
-            animate={isInView ? "visible" : "hidden"}
-          >
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-white">Projects</h2>
-              <button
-                onClick={() => {
-                  setActiveModal("project");
-                }}
-                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors text-sm"
-              >
-                <Plus size={16} />
-              </button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {data.projects.map((project) => (
-                <motion.div
-                  key={project.id}
-                  variants={itemVariants}
-                  className="bg-gray-800/70 p-6 rounded-2xl shadow-lg border border-gray-700 hover:border-green-600 transition-colors"
-                >
-                  <h3 className="text-lg font-semibold text-white">
-                    {project.name}
-                  </h3>
-                  <p className="text-sm text-gray-400 mb-2">
-                    {project.description}
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {project.skills.map((skill) => (
-                      <span
-                        key={skill.id}
-                        className="px-2 py-1 bg-gray-700 rounded-full text-xs text-gray-300"
-                      >
-                        {skill.name}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="flex justify-end items-center space-x-2 text-sm">
-                    <button
-                      onClick={() =>
-                        setActiveModal({ type: "editproject", data: project })
-                      }
-                      className="text-blue-400 hover:text-blue-300"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() =>
-                        setActiveModal({
-                          type: "deleteproject",
-                          id: project.id,
-                        })
-                      }
-                      className="text-red-400 hover:text-red-300"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+          <ProjectSection
+            sectionVariants={sectionVariants}
+            isInView={isInView}
+            setActiveModal={setActiveModal}
+            itemVariants={itemVariants}
+            userId={userId}
+          />
         </motion.div>
       </div>
 
@@ -765,7 +406,7 @@ const Dashboard = () => {
         {typeof activeModal === "object" && activeModal?.type === "profile" && (
           <Modal title="Edit Profile" onClose={() => setActiveModal(null)}>
             <UserProfileForm
-              defaultValues={mockUser}
+              defaultValues={activeModal.data}
               onSubmit={handleEditProfile}
             />
           </Modal>

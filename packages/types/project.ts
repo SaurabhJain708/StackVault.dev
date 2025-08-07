@@ -20,3 +20,24 @@ export const projectInputSchema = z.object({
   id: z.string().optional(),
 });
 export type projectInput = z.infer<typeof projectInputSchema>;
+
+export type FrontendProject = {
+  name: string;
+  id: string;
+  description: string | undefined;
+  imageUrl: string | undefined;
+  url: string | undefined;
+  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  skills:
+    | {
+        name: string;
+        id: string;
+        description: string | undefined;
+        userId: string;
+        createdAt: Date;
+        updatedAt: Date;
+      }[]
+    | undefined;
+};

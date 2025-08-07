@@ -34,3 +34,31 @@ export const educationInputSchema = z.object({
 });
 
 export type educationInput = z.infer<typeof educationInputSchema>;
+
+export type FrontendEducation = {
+  id: string;
+  description: string | undefined;
+  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  institution: string;
+  degree: string;
+  fieldOfStudy: string | undefined;
+  startDate: Date;
+  endDate: Date | undefined;
+  institutionUrl: string | undefined;
+  imageUrl: string | undefined;
+  grade: string | undefined;
+  activities: string[];
+  credentialUrl: string | undefined;
+  skills:
+    | {
+        name: string;
+        id: string;
+        description: string | undefined;
+        userId: string;
+        createdAt: Date;
+        updatedAt: Date;
+      }[]
+    | undefined;
+};
