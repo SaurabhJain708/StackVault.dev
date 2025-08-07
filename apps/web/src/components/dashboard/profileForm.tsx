@@ -36,11 +36,11 @@ export default function UserProfileForm({
 
   useEffect(() => {
     setValue("avatarUrl", avatarUrl);
-  }, [avatarUrl]);
+  }, [avatarUrl, setValue]);
 
   useEffect(() => {
     setValue("resumeUrl", resumeUrl);
-  }, [resumeUrl]);
+  }, [resumeUrl, setValue]);
   return (
     <>
       <FileUploader Title="Upload Avatar" setUploadUrl={setAvatarUrl} />

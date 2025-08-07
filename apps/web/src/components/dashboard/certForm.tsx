@@ -32,13 +32,13 @@ export default function CertForm({
       reset(defaultValues);
       setValue("id", defaultValues.id);
     }
-  }, [isEdit, defaultValues, reset]);
+  }, [isEdit, defaultValues, reset, setValue]);
 
   useEffect(() => {
     if (certUrl) {
       setValue("imageUrl", certUrl);
     }
-  }, [certUrl]);
+  }, [certUrl, setValue]);
   useEffect(() => {
     if (skills.length > 0) {
       setValue(
@@ -46,7 +46,7 @@ export default function CertForm({
         skills.map((skill) => ({ id: skill.id })),
       );
     }
-  }, [skills]);
+  }, [skills, setValue]);
   return (
     <>
       <FileUploader Title={"Upload Certificate"} setUploadUrl={setCertUrl} />

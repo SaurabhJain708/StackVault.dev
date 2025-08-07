@@ -33,13 +33,13 @@ export default function ProjectForm({
       reset(defaultValues);
       setValue("id", defaultValues.id);
     }
-  }, [isEdit, defaultValues, reset]);
+  }, [isEdit, defaultValues, reset, setValue]);
 
   useEffect(() => {
     if (certUrl) {
       setValue("imageUrl", certUrl);
     }
-  }, [certUrl]);
+  }, [certUrl, setValue]);
   useEffect(() => {
     if (skills.length > 0) {
       setValue(
@@ -47,7 +47,7 @@ export default function ProjectForm({
         skills.map((skill) => ({ id: skill.id })),
       );
     }
-  }, [skills]);
+  }, [skills, setValue]);
 
   return (
     <>

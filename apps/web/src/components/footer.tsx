@@ -29,17 +29,17 @@ export default function Footer() {
               <h3 className="text-white font-semibold mb-3">Links</h3>
               <ul className="space-y-2">
                 <li>
-                  <Link href="#" className="hover:text-purple-400">
+                  <Link href="/" className="hover:text-purple-400">
                     Home
                   </Link>
                 </li>
                 <li>
-                  <Link href="#features" className="hover:text-purple-400">
+                  <Link href="/#features" className="hover:text-purple-400">
                     Features
                   </Link>
                 </li>
                 <li>
-                  <Link href="#templates" className="hover:text-purple-400">
+                  <Link href="/#templates" className="hover:text-purple-400">
                     Templates
                   </Link>
                 </li>
@@ -54,22 +54,22 @@ export default function Footer() {
               <h3 className="text-white font-semibold mb-3">Company</h3>
               <ul className="space-y-2">
                 <li>
-                  <Link href="#" className="hover:text-purple-400">
+                  <Link href="/aboutus" className="hover:text-purple-400">
                     About Us
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-purple-400">
+                  <Link href="/contact" className="hover:text-purple-400">
                     Contact
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-purple-400">
+                  <Link href="/blogs" className="hover:text-purple-400">
                     Blog
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-purple-400">
+                  <Link href="/careers" className="hover:text-purple-400">
                     Careers
                   </Link>
                 </li>
@@ -79,12 +79,15 @@ export default function Footer() {
               <h3 className="text-white font-semibold mb-3">Legal</h3>
               <ul className="space-y-2">
                 <li>
-                  <Link href="#" className="hover:text-purple-400">
+                  <Link href="/privacypolicy" className="hover:text-purple-400">
                     Privacy Policy
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-purple-400">
+                  <Link
+                    href="/termsofservice"
+                    className="hover:text-purple-400"
+                  >
                     Terms of Service
                   </Link>
                 </li>
@@ -101,7 +104,7 @@ export default function Footer() {
           </p>
           <div className="flex space-x-5 text-gray-400">
             <Link
-              href="https://linkedin.com"
+              href="https://www.linkedin.com/company/108249867"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-white"
@@ -109,7 +112,7 @@ export default function Footer() {
               <FaLinkedinIn className="w-5 h-5" />
             </Link>
             <Link
-              href="https://youtube.com"
+              href="https://youtube.com/@Stackvault_dev"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-white"
@@ -117,7 +120,7 @@ export default function Footer() {
               <FaYoutube className="w-5 h-5" />
             </Link>
             <Link
-              href="https://facebook.com"
+              href="https://www.facebook.com/people/Stackvault-Dev/pfbid06b6CkwGmkWdWHjqnpdeBfYTZfj3bhcVe6FeQiVWAhuHomnW2NFw6z8ktH6H5FzaPl/"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-white"

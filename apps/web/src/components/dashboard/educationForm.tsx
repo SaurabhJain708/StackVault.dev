@@ -36,13 +36,13 @@ export default function EducationForm({
       reset(defaultValues);
       setValue("id", defaultValues.id);
     }
-  }, [isEdit, defaultValues, reset]);
+  }, [isEdit, defaultValues, reset, setValue]);
 
   useEffect(() => {
     if (fileUrl) {
       setValue("credentialUrl", fileUrl);
     }
-  }, [fileUrl]);
+  }, [fileUrl, setValue]);
   useEffect(() => {
     if (skillId.length > 0) {
       setValue(
@@ -50,7 +50,7 @@ export default function EducationForm({
         skillId.map((skill) => ({ id: skill.id })),
       );
     }
-  }, [skillId]);
+  }, [skillId, setValue]);
 
   return (
     <>
