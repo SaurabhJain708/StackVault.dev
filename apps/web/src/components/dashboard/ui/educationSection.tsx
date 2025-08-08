@@ -69,6 +69,25 @@ export default function EducationSection({
             variants={itemVariants}
             className="bg-gray-800/70 p-6 rounded-2xl shadow-lg border border-gray-700 hover:border-blue-600 transition-colors"
           >
+            {edu.imageUrl ? (
+              <img
+                src={edu.imageUrl}
+                alt={`${edu.degree} certificate`}
+                className="w-full h-40 object-cover rounded-lg mb-4 border border-gray-600"
+              />
+            ) : (
+              <div className="w-full h-40 flex items-center justify-center bg-gray-700/40 rounded-lg mb-4 border border-dashed border-gray-600 text-gray-400 text-xs italic">
+                No image added. <br />
+                <button
+                  onClick={() =>
+                    setActiveModal({ type: "editeducation", data: edu })
+                  }
+                  className="underline text-purple-400 hover:text-purple-300 mt-1"
+                >
+                  + Add image
+                </button>
+              </div>
+            )}
             <h3 className="text-lg font-semibold text-white">
               {edu.degree}
               {edu.fieldOfStudy && ` in ${edu?.fieldOfStudy}`}

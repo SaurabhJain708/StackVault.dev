@@ -22,12 +22,13 @@ export default function ProjectForm({
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     reset,
     setValue,
   } = useForm({
     resolver: zodResolver(projectInputSchema),
   });
+
   useEffect(() => {
     if (isEdit && defaultValues) {
       reset(defaultValues);
@@ -40,6 +41,7 @@ export default function ProjectForm({
       setValue("imageUrl", certUrl);
     }
   }, [certUrl, setValue]);
+
   useEffect(() => {
     if (skills.length > 0) {
       setValue(
@@ -50,14 +52,15 @@ export default function ProjectForm({
   }, [skills, setValue]);
 
   return (
-    <>
-      <FileUploader Title={"Upload Project Image"} setUploadUrl={setCertUrl} />
+    <div className="rounded-xl border border-gray-700 bg-gray-800 p-6 shadow-lg space-y-6">
+      <FileUploader Title="Upload Project Image" setUploadUrl={setCertUrl} />
       <SkillsUploader setSkillId={setSkills} />
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <div>
           <label
             htmlFor="name"
-            className="block text-sm font-medium text-gray-400"
+            className="block text-sm font-medium text-gray-300"
           >
             Project Name
           </label>
@@ -65,17 +68,17 @@ export default function ProjectForm({
             {...register("name")}
             id="name"
             type="text"
-            className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm"
+            className="mt-1 w-full rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
           {errors.name && (
-            <p className="text-red-400 text-xs mt-1">{errors.name.message}</p>
+            <p className="mt-1 text-xs text-red-400">{errors.name.message}</p>
           )}
         </div>
 
         <div>
           <label
             htmlFor="description"
-            className="block text-sm font-medium text-gray-400"
+            className="block text-sm font-medium text-gray-300"
           >
             Description (optional)
           </label>
@@ -83,10 +86,10 @@ export default function ProjectForm({
             {...register("description")}
             id="description"
             rows={3}
-            className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm"
+            className="mt-1 w-full rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
           {errors.description && (
-            <p className="text-red-400 text-xs mt-1">
+            <p className="mt-1 text-xs text-red-400">
               {errors.description.message}
             </p>
           )}
@@ -95,7 +98,7 @@ export default function ProjectForm({
         <div>
           <label
             htmlFor="imageUrl"
-            className="block text-sm font-medium text-gray-400"
+            className="block text-sm font-medium text-gray-300"
           >
             Image URL (optional)
           </label>
@@ -103,10 +106,10 @@ export default function ProjectForm({
             {...register("imageUrl")}
             id="imageUrl"
             type="url"
-            className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm"
+            className="mt-1 w-full rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
           {errors.imageUrl && (
-            <p className="text-red-400 text-xs mt-1">
+            <p className="mt-1 text-xs text-red-400">
               {errors.imageUrl.message}
             </p>
           )}
@@ -115,7 +118,7 @@ export default function ProjectForm({
         <div>
           <label
             htmlFor="url"
-            className="block text-sm font-medium text-gray-400"
+            className="block text-sm font-medium text-gray-300"
           >
             Project URL (optional)
           </label>
@@ -123,22 +126,23 @@ export default function ProjectForm({
             {...register("url")}
             id="url"
             type="url"
-            className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm"
+            className="mt-1 w-full rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
           {errors.url && (
-            <p className="text-red-400 text-xs mt-1">{errors.url.message}</p>
+            <p className="mt-1 text-xs text-red-400">{errors.url.message}</p>
           )}
         </div>
 
         <div className="flex justify-end">
           <button
             type="submit"
-            className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors"
+            disabled={isSubmitting}
+            className="rounded-full bg-purple-600 px-5 py-2 font-semibold text-white shadow-md transition hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Add Project
+            {isEdit ? "Update Project" : "Add Project"}
           </button>
         </div>
       </form>
-    </>
+    </div>
   );
 }

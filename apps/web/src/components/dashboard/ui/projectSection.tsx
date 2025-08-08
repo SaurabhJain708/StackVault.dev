@@ -69,6 +69,26 @@ export default function ProjectSection({
             variants={itemVariants}
             className="bg-gray-800/70 p-6 rounded-2xl shadow-lg border border-gray-700 hover:border-green-600 transition-colors"
           >
+            {project.imageUrl ? (
+              <img
+                src={project.imageUrl}
+                alt={`${project.name} project`}
+                className="w-full h-40 object-cover rounded-lg mb-4 border border-gray-600"
+              />
+            ) : (
+              <div className="w-full h-40 flex items-center justify-center bg-gray-700/40 rounded-lg mb-4 border border-dashed border-gray-600 text-gray-400 text-xs italic">
+                No image added. <br />
+                <button
+                  onClick={() =>
+                    setActiveModal({ type: "editproject", data: project })
+                  }
+                  className="underline text-purple-400 hover:text-purple-300 mt-1"
+                >
+                  + Add image
+                </button>
+              </div>
+            )}
+
             <h3 className="text-lg font-semibold text-white">{project.name}</h3>
             <p className="text-sm text-gray-400 mb-2">
               {project?.description || (
@@ -92,6 +112,43 @@ export default function ProjectSection({
                 <span className="text-gray-500 text-xs italic">
                   No skills added. Add some!
                 </span>
+              )}
+            </div>
+
+            {/* Visit / Add URL */}
+            <div className="mb-4">
+              {project.url ? (
+                <a
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-sm font-medium text-green-400 hover:text-green-300 hover:underline transition-all"
+                >
+                  Visit project
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M14 3h7m0 0v7m0-7L10 14"
+                    />
+                  </svg>
+                </a>
+              ) : (
+                <button
+                  onClick={() =>
+                    setActiveModal({ type: "editproject", data: project })
+                  }
+                  className="text-purple-400 hover:text-purple-300 text-sm underline"
+                >
+                  + Add project URL
+                </button>
               )}
             </div>
 

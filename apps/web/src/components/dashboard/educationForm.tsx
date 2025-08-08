@@ -43,6 +43,7 @@ export default function EducationForm({
       setValue("credentialUrl", fileUrl);
     }
   }, [fileUrl, setValue]);
+
   useEffect(() => {
     if (skillId.length > 0) {
       setValue(
@@ -54,15 +55,19 @@ export default function EducationForm({
 
   return (
     <>
-      <FileUploader setUploadUrl={setFileUrl} Title="Upload Credential" />
-      <SkillsUploader skills={skillId} setSkillId={setSkillId} />
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mb-3">
+      <div className="mb-6 space-y-4">
+        <FileUploader setUploadUrl={setFileUrl} Title="Upload Credential" />
+        <SkillsUploader skills={skillId} setSkillId={setSkillId} />
+      </div>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mb-4">
         <input type="hidden" {...register("credentialUrl")} />
 
-        <div>
+        {/* Institution */}
+        <div className="space-y-1">
           <label
             htmlFor="institution"
-            className="block text-sm font-medium text-gray-400"
+            className="text-sm font-medium text-gray-300"
           >
             Institution
           </label>
@@ -71,20 +76,16 @@ export default function EducationForm({
             id="institution"
             type="text"
             maxLength={100}
-            className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm"
+            className="form-input w-full bg-gray-800 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-purple-600 focus:outline-none px-4 py-2"
           />
           {errors.institution && (
-            <p className="text-red-400 text-xs mt-1">
-              {errors.institution.message}
-            </p>
+            <p className="text-red-400 text-xs">{errors.institution.message}</p>
           )}
         </div>
 
-        <div>
-          <label
-            htmlFor="degree"
-            className="block text-sm font-medium text-gray-400"
-          >
+        {/* Degree */}
+        <div className="space-y-1">
+          <label htmlFor="degree" className="text-sm font-medium text-gray-300">
             Degree
           </label>
           <input
@@ -92,17 +93,18 @@ export default function EducationForm({
             id="degree"
             type="text"
             maxLength={100}
-            className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm"
+            className="form-input w-full bg-gray-800 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-purple-600 focus:outline-none px-4 py-2"
           />
           {errors.degree && (
-            <p className="text-red-400 text-xs mt-1">{errors.degree.message}</p>
+            <p className="text-red-400 text-xs">{errors.degree.message}</p>
           )}
         </div>
 
-        <div>
+        {/* Field of Study */}
+        <div className="space-y-1">
           <label
             htmlFor="fieldOfStudy"
-            className="block text-sm font-medium text-gray-400"
+            className="text-sm font-medium text-gray-300"
           >
             Field of Study (optional)
           </label>
@@ -111,20 +113,21 @@ export default function EducationForm({
             id="fieldOfStudy"
             type="text"
             maxLength={100}
-            className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm"
+            className="form-input w-full bg-gray-800 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-purple-600 focus:outline-none px-4 py-2"
           />
           {errors.fieldOfStudy && (
-            <p className="text-red-400 text-xs mt-1">
+            <p className="text-red-400 text-xs">
               {errors.fieldOfStudy.message}
             </p>
           )}
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div>
+        {/* Start & End Date */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="space-y-1">
             <label
               htmlFor="startDate"
-              className="block text-sm font-medium text-gray-400"
+              className="text-sm font-medium text-gray-300"
             >
               Start Date
             </label>
@@ -132,19 +135,17 @@ export default function EducationForm({
               {...register("startDate")}
               id="startDate"
               type="date"
-              className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm"
+              className="form-input w-full bg-gray-800 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-purple-600 focus:outline-none px-4 py-2"
             />
             {errors.startDate && (
-              <p className="text-red-400 text-xs mt-1">
-                {errors.startDate.message}
-              </p>
+              <p className="text-red-400 text-xs">{errors.startDate.message}</p>
             )}
           </div>
 
-          <div>
+          <div className="space-y-1">
             <label
               htmlFor="endDate"
-              className="block text-sm font-medium text-gray-400"
+              className="text-sm font-medium text-gray-300"
             >
               End Date (optional)
             </label>
@@ -152,20 +153,19 @@ export default function EducationForm({
               {...register("endDate")}
               id="endDate"
               type="date"
-              className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm"
+              className="form-input w-full bg-gray-800 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-purple-600 focus:outline-none px-4 py-2"
             />
             {errors.endDate && (
-              <p className="text-red-400 text-xs mt-1">
-                {errors.endDate.message}
-              </p>
+              <p className="text-red-400 text-xs">{errors.endDate.message}</p>
             )}
           </div>
         </div>
 
-        <div>
+        {/* Institution URL */}
+        <div className="space-y-1">
           <label
             htmlFor="institutionUrl"
-            className="block text-sm font-medium text-gray-400"
+            className="text-sm font-medium text-gray-300"
           >
             Institution Website (optional)
           </label>
@@ -173,19 +173,20 @@ export default function EducationForm({
             {...register("institutionUrl")}
             id="institutionUrl"
             type="url"
-            className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm"
+            className="form-input w-full bg-gray-800 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-purple-600 focus:outline-none px-4 py-2"
           />
           {errors.institutionUrl && (
-            <p className="text-red-400 text-xs mt-1">
+            <p className="text-red-400 text-xs">
               {errors.institutionUrl.message}
             </p>
           )}
         </div>
 
-        <div>
+        {/* Description */}
+        <div className="space-y-1">
           <label
             htmlFor="description"
-            className="block text-sm font-medium text-gray-400"
+            className="text-sm font-medium text-gray-300"
           >
             Description (max 200 characters)
           </label>
@@ -194,20 +195,16 @@ export default function EducationForm({
             id="description"
             rows={3}
             maxLength={200}
-            className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm"
+            className="form-textarea w-full bg-gray-800 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-purple-600 focus:outline-none px-4 py-2"
           />
           {errors.description && (
-            <p className="text-red-400 text-xs mt-1">
-              {errors.description.message}
-            </p>
+            <p className="text-red-400 text-xs">{errors.description.message}</p>
           )}
         </div>
 
-        <div>
-          <label
-            htmlFor="grade"
-            className="block text-sm font-medium text-gray-400"
-          >
+        {/* Grade */}
+        <div className="space-y-1">
+          <label htmlFor="grade" className="text-sm font-medium text-gray-300">
             Grade (optional, max 10 characters)
           </label>
           <input
@@ -215,18 +212,18 @@ export default function EducationForm({
             id="grade"
             type="text"
             maxLength={10}
-            className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm"
+            className="form-input w-full bg-gray-800 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-purple-600 focus:outline-none px-4 py-2"
           />
           {errors.grade && (
-            <p className="text-red-400 text-xs mt-1">{errors.grade.message}</p>
+            <p className="text-red-400 text-xs">{errors.grade.message}</p>
           )}
         </div>
-        {/* skills[] and activities[] could be added later with tag inputs or multiselects and capped at 5 entries */}
 
-        <div className="flex justify-end">
+        {/* Submit */}
+        <div className="flex justify-end pt-4">
           <button
             type="submit"
-            className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors"
+            className="px-5 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-full transition-colors duration-200"
           >
             {isEdit ? "Update Education" : "Add Education"}
           </button>
