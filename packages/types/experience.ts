@@ -16,10 +16,10 @@ export const experienceInputSchema = z.object({
   position: z.string().max(100),
   startDate: z.coerce.date(),
   endDate: z.coerce.date().optional(),
-  companyUrl: z.url().optional(),
+  companyUrl: z.url().optional().or(z.literal("")),
   description: z.string().max(200).optional(),
-  imageUrl: z.url().optional(),
-  credentialUrl: z.url().optional(),
+  imageUrl: z.url().optional().or(z.literal("")),
+  credentialUrl: z.url().optional().or(z.literal("")),
   skills: z
     .array(z.object({ id: z.cuid(), name: z.string().optional() }))
     .max(5)

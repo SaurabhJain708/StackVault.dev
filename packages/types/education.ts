@@ -19,13 +19,14 @@ export const educationInputSchema = z.object({
   endDate: z
     .preprocess((val) => (val === "" ? undefined : val), z.date())
     .optional(),
-  institutionUrl: z.url().optional(),
+  institutionUrl: z.url().optional().or(z.literal("")),
   description: z.string().max(200).optional(),
-  imageUrl: z.url().optional(),
+  imageUrl: z.url().optional().or(z.literal("")),
   grade: z.string().max(10).optional(),
   credentialUrl: z
     .preprocess((val) => (val === "" ? undefined : val), z.string())
-    .optional(),
+    .optional()
+    .or(z.literal("")),
   skills: z
     .array(z.object({ id: z.cuid(), name: z.string().optional() }))
     .max(5)

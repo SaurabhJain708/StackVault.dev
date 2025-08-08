@@ -31,6 +31,11 @@ export default function ProjectForm({
 
   useEffect(() => {
     if (isEdit && defaultValues) {
+      if (defaultValues.skills) {
+        setSkills(
+          defaultValues?.skills.map((s) => ({ id: s.id, name: s.name || "" })),
+        );
+      }
       reset(defaultValues);
       setValue("id", defaultValues.id);
     }
@@ -54,7 +59,7 @@ export default function ProjectForm({
   return (
     <div className="rounded-xl border border-gray-700 bg-gray-800 p-6 shadow-lg space-y-6">
       <FileUploader Title="Upload Project Image" setUploadUrl={setCertUrl} />
-      <SkillsUploader setSkillId={setSkills} />
+      <SkillsUploader setSkillId={setSkills} skills={skills} />
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <div>
@@ -91,26 +96,6 @@ export default function ProjectForm({
           {errors.description && (
             <p className="mt-1 text-xs text-red-400">
               {errors.description.message}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <label
-            htmlFor="imageUrl"
-            className="block text-sm font-medium text-gray-300"
-          >
-            Image URL (optional)
-          </label>
-          <input
-            {...register("imageUrl")}
-            id="imageUrl"
-            type="url"
-            className="mt-1 w-full rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
-          {errors.imageUrl && (
-            <p className="mt-1 text-xs text-red-400">
-              {errors.imageUrl.message}
             </p>
           )}
         </div>

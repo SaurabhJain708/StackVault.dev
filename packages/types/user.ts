@@ -57,6 +57,6 @@ export const userInputSchema = z.object({
   resumeUrl: z.url().optional(),
   languages: z.array(z.string()).optional(),
   causes: z.array(z.string()).optional(),
-  TemplateId: z.string().optional(),
+  TemplateId: z.string().nullable().optional(),
 });
 export type userInput = z.infer<typeof userInputSchema>;

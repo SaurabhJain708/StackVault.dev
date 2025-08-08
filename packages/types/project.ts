@@ -15,7 +15,7 @@ export const projectInputSchema = z.object({
   name: z.string().max(100),
   description: z.string().max(200).optional(),
   imageUrl: z.url().optional(),
-  url: z.url().optional(),
+  url: z.url().optional().or(z.literal("")),
   skills: z
     .array(z.object({ id: z.cuid(), name: z.string().optional() }))
     .max(5)
