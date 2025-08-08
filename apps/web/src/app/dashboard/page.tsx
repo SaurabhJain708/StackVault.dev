@@ -458,11 +458,7 @@ const Dashboard = () => {
         {typeof activeModal === "object" &&
           activeModal?.type === "editskill" && (
             <Modal title="Edit Skill" onClose={() => setActiveModal(null)}>
-              <SkillForm
-                isEdit={true}
-                defaultValues={activeModal.data}
-                onSubmit={handleEditSkill}
-              />
+              <SkillForm isEdit={true} onSubmit={handleEditSkill} />
             </Modal>
           )}
         {typeof activeModal === "object" &&
