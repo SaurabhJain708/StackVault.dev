@@ -14,7 +14,7 @@ export type TemplateCert = Omit<Cert, "createdAt" | "updatedAt"> & {
 export const certInputSchema = z.object({
   name: z.string().max(100),
   description: z.string().max(200).optional(),
-  imageUrl: z.url().optional(),
+  imageUrl: z.url().nullable().optional(),
   acquiredAt: z.coerce.date().optional(),
   credentialUrl: z.url().or(z.literal("")).optional(),
   skills: z

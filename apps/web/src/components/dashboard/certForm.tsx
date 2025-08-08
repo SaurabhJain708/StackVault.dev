@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { certInput, certInputSchema } from "@repo/types";
 import { FileUploader } from "./utils/fileUploader";
 import { SkillsUploader } from "./utils/skillUploader";
@@ -22,6 +22,8 @@ export default function CertForm({
     formState: { errors },
     reset,
     setValue,
+    watch,
+    control,
   } = useForm({
     resolver: zodResolver(certInputSchema),
   });
@@ -31,7 +33,15 @@ export default function CertForm({
 
   useEffect(() => {
     if (isEdit && defaultValues) {
-      reset(defaultValues);
+      console.log("Default values for edit:", defaultValues); // <--- Add this
+      const parsedDefaults = {
+        ...defaultValues,
+        acquiredAt: defaultValues.acquiredAt
+          ? new Date(defaultValues.acquiredAt)
+          : undefined,
+      };
+
+      reset(parsedDefaults);
       setValue("id", defaultValues.id);
       if (defaultValues.skills) {
         setSkills(
@@ -57,11 +67,24 @@ export default function CertForm({
     }
   }, [skills, setValue]);
 
+  console.log("onSubmit fn:", onSubmit);
+
   return (
     <>
       <FileUploader Title="Upload Certificate" setUploadUrl={setCertUrl} />
       <SkillsUploader setSkillId={setSkills} skills={skills} />
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form
+        onSubmit={handleSubmit(
+          (data) => {
+            console.log("✅ Form submitted with:", data);
+            onSubmit(data);
+          },
+          (formErrors) => {
+            console.error("❌ Form validation failed:", formErrors);
+          },
+        )}
+        className="space-y-6"
+      >
         <div className="space-y-6 rounded-xl bg-gray-800/70 p-6 border border-gray-700 shadow-lg">
           {/* Name */}
           <div>
@@ -104,25 +127,36 @@ export default function CertForm({
           </div>
 
           {/* Acquired Date */}
-          <div>
-            <label
-              htmlFor="acquiredAt"
-              className="block text-sm font-medium text-white"
-            >
-              Acquired Date
-            </label>
-            <input
-              {...register("acquiredAt")}
-              id="acquiredAt"
-              type="date"
-              className="mt-1 block w-full rounded-md bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-purple-600 focus:outline-none text-white px-3 py-2"
-            />
-            {errors.acquiredAt && (
-              <p className="text-red-400 text-xs mt-1">
-                {errors.acquiredAt.message}
-              </p>
+          <Controller
+            control={control}
+            name="acquiredAt"
+            render={({ field }) => (
+              <div>
+                <label
+                  htmlFor="acquiredAt"
+                  className="block text-sm font-medium text-white"
+                >
+                  Acquired Date
+                </label>
+                <input
+                  id="acquiredAt"
+                  type="date"
+                  value={
+                    field.value instanceof Date
+                      ? field.value.toISOString().slice(0, 10)
+                      : ""
+                  }
+                  onChange={(e) => field.onChange(new Date(e.target.value))}
+                  className="mt-1 block w-full rounded-md bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-purple-600 focus:outline-none text-white px-3 py-2"
+                />
+                {errors.acquiredAt && (
+                  <p className="text-red-400 text-xs mt-1">
+                    {errors.acquiredAt.message}
+                  </p>
+                )}
+              </div>
             )}
-          </div>
+          />
 
           {/* Credential URL */}
           <div>

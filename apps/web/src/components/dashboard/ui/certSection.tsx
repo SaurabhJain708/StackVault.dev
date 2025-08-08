@@ -69,6 +69,25 @@ export default function CertSection({
             variants={itemVariants}
             className="bg-gray-800/70 p-6 rounded-2xl shadow-lg border border-gray-700 hover:border-purple-600 transition-colors"
           >
+            {cert.imageUrl ? (
+              <img
+                src={cert.imageUrl}
+                alt={`${cert.name} certificate`}
+                className="w-full h-40 object-cover rounded-lg mb-4 border border-gray-600"
+              />
+            ) : (
+              <div className="w-full h-40 flex items-center justify-center bg-gray-700/40 rounded-lg mb-4 border border-dashed border-gray-600 text-gray-400 text-xs italic">
+                No image added. <br />
+                <button
+                  onClick={() =>
+                    setActiveModal({ type: "editcert", data: cert })
+                  }
+                  className="underline text-purple-400 hover:text-purple-300 mt-1"
+                >
+                  + Add image
+                </button>
+              </div>
+            )}
             <h3 className="text-lg font-semibold text-white">{cert.name}</h3>
             <div className="flex flex-wrap gap-2 mb-4">
               {cert.skills && cert?.skills.length > 0 ? (

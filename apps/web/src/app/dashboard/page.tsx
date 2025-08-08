@@ -227,6 +227,8 @@ const Dashboard = () => {
     setActiveModal(null);
   };
   const handleEditCert = (formData: certInput) => {
+    console.log("Editing cert:", formData); // <--- Add this
+
     editCert.mutate(formData);
     setActiveModal(null);
   };
