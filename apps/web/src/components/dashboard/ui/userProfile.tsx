@@ -84,6 +84,43 @@ export default function UserProfile({
               <p className="text-sm text-gray-300">
                 {userData.bio ?? "No bio available"}
               </p>
+
+              {/* Resume Section */}
+              <div className="pt-2">
+                {userData.resumeUrl ? (
+                  <a
+                    href={userData.resumeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs rounded-full transition-colors"
+                  >
+                    View Resume
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-4 h-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M14 3h7m0 0v7m0-7L10 14"
+                      />
+                    </svg>
+                  </a>
+                ) : (
+                  <button
+                    onClick={() =>
+                      setActiveModal({ type: "profile", data: userData })
+                    }
+                    className="text-purple-400 hover:text-purple-300 text-xs underline"
+                  >
+                    + Add Resume
+                  </button>
+                )}
+              </div>
             </>
           )}
         </div>

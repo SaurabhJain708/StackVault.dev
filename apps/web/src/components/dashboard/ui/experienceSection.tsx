@@ -73,6 +73,25 @@ export default function ExperienceSection({
             variants={itemVariants}
             className="bg-gray-800/70 p-6 rounded-2xl shadow-lg border border-gray-700 hover:border-pink-600 transition-colors"
           >
+            {experienceData.imageUrl ? (
+              <img
+                src={experienceData.imageUrl}
+                alt={`${experienceData.name} certificate`}
+                className="w-full h-40 object-cover rounded-lg mb-4 border border-gray-600"
+              />
+            ) : (
+              <div className="w-full h-40 flex items-center justify-center bg-gray-700/40 rounded-lg mb-4 border border-dashed border-gray-600 text-gray-400 text-xs italic">
+                No image added. <br />
+                <button
+                  onClick={() =>
+                    setActiveModal({ type: "editexperience", data: exp })
+                  }
+                  className="underline text-purple-400 hover:text-purple-300 mt-1"
+                >
+                  + Add image
+                </button>
+              </div>
+            )}
             <h3 className="text-lg font-semibold text-white">
               {exp?.position}
             </h3>
