@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { experienceInputSchema } from "@repo/types";
 import type { experienceInput } from "@repo/types";
 import { FileUploader } from "./utils/fileUploader";
@@ -25,20 +25,35 @@ export default function ExperienceForm({
     formState: { errors, isSubmitting },
     setValue,
     reset,
+    control,
   } = useForm({
     resolver: zodResolver(experienceInputSchema),
   });
 
   useEffect(() => {
     if (isEdit && defaultValues) {
-      reset(defaultValues);
+      const parsedDefaults = {
+        ...defaultValues,
+        startDate: defaultValues.startDate
+          ? new Date(defaultValues.startDate)
+          : undefined,
+        endDate: defaultValues.endDate
+          ? new Date(defaultValues.endDate)
+          : undefined,
+      };
+      reset(parsedDefaults);
       setValue("id", defaultValues.id);
+      if (defaultValues.skills) {
+        setSkills(
+          defaultValues?.skills.map((s) => ({ id: s.id, name: s.name || "" })),
+        );
+      }
     }
   }, [isEdit, defaultValues, reset, setValue]);
 
   useEffect(() => {
     if (fileUrl) {
-      setValue("credentialUrl", fileUrl);
+      setValue("imageUrl", fileUrl);
     }
   }, [fileUrl, setValue]);
 
@@ -57,7 +72,7 @@ export default function ExperienceForm({
         setUploadUrl={setFileUrl}
         Title="Upload Experience Document"
       />
-      <SkillsUploader setSkillId={setSkills} />
+      <SkillsUploader setSkillId={setSkills} skills={skills} />
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <div>
@@ -100,47 +115,72 @@ export default function ExperienceForm({
           )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label
-              htmlFor="startDate"
-              className="block text-sm font-medium text-gray-300"
-            >
-              Start Date
-            </label>
-            <input
-              {...register("startDate")}
-              id="startDate"
-              type="date"
-              className="mt-1 w-full rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
-            {errors.startDate && (
-              <p className="mt-1 text-xs text-red-400">
-                {errors.startDate.message}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <label
-              htmlFor="endDate"
-              className="block text-sm font-medium text-gray-300"
-            >
-              End Date (optional)
-            </label>
-            <input
-              {...register("endDate")}
-              id="endDate"
-              type="date"
-              className="mt-1 w-full rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
-            {errors.endDate && (
-              <p className="mt-1 text-xs text-red-400">
-                {errors.endDate.message}
-              </p>
-            )}
-          </div>
-        </div>
+        <Controller
+          control={control}
+          name="startDate"
+          render={({ field }) => (
+            <div className="space-y-1">
+              <label
+                htmlFor="startDate"
+                className="text-sm font-medium text-gray-300"
+              >
+                Start Date
+              </label>
+              <input
+                id="startDate"
+                type="date"
+                value={
+                  field.value instanceof Date
+                    ? field.value.toISOString().slice(0, 10)
+                    : ""
+                }
+                onChange={(e) =>
+                  field.onChange(
+                    e.target.value ? new Date(e.target.value) : undefined,
+                  )
+                }
+                className="form-input w-full bg-gray-800 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-purple-600 focus:outline-none px-4 py-2"
+              />
+              {errors.startDate && (
+                <p className="text-red-400 text-xs">
+                  {errors.startDate.message}
+                </p>
+              )}
+            </div>
+          )}
+        />
+        <Controller
+          control={control}
+          name="endDate"
+          render={({ field }) => (
+            <div className="space-y-1">
+              <label
+                htmlFor="endDate"
+                className="text-sm font-medium text-gray-300"
+              >
+                End Date (optional)
+              </label>
+              <input
+                id="endDate"
+                type="date"
+                value={
+                  field.value instanceof Date
+                    ? field.value.toISOString().slice(0, 10)
+                    : ""
+                }
+                onChange={(e) =>
+                  field.onChange(
+                    e.target.value ? new Date(e.target.value) : undefined,
+                  )
+                }
+                className="form-input w-full bg-gray-800 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-purple-600 focus:outline-none px-4 py-2"
+              />
+              {errors.endDate && (
+                <p className="text-red-400 text-xs">{errors.endDate.message}</p>
+              )}
+            </div>
+          )}
+        />
 
         <div>
           <label
