@@ -47,7 +47,7 @@ export default function CertSection({
       {/* Error */}
       {isError && (
         <p className="text-red-500 text-sm">
-          Oops! Couldn’t load certifications. Try refreshing.
+          Oops! Couldn&apos;t load certifications. Try refreshing.
         </p>
       )}
 
@@ -87,28 +87,48 @@ export default function CertSection({
               )}
             </div>
 
-            <div className="flex justify-between items-center text-sm">
-              <p className="text-gray-500">
-                {new Date(cert?.acquiredAt).toLocaleDateString()}
-              </p>
-              <div className="flex space-x-2">
+            <div className="flex flex-col gap-2 mt-4 text-sm">
+              <div className="flex justify-between text-gray-500">
+                <p>{new Date(cert?.acquiredAt).toLocaleDateString()}</p>
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() =>
+                      setActiveModal({ type: "editcert", data: cert })
+                    }
+                    className="text-blue-400 hover:text-blue-300"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() =>
+                      setActiveModal({ type: "deletecert", id: cert.id })
+                    }
+                    className="text-red-400 hover:text-red-300"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+
+              {cert.credentialUrl ? (
+                <a
+                  href={cert.credentialUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block w-full text-center px-4 py-2 mt-1 bg-purple-700 hover:bg-purple-800 text-white rounded-md text-sm transition-colors"
+                >
+                  View Credential
+                </a>
+              ) : (
                 <button
                   onClick={() =>
                     setActiveModal({ type: "editcert", data: cert })
                   }
-                  className="text-blue-400 hover:text-blue-300"
+                  className="text-xs text-purple-400 hover:text-purple-300 underline mt-1 self-start"
                 >
-                  Edit
+                  + Add credential URL
                 </button>
-                <button
-                  onClick={() =>
-                    setActiveModal({ type: "deletecert", id: cert.id })
-                  }
-                  className="text-red-400 hover:text-red-300"
-                >
-                  Delete
-                </button>
-              </div>
+              )}
             </div>
           </motion.div>
         ))}

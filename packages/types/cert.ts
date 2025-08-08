@@ -16,8 +16,11 @@ export const certInputSchema = z.object({
   description: z.string().max(200).optional(),
   imageUrl: z.url().optional(),
   acquiredAt: z.coerce.date().optional(),
-  credentialUrl: z.url().optional(),
-  skills: z.array(z.object({ id: z.cuid() })).optional(),
+  credentialUrl: z.url().or(z.literal("")).optional(),
+  skills: z
+    .array(z.object({ id: z.cuid(), name: z.string().optional() }))
+    .max(5)
+    .optional(),
   id: z.string().optional(),
 });
 

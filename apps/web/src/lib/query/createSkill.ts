@@ -47,12 +47,12 @@ export const useCreateSkill = () => {
 };
 
 // Hook to delete skill
-export const useDeleteSkill = (userId: string) => {
+export const useDeleteSkill = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteSkill,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["skills", userId] });
+      queryClient.invalidateQueries({ queryKey: ["skills"] });
       toast.success("Skill deleted!");
     },
     onError: (error: AxiosError) => {

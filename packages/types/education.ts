@@ -27,7 +27,7 @@ export const educationInputSchema = z.object({
     .preprocess((val) => (val === "" ? undefined : val), z.string())
     .optional(),
   skills: z
-    .array(z.object({ id: z.cuid() }))
+    .array(z.object({ id: z.cuid(), name: z.string().optional() }))
     .max(5)
     .optional(),
   id: z.string().optional(),

@@ -145,7 +145,7 @@ const Dashboard = () => {
   const deleteProject = useDeleteProject(userId);
   const deleteExperience = useDeleteExperience(userId);
   const deleteEducation = useDeleteEducation(userId);
-  const deleteSkill = useDeleteSkill(userId);
+  const deleteSkill = useDeleteSkill();
   const editProfile = useUpdateUser();
   const editCert = useUpdateCert(userId);
   const editProject = useUpdateProject(userId);
