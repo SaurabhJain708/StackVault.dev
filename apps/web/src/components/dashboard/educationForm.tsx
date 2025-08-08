@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { educationInput, educationInputSchema } from "@repo/types";
 import { useEffect, useState } from "react";
 import { FileUploader } from "./utils/fileUploader";
@@ -26,6 +26,7 @@ export default function EducationForm({
     formState: { errors },
     reset,
     setValue,
+    control,
   } = useForm({
     resolver: zodResolver(educationInputSchema),
     defaultValues,
@@ -33,14 +34,28 @@ export default function EducationForm({
 
   useEffect(() => {
     if (isEdit && defaultValues) {
-      reset(defaultValues);
+      const parsedDefaults = {
+        ...defaultValues,
+        startDate: defaultValues.startDate
+          ? new Date(defaultValues.startDate)
+          : undefined,
+        endDate: defaultValues.endDate
+          ? new Date(defaultValues.endDate)
+          : undefined,
+      };
+      reset(parsedDefaults);
       setValue("id", defaultValues.id);
+      if (defaultValues.skills) {
+        setSkillId(
+          defaultValues?.skills.map((s) => ({ id: s.id, name: s.name || "" })),
+        );
+      }
     }
   }, [isEdit, defaultValues, reset, setValue]);
 
   useEffect(() => {
     if (fileUrl) {
-      setValue("credentialUrl", fileUrl);
+      setValue("imageUrl", fileUrl);
     }
   }, [fileUrl, setValue]);
 
@@ -123,43 +138,72 @@ export default function EducationForm({
         </div>
 
         {/* Start & End Date */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div className="space-y-1">
-            <label
-              htmlFor="startDate"
-              className="text-sm font-medium text-gray-300"
-            >
-              Start Date
-            </label>
-            <input
-              {...register("startDate")}
-              id="startDate"
-              type="date"
-              className="form-input w-full bg-gray-800 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-purple-600 focus:outline-none px-4 py-2"
-            />
-            {errors.startDate && (
-              <p className="text-red-400 text-xs">{errors.startDate.message}</p>
-            )}
-          </div>
-
-          <div className="space-y-1">
-            <label
-              htmlFor="endDate"
-              className="text-sm font-medium text-gray-300"
-            >
-              End Date (optional)
-            </label>
-            <input
-              {...register("endDate")}
-              id="endDate"
-              type="date"
-              className="form-input w-full bg-gray-800 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-purple-600 focus:outline-none px-4 py-2"
-            />
-            {errors.endDate && (
-              <p className="text-red-400 text-xs">{errors.endDate.message}</p>
-            )}
-          </div>
-        </div>
+        <Controller
+          control={control}
+          name="startDate"
+          render={({ field }) => (
+            <div className="space-y-1">
+              <label
+                htmlFor="startDate"
+                className="text-sm font-medium text-gray-300"
+              >
+                Start Date
+              </label>
+              <input
+                id="startDate"
+                type="date"
+                value={
+                  field.value instanceof Date
+                    ? field.value.toISOString().slice(0, 10)
+                    : ""
+                }
+                onChange={(e) =>
+                  field.onChange(
+                    e.target.value ? new Date(e.target.value) : undefined,
+                  )
+                }
+                className="form-input w-full bg-gray-800 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-purple-600 focus:outline-none px-4 py-2"
+              />
+              {errors.startDate && (
+                <p className="text-red-400 text-xs">
+                  {errors.startDate.message}
+                </p>
+              )}
+            </div>
+          )}
+        />
+        <Controller
+          control={control}
+          name="endDate"
+          render={({ field }) => (
+            <div className="space-y-1">
+              <label
+                htmlFor="endDate"
+                className="text-sm font-medium text-gray-300"
+              >
+                End Date (optional)
+              </label>
+              <input
+                id="endDate"
+                type="date"
+                value={
+                  field.value instanceof Date
+                    ? field.value.toISOString().slice(0, 10)
+                    : ""
+                }
+                onChange={(e) =>
+                  field.onChange(
+                    e.target.value ? new Date(e.target.value) : undefined,
+                  )
+                }
+                className="form-input w-full bg-gray-800 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-purple-600 focus:outline-none px-4 py-2"
+              />
+              {errors.endDate && (
+                <p className="text-red-400 text-xs">{errors.endDate.message}</p>
+              )}
+            </div>
+          )}
+        />
 
         {/* Institution URL */}
         <div className="space-y-1">

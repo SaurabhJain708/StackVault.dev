@@ -22,7 +22,6 @@ export default function CertForm({
     formState: { errors },
     reset,
     setValue,
-    watch,
     control,
   } = useForm({
     resolver: zodResolver(certInputSchema),

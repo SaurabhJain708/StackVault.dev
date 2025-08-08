@@ -80,6 +80,7 @@ export async function PATCH(request: Request) {
         status: 400,
       });
     }
+    console.log("Update data:", updateData);
     if (
       educationInputSchema.safeParse(updateData).success === false ||
       (skills?.length && skills.length > 5)
