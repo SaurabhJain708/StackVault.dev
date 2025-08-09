@@ -23,6 +23,8 @@ export default function ExperienceSection({
     isError,
   } = useGetExperiences(userId);
 
+  console.log(experienceData);
+
   return (
     <motion.div
       id="experience"
@@ -73,10 +75,10 @@ export default function ExperienceSection({
             variants={itemVariants}
             className="bg-gray-800/70 p-6 rounded-2xl shadow-lg border border-gray-700 hover:border-pink-600 transition-colors"
           >
-            {experienceData.imageUrl ? (
+            {exp.imageUrl ? (
               <img
-                src={experienceData.imageUrl}
-                alt={`${experienceData.name} certificate`}
+                src={exp.imageUrl}
+                alt={`${exp.position} certificate`}
                 className="w-full h-40 object-cover rounded-lg mb-4 border border-gray-600"
               />
             ) : (

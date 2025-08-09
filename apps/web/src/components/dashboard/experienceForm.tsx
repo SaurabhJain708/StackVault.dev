@@ -222,26 +222,6 @@ export default function ExperienceForm({
           )}
         </div>
 
-        <div>
-          <label
-            htmlFor="imageUrl"
-            className="block text-sm font-medium text-gray-300"
-          >
-            Company Logo URL (optional)
-          </label>
-          <input
-            {...register("imageUrl")}
-            id="imageUrl"
-            type="url"
-            className="mt-1 w-full rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
-          {errors.imageUrl && (
-            <p className="mt-1 text-xs text-red-400">
-              {errors.imageUrl.message}
-            </p>
-          )}
-        </div>
-
         <div className="flex justify-end">
           <button
             type="submit"
