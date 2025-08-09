@@ -14,14 +14,12 @@ test("POST /api/private/socialLink should add a social link", async ({
     {
       data: {
         link: {
-          platform: `Test Platform ${timestamp}`,
+          platform: `Test Platform `,
           url: `https://example.com/${timestamp}`,
-          userId,
         },
       },
     },
   );
-
   expect(res.status()).toBe(201);
   const text = await res.text();
   expect(text).toBe("Social link added successfully");
@@ -58,9 +56,8 @@ test("DELETE /api/private/socialLink should delete a social link", async ({
     {
       data: {
         link: {
-          platform: `DeleteLink ${timestamp}`,
+          platform: `DeleteLink `,
           url: `https://example.com/${timestamp}`,
-          userId,
         },
       },
     },

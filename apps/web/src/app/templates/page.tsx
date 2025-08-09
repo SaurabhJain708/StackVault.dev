@@ -3,77 +3,13 @@ import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
 import { useIsMobile } from "@/components/hooks/isMobile";
+import { useGetAllTemplates } from "@/lib/query/template";
+import { Template } from "@repo/db";
 
 // Template data with image placeholders for easy management
-const templatesData = [
-  {
-    name: "Nebula",
-    status: "Premium",
-    image: "https://placehold.co/800x600/8B5CF6/FFFFFF?text=Nebula+Premium",
-    description:
-      "A sleek, dark theme with fluid gradients and minimalist typography. Perfect for showcasing tech-focused projects.",
-    link: "/templates/preview",
-  },
-  {
-    name: "Aurora",
-    status: "Free",
-    image: "https://placehold.co/800x600/3B82F6/FFFFFF?text=Aurora+Free",
-    description:
-      "A bright, airy design with a focus on clean lines and subtle animations. Ideal for designers and creatives.",
-    link: "/templates/preview",
-  },
-  {
-    name: "Quantum",
-    status: "Premium",
-    image: "https://placehold.co/800x600/10B981/FFFFFF?text=Quantum+Premium",
-    description:
-      "A bold, geometric template with powerful section transitions. Great for data scientists and engineers.",
-    link: "/templates/preview",
-  },
-  {
-    name: "Vortex",
-    status: "Coming Soon",
-    image: "https://placehold.co/800x600/EF4444/FFFFFF?text=Vortex+Coming+Soon",
-    description:
-      "An immersive, video-centric template designed to bring your work to life with dynamic motion backgrounds.",
-    link: "#",
-  },
-  {
-    name: "Aether",
-    status: "Free",
-    image: "https://placehold.co/800x600/6B7280/FFFFFF?text=Aether+Free",
-    description:
-      "A classic and professional template with a modern twist, focusing on content clarity and readability.",
-    link: "/templates/preview",
-  },
-  {
-    name: "Chrono",
-    status: "Premium",
-    image: "https://placehold.co/800x600/EC4899/FFFFFF?text=Chrono+Premium",
-    description:
-      "A dynamic and chronological layout that tells the story of your career journey. Perfect for experienced professionals.",
-    link: "/templates/preview",
-  },
-  {
-    name: "Eclipse",
-    status: "Coming Soon",
-    image:
-      "https://placehold.co/800x600/9333EA/FFFFFF?text=Eclipse+Coming+Soon",
-    description:
-      "A sophisticated dark-mode template with high-contrast elements and a strong visual hierarchy.",
-    link: "#",
-  },
-  {
-    name: "Starlight",
-    status: "Premium",
-    image: "https://placehold.co/800x600/D97706/FFFFFF?text=Starlight+Premium",
-    description:
-      "A vibrant and energetic template that uses bright colors to make a memorable impression.",
-    link: "/templates/preview",
-  },
-];
 
 const Templates = () => {
+  const { data: templatesData } = useGetAllTemplates();
   const templatesRef = useRef(null);
   const isMobile = useIsMobile();
 
@@ -211,7 +147,7 @@ const Templates = () => {
       <section ref={templatesRef} className="pb-28 px-4 relative z-10">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
-            {templatesData.map((template, index) => {
+            {templatesData?.map((template: Template, index: number) => {
               const { badge, button, disabled } = getBadgeAndButtonStyles(
                 template.status,
               );
@@ -247,7 +183,7 @@ const Templates = () => {
                     {template.description}
                   </p>
                   <Link
-                    href={template.link}
+                    href={`/preview/${template.id}`}
                     onClick={(e) => disabled && e.preventDefault()}
                   >
                     <motion.button

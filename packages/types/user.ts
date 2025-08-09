@@ -3,9 +3,7 @@ import type {
   Cert,
   Education,
   Experience,
-  Recommendation,
   Skill,
-  SocialLink,
   Project,
 } from "../db/generated/prisma";
 
@@ -60,3 +58,148 @@ export const userInputSchema = z.object({
   TemplateId: z.string().nullable().optional(),
 });
 export type userInput = z.infer<typeof userInputSchema>;
+
+// Frontend
+// types.ts
+// A base user with only non-relational fields.
+interface BaseUser {
+  id: string;
+  email: string;
+  name: string;
+  age: number;
+  stars: number;
+  isActive: boolean;
+  username: string;
+  avatarUrl: string | null;
+  bio: string | null;
+  available: boolean;
+  location: string | null;
+  resumeUrl: string | null;
+  badges: string[];
+  languages: string[];
+  causes: string[];
+  isProfileComplete: boolean;
+  TemplateId: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// A more detailed skill type that matches the relational data in the JSON.
+interface RelationalSkill {
+  id: string;
+  name: string;
+  description: string | null;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// CORRECTED: Base types for portfolio items, now with optional timestamps.
+interface BaseProject {
+  id: string;
+  name: string;
+  description: string | null;
+  imageUrl: string | null;
+  url: string | null;
+  userId: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+interface BaseCert {
+  id: string;
+  name: string;
+  description: string | null;
+  imageUrl: string | null;
+  acquiredAt: string;
+  credentialUrl: string | null;
+  userId: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+interface BaseEducation {
+  id: string;
+  institution: string;
+  degree: string;
+  fieldOfStudy: string | null;
+  startDate: string;
+  endDate: string | null;
+  institutionUrl: string | null;
+  description: string | null;
+  imageUrl: string | null;
+  grade: string | null;
+  activities: string[];
+  userId: string;
+  credentialUrl: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+interface BaseExperience {
+  id: string;
+  company: string;
+  position: string;
+  startDate: string;
+  endDate: string | null;
+  companyUrl: string | null;
+  description: string | null;
+  imageUrl: string | null;
+  userId: string;
+  credentialUrl: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+// CORRECTED: Portfolio items with their related skills, using the detailed RelationalSkill type.
+interface ProjectWithSkills extends BaseProject {
+  skills: RelationalSkill[];
+}
+
+interface CertWithSkills extends BaseCert {
+  skills: RelationalSkill[];
+}
+
+interface EducationWithSkills extends BaseEducation {
+  skills: RelationalSkill[];
+}
+
+interface ExperienceWithSkills extends BaseExperience {
+  skills: RelationalSkill[];
+}
+
+// A skill that holds all its relations. This type is now correct because
+// its constituent Base types have been fixed.
+interface SkillWithRelations {
+  id: string;
+  name: string;
+  description: string | null;
+  userId: string;
+  projects: BaseProject[];
+  certs: BaseCert[];
+  educations: BaseEducation[];
+  experiences: BaseExperience[];
+  user: BaseUser;
+}
+
+// A link to a social media profile.
+interface SocialLink {
+  id: string;
+  platform: string;
+  url: string;
+  userId: string;
+}
+
+// A placeholder for a recommendation.
+interface Recommendation {}
+
+// The main, top-level user profile type, now fully correct.
+export interface UserProfile extends BaseUser {
+  skillsWithRelations: SkillWithRelations[];
+  recommendations: Recommendation[];
+  socialLinks: SocialLink[];
+  certsWithSkills: CertWithSkills[];
+  educationsWithSkills: EducationWithSkills[];
+  experiencesWithSkills: ExperienceWithSkills[];
+  projectsWithSkills: ProjectWithSkills[];
+}

@@ -16,7 +16,6 @@ export async function GET(request: Request) {
 
     return Response.json(links, { status: 200 });
   } catch (error) {
-    console.error("Error fetching social links:", error);
     return new Response("Internal Server Error", { status: 500 });
   }
 }

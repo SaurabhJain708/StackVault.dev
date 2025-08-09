@@ -132,6 +132,23 @@ model SocialLink {
 
   @@map("social_links")
 }
+enum TemplateStatus {
+  Free
+  Premium
+  ComingSoon
+}
+
+model Template {
+  id          String         @id @default(cuid())
+  name        String
+  status      TemplateStatus
+  image       String         // URL string for the image
+  description String
+  link        String         // URL or internal link
+
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
 
 model User {
   id                   String           @id @unique @default(cuid())
