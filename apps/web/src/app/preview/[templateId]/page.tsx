@@ -6,7 +6,7 @@ import PulseTemplate from "@/components/templates/Pulse";
 // data.ts
 import { UserProfile } from "@repo/types"; // Adjust path if necessary
 
-export const data: UserProfile = {
+const data: UserProfile = {
   // BaseUser fields
   id: "user_psharma_8H1A2B",
   email: "priya.sharma@example.com",
