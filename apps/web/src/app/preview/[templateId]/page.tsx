@@ -348,18 +348,28 @@ export default async function PreviewPage({
 }) {
   const { templateId } = await params;
 
+  let TemplateComponent = null;
+
   if (templateId === "140b76f2-b630-4546-bbf0-ae912ea5002b") {
-    return <AtlasTemplate data={data} />;
-  }
-  if (templateId === "canvas-template-id") {
-    return <CanvasTemplate data={data} />;
-  }
-  if (templateId === "horizon-template-id") {
-    return <HorizonTemplate data={data} />;
-  }
-  if (templateId === "pulse-template-id") {
-    return <PulseTemplate data={data} />;
+    TemplateComponent = <PulseTemplate data={data} />;
+  } else if (templateId === "4c3a1d73-dccc-4406-af9b-90546f601dd5") {
+    TemplateComponent = <CanvasTemplate data={data} />;
+  } else if (templateId === "9e1b1653-ee01-4f9f-835d-a437b4de87f5") {
+    TemplateComponent = <HorizonTemplate data={data} />;
+  } else if (templateId === "b53023bb-1fe3-4821-8e9a-318d51d93f1d") {
+    TemplateComponent = <AtlasTemplate data={data} />;
+  } else {
+    return <div>Template not found</div>;
   }
 
-  return <div>Template not found</div>;
+  return (
+    <div className="relative">
+      {TemplateComponent}
+
+      {/* Floating Button */}
+      <button className="fixed bottom-6 right-6 z-50 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-5 rounded-full shadow-lg transition-all">
+        Use This Template
+      </button>
+    </div>
+  );
 }
