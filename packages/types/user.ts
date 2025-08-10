@@ -48,14 +48,15 @@ export const userInputSchema = z.object({
   id: z.string().optional(),
   name: z.string().max(50),
   age: z.number().int().optional(),
-  avatarUrl: z.url().optional(),
-  bio: z.string().max(200).optional(),
+  avatarUrl: z.url().optional().or(z.literal("")),
+  bio: z.string().max(200).nullable().optional(),
   available: z.boolean().optional(),
-  location: z.string().max(100).optional(),
-  resumeUrl: z.url().optional(),
+  location: z.string().max(100).nullable().optional(),
+  resumeUrl: z.url().optional().or(z.literal("")),
   languages: z.array(z.string()).optional(),
   causes: z.array(z.string()).optional(),
   TemplateId: z.string().nullable().optional(),
+  stars: z.number().int().optional(),
 });
 export type userInput = z.infer<typeof userInputSchema>;
 

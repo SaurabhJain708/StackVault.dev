@@ -5,10 +5,13 @@ import Link from "next/link";
 import { useIsMobile } from "@/components/hooks/isMobile";
 import { useGetAllTemplates } from "@/lib/query/template";
 import { Template } from "@repo/db";
+import { useSession } from "next-auth/react";
 
 // Template data with image placeholders for easy management
 
 const Templates = () => {
+  const session = useSession();
+  const userId = session?.data?.user?.id ?? ``;
   const { data: templatesData } = useGetAllTemplates();
   const templatesRef = useRef(null);
   const isMobile = useIsMobile();
@@ -115,10 +118,10 @@ const Templates = () => {
           </Link>
         </div>
         <Link
-          href="/login"
+          href="/dashboard"
           className="px-4 items-center ml-2 py-2 sm:px-6 sm:py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-sm sm:text-base text-white rounded-full font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-300 shadow-md min-w-[100px]"
         >
-          Sign In
+          {userId ? "Dashboard" : "Sign In"}
         </Link>
       </motion.nav>
 

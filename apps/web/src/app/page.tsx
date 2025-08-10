@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
@@ -10,6 +10,8 @@ import {
   ChartBarIcon,
 } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
+import { useGetAllTemplates } from "@/lib/query/template";
+import { Template } from "@repo/db";
 
 // Main App component for the landing page
 const App = () => {
@@ -214,29 +216,18 @@ const App = () => {
     },
   ];
 
-  const templatePlaceholders = [
-    {
-      name: "Nebula",
-      color: "from-purple-500 to-indigo-500",
-      image: "https://placehold.co/400x250/8B5CF6/FFFFFF?text=Nebula+Template",
-    },
-    {
-      name: "Aurora",
-      color: "from-blue-500 to-cyan-500",
-      image: "https://placehold.co/400x250/3B82F6/FFFFFF?text=Aurora+Template",
-    },
-    {
-      name: "Quantum",
-      color: "from-green-500 to-teal-500",
-      image: "https://placehold.co/400x250/10B981/FFFFFF?text=Quantum+Template",
-    },
-    {
-      name: "Vortex",
-      color: "from-red-500 to-orange-500",
-      image: "https://placehold.co/400x250/EF4444/FFFFFF?text=Vortex+Template",
-    },
-  ];
-
+  const { data: templateData } = useGetAllTemplates();
+  const [templatePlaceholders, setTemplatePlaceholders] = React.useState<
+    Template[]
+  >([]);
+  useEffect(() => {
+    if (templateData) {
+      const filteredTemplates = templateData.filter(
+        (template: Template) => template.status === "Premium",
+      );
+      setTemplatePlaceholders(filteredTemplates);
+    }
+  }, [templateData]);
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white font-inter overflow-hidden relative">
       {/* Global Background Particles (Subtle) */}
@@ -527,7 +518,7 @@ const App = () => {
           </motion.h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-            {templatePlaceholders.map((template, index) => (
+            {templatePlaceholders.map((template: Template, index: number) => (
               <motion.div
                 key={index}
                 className={`bg-gray-800 p-6 rounded-2xl shadow-xl border border-gray-700 overflow-hidden flex flex-col group relative`}
@@ -557,7 +548,10 @@ const App = () => {
                   A sleek and modern template perfect for showcasing your
                   projects and skills with a futuristic touch.
                 </p>
-                <button className="mt-6 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full text-sm font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-300 shadow-md">
+                <button
+                  onClick={() => router.push(`/preview/${template.id}`)}
+                  className="mt-6 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full text-sm font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-300 shadow-md"
+                >
                   Preview
                 </button>
               </motion.div>

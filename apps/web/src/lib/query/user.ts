@@ -18,7 +18,26 @@ const updateUser = async (user: userInput) => {
   return response.data;
 };
 
+const logout = async () => {
+  const response = await axios.get("/api/private/logout", {
+    withCredentials: true,
+  });
+  return response.data;
+};
+
 // HOOKS
+
+export const useLogout = () => {
+  return useMutation({
+    mutationFn: logout,
+    onSuccess: () => {
+      toast.success("Logout successful");
+    },
+    onError: (error: AxiosError) => {
+      toast.error(`Logout failed: ${error.message}`);
+    },
+  });
+};
 
 export const useGetUser = () => {
   return useQuery({
