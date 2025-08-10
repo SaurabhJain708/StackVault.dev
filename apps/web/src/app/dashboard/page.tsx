@@ -87,6 +87,8 @@ import ExperienceSection from "@/components/dashboard/ui/experienceSection";
 import ProjectSection from "@/components/dashboard/ui/projectSection";
 import TemplateSection from "@/components/dashboard/ui/templateSection";
 import Spinner from "@/components/spinner";
+import ApplyButton from "@/components/templates/applybutton";
+import { useRouter } from "next/navigation";
 
 type EditProjectState = { type: "editproject"; data: projectInput };
 type EditEducationState = { type: "editeducation"; data: educationInput };
@@ -122,6 +124,7 @@ export type ModalState =
   | DeleteProjectState;
 
 const Dashboard = () => {
+  const router = useRouter();
   const session = useSession();
   const userId = session?.data?.user?.id ?? ``;
 
@@ -334,6 +337,13 @@ const Dashboard = () => {
           userId={userId}
         />
       </div>
+
+      <button
+        onClick={() => router.push(`/portfolio/${userId}`)}
+        className="fixed bottom-6 right-6 z-50 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-5 rounded-full shadow-lg transition-all"
+      >
+        Preview
+      </button>
 
       {/* Modal for Forms */}
       <AnimatePresence>

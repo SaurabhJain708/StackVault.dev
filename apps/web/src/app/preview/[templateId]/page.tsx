@@ -1,11 +1,26 @@
+import Spinner from "@/components/spinner";
 import ApplyButton from "@/components/templates/applybutton";
-import AtlasTemplate from "@/components/templates/Atlas";
-import CanvasTemplate from "@/components/templates/Canvas";
-import HorizonTemplate from "@/components/templates/Horizon";
-import PulseTemplate from "@/components/templates/Pulse";
+
+const AtlasTemplate = dynamic(() => import("@/components/templates/Atlas"), {
+  loading: () => <Spinner />,
+});
+const CanvasTemplate = dynamic(() => import("@/components/templates/Canvas"), {
+  loading: () => <Spinner />,
+});
+
+const HorizonTemplate = dynamic(
+  () => import("@/components/templates/Horizon"),
+  {
+    loading: () => <Spinner />,
+  },
+);
+const PulseTemplate = dynamic(() => import("@/components/templates/Pulse"), {
+  loading: () => <Spinner />,
+});
 
 // data.ts
 import { UserProfile } from "@repo/types"; // Adjust path if necessary
+import dynamic from "next/dynamic";
 
 const data: UserProfile = {
   // BaseUser fields

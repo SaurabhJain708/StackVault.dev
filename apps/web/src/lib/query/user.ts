@@ -8,7 +8,10 @@ const getUser = async () => {
   const response = await axios.get("/api/private/user");
   return response.data;
 };
-
+const getFullUser = async (userId: string) => {
+  const response = await axios.get(`/api/public?userid=${userId}`);
+  return response.data;
+};
 // UPDATE
 const updateUser = async (user: userInput) => {
   const response = await axios.patch("/api/private/user", { user });
@@ -21,6 +24,12 @@ export const useGetUser = () => {
   return useQuery({
     queryKey: ["user"],
     queryFn: getUser,
+  });
+};
+export const useGetFullUser = (userId: string) => {
+  return useQuery({
+    queryKey: ["user"],
+    queryFn: () => getFullUser(userId),
   });
 };
 
