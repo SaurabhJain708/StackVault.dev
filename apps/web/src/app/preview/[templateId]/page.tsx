@@ -217,13 +217,13 @@ const data: UserProfile = {
     {
       id: "social_linkedin_01",
       platform: "LinkedIn",
-      url: "https://linkedin.com/in/johndev",
+      url: "https://linkedin.com/in",
       userId: "user_jdoe_9X7B4C",
     },
     {
       id: "social_github_02",
       platform: "GitHub",
-      url: "https://github.com/johndev",
+      url: "https://github.com",
       userId: "user_jdoe_9X7B4C",
     },
   ],
