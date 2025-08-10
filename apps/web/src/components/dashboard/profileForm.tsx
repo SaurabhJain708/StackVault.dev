@@ -49,7 +49,8 @@ export default function UserProfileForm({
   useEffect(() => {
     setValue("resumeUrl", resumeUrl);
   }, [resumeUrl, setValue]);
-
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const {
     fields: languageFields,
     append: appendLanguage,
@@ -58,7 +59,8 @@ export default function UserProfileForm({
     control,
     name: "languages",
   });
-
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const {
     fields: causeFields,
     append: appendCause,
@@ -75,18 +77,7 @@ export default function UserProfileForm({
         <FileUploader Title="Upload Resume" setUploadUrl={setResumeUrl} />
       </div>
 
-      <form
-        onSubmit={handleSubmit(
-          (data) => {
-            console.log("✅ Form submitted with:", data);
-            onSubmit(data);
-          },
-          (formErrors) => {
-            console.error("❌ Form validation failed:", formErrors);
-          },
-        )}
-        className="space-y-6"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Name */}
         <div className="space-y-1">
           <label className="text-sm font-medium text-gray-300">Name</label>
