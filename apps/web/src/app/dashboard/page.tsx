@@ -331,6 +331,7 @@ const Dashboard = () => {
           sectionVariants={sectionVariants}
           isInView={isInView}
           itemVariants={itemVariants}
+          userId={userId}
         />
       </div>
 

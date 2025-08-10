@@ -8,14 +8,18 @@ export default function TemplateSection({
   sectionVariants,
   isInView,
   itemVariants,
+  userId,
 }: {
   sectionVariants: Variants;
   isInView: boolean;
   itemVariants: Variants;
+  userId: string;
 }) {
   const { data: user } = useGetUser();
-  const templateId = user?.templateId;
+  const templateId = user?.TemplateId;
   const { data: template } = useGetTemplateById(templateId);
+  console.log("Template Data:", template);
+  console.log("User Template ID:", templateId);
 
   return (
     <motion.div

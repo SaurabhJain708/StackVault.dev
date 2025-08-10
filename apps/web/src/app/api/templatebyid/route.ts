@@ -9,7 +9,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const template = prisma.template.findUnique({
+    const template = await prisma.template.findUnique({
       where: { id: templateId },
     });
     if (!template) {
