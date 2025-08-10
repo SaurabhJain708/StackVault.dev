@@ -412,21 +412,22 @@ const Portfolio: React.FC<PortfolioProps> = ({ data }) => {
     }
 
     .social-link {
-      width: 2.25rem;
+      width: auto;
       height: 2.25rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 50%;
+      border-radius: 10%;
       border: 1px solid #a855f7;
       color: #c4b5fd;
       text-decoration: none;
       transition: all 0.3s ease;
+      padding: 5px;
     }
 
     @media (min-width: 640px) {
       .social-link {
-        width: 2.5rem;
+        width: auto;
         height: 2.5rem;
       }
     }
@@ -719,7 +720,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ data }) => {
                 title={link.platform}
                 className="social-link"
               >
-                {link.platform.charAt(0)}
+                {link.platform}
               </a>
             ))}
           </div>

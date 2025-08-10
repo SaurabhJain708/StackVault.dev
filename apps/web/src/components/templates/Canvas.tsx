@@ -541,9 +541,9 @@ const LightPortfolio: React.FC<PortfolioProps> = ({ data }) => {
                 rel="noopener noreferrer"
                 title={link.platform}
                 style={{
-                  width: "50px",
+                  width: "auto",
                   height: "50px",
-                  borderRadius: "50%",
+                  borderRadius: "10%",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -555,9 +555,10 @@ const LightPortfolio: React.FC<PortfolioProps> = ({ data }) => {
                   fontWeight: 700,
                   transition: "all 0.3s ease",
                   boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)",
+                  padding: "10px",
                 }}
               >
-                {link.platform.charAt(0)}
+                {link.platform}
               </a>
             ))}
           </div>
@@ -1190,9 +1191,9 @@ const LightPortfolio: React.FC<PortfolioProps> = ({ data }) => {
                   rel="noopener noreferrer"
                   title={link.platform}
                   style={{
-                    width: "60px",
+                    width: "auto",
                     height: "60px",
-                    borderRadius: "50%",
+                    borderRadius: "20%",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -1202,9 +1203,10 @@ const LightPortfolio: React.FC<PortfolioProps> = ({ data }) => {
                     border: "2px solid rgba(59, 130, 246, 0.2)",
                     fontSize: "1.5rem",
                     fontWeight: 700,
+                    padding: "5px",
                   }}
                 >
-                  {link.platform.charAt(0)}
+                  {link.platform}
                 </a>
               ))}
             </div>

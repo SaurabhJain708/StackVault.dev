@@ -542,9 +542,9 @@ const SunsetPortfolio: React.FC<PortfolioProps> = ({ data }) => {
                 rel="noopener noreferrer"
                 title={link.platform}
                 style={{
-                  width: "50px",
+                  width: "auto",
                   height: "50px",
-                  borderRadius: "50%",
+                  borderRadius: "10%",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -556,9 +556,10 @@ const SunsetPortfolio: React.FC<PortfolioProps> = ({ data }) => {
                   fontWeight: 700,
                   transition: "all 0.3s ease",
                   boxShadow: "0 0 15px rgba(255, 107, 0, 0.2)",
+                  padding: "10px",
                 }}
               >
-                {link.platform.charAt(0)}
+                {link.platform}
               </a>
             ))}
           </div>
@@ -1178,9 +1179,9 @@ const SunsetPortfolio: React.FC<PortfolioProps> = ({ data }) => {
                   rel="noopener noreferrer"
                   title={link.platform}
                   style={{
-                    width: "60px",
+                    width: "auto",
                     height: "60px",
-                    borderRadius: "50%",
+                    borderRadius: "10%",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -1190,9 +1191,10 @@ const SunsetPortfolio: React.FC<PortfolioProps> = ({ data }) => {
                     border: "2px solid rgba(255, 107, 0, 0.4)",
                     fontSize: "1.5rem",
                     fontWeight: 700,
+                    padding: "10px",
                   }}
                 >
-                  {link.platform.charAt(0)}
+                  {link.platform}
                 </a>
               ))}
             </div>

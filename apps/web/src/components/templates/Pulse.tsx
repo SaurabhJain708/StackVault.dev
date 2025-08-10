@@ -525,9 +525,9 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
                 rel="noopener noreferrer"
                 title={link.platform}
                 style={{
-                  width: "50px",
+                  width: "auto",
                   height: "50px",
-                  borderRadius: "50%",
+                  borderRadius: "10%",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -537,9 +537,10 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
                   border: "1px solid rgba(0, 255, 255, 0.3)",
                   fontSize: "1.2rem",
                   fontWeight: 700,
+                  padding: "10px",
                 }}
               >
-                {link.platform.charAt(0)}
+                {link.platform}
               </a>
             ))}
           </div>
@@ -1159,9 +1160,9 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
                   rel="noopener noreferrer"
                   title={link.platform}
                   style={{
-                    width: "60px",
+                    width: "auto",
                     height: "60px",
-                    borderRadius: "50%",
+                    borderRadius: "20%",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -1171,9 +1172,10 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
                     border: "1px solid rgba(0, 255, 255, 0.3)",
                     fontSize: "1.5rem",
                     fontWeight: 700,
+                    padding: "10px",
                   }}
                 >
-                  {link.platform.charAt(0)}
+                  {link.platform}
                 </a>
               ))}
             </div>
