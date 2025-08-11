@@ -20,7 +20,7 @@ export default function UserProfileForm({
     reset,
     setValue,
     control,
-  } = useForm<userInput>({
+  } = useForm({
     resolver: zodResolver(userInputSchema),
     defaultValues: {
       ...defaultValues,
@@ -56,15 +56,16 @@ export default function UserProfileForm({
     remove: removeLanguage,
   } = useFieldArray({
     control,
-    name: "languages" as const,
+    // @ts-expect-error: react-hook-form useFieldArray types bug workaround
+    name: "languages",
   });
-
   const {
     fields: causeFields,
     append: appendCause,
     remove: removeCause,
-  } = useFieldArray<userInput, "causes">({
+  } = useFieldArray({
     control,
+    // @ts-expect-error: react-hook-form useFieldArray types bug workaround
     name: "causes",
   });
 
