@@ -42,7 +42,7 @@ export async function POST(request: Request) {
     const count = await prisma.cert.count({
       where: { userId: session.user.id },
     });
-    if (count > 40) {
+    if (count > 6) {
       return new Response("Cert limit reached", { status: 403 });
     }
     await prisma.cert.create({

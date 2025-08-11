@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     const count = await prisma.skill.count({
       where: { userId: session.user.id },
     });
-    if (count > 55) {
+    if (count > 30) {
       return new Response("Skill limit reached", { status: 403 });
     }
     const existingSkill = await prisma.skill.findFirst({

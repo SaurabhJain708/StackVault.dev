@@ -42,7 +42,7 @@ export async function POST(request: Request) {
     const count = await prisma.experience.count({
       where: { userId: session.user.id },
     });
-    if (count > 40) {
+    if (count > 5) {
       return new Response("Experience limit reached", { status: 403 });
     }
 

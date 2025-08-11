@@ -13,6 +13,8 @@ import {
   userInput,
 } from "@repo/types";
 import { easeOut } from "framer-motion";
+import Confetti from "react-confetti";
+import { useWindowSize } from "react-use";
 
 const CertForm = dynamic(() => import("@/components/dashboard/certForm"), {
   loading: () => <Spinner />,
@@ -87,8 +89,8 @@ import ExperienceSection from "@/components/dashboard/ui/experienceSection";
 import ProjectSection from "@/components/dashboard/ui/projectSection";
 import TemplateSection from "@/components/dashboard/ui/templateSection";
 import Spinner from "@/components/spinner";
-import ApplyButton from "@/components/templates/applybutton";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import PortfolioLiveMessage from "@/components/dashboard/ui/celebration";
 
 type EditProjectState = { type: "editproject"; data: projectInput };
 type EditEducationState = { type: "editeducation"; data: educationInput };
@@ -248,8 +250,23 @@ const Dashboard = () => {
     }
   }, [activeModal]);
 
+  const searchParams = useSearchParams();
+  const celebration = searchParams.get("celebration");
+  const [showConfetti, setShowConfetti] = useState(false);
+  const { width, height } = useWindowSize();
+
+  useEffect(() => {
+    if (celebration === "true") {
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 8000);
+    }
+  }, [celebration]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 to-black text-gray-200 font-inter overflow-x-hidden relative">
+      {showConfetti && (
+        <Confetti width={width} height={height} style={{ zIndex: 100 }} />
+      )}
       {/* Background patterns */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <div className="absolute w-full h-full bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-5"></div>
@@ -515,6 +532,11 @@ const Dashboard = () => {
               />
             </Modal>
           )}
+        {celebration && (
+          <Modal title="Celebration" onClose={() => setActiveModal(null)}>
+            <PortfolioLiveMessage userId={userId} />
+          </Modal>
+        )}
       </AnimatePresence>
 
       {/* Custom CSS for base styles and animations */}

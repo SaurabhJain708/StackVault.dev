@@ -45,7 +45,7 @@ export async function POST(request: Request) {
     const count = await prisma.education.count({
       where: { userId: session.user.id },
     });
-    if (count > 15) {
+    if (count > 5) {
       return new Response("Education limit reached", { status: 403 });
     }
 

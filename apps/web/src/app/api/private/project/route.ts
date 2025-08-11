@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     const count = await prisma.project.count({
       where: { userId: session.user.id },
     });
-    if (count > 15) {
+    if (count > 5) {
       return new Response("Project limit reached", { status: 403 });
     }
     await prisma.project.create({

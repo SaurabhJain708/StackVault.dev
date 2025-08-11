@@ -49,18 +49,16 @@ export default function UserProfileForm({
   useEffect(() => {
     setValue("resumeUrl", resumeUrl);
   }, [resumeUrl, setValue]);
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
+
   const {
     fields: languageFields,
     append: appendLanguage,
     remove: removeLanguage,
-  } = useFieldArray<userInput, "languages">({
+  } = useFieldArray({
     control,
-    name: "languages",
+    name: "languages" as const,
   });
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
+
   const {
     fields: causeFields,
     append: appendCause,
