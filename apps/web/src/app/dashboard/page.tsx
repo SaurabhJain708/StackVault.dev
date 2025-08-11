@@ -262,6 +262,7 @@ const Dashboard = () => {
       setShowConfetti(true);
       setTimeout(() => {
         setShowConfetti(false);
+        setActiveModal(null);
         router.push("/dashboard");
       }, 8000);
       setActiveModal("celebration");
