@@ -13,7 +13,7 @@ export default function ApplyButton({ id }: { id: string }) {
       onClick={() => {
         updateTemplateMutation.mutate(id, {
           onSuccess: () => {
-            router.push("/dashboard/celebration=true");
+            router.push("/dashboard?celebration=true");
             toast.success("Template updated!");
           },
         });
