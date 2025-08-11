@@ -260,7 +260,10 @@ const Dashboard = () => {
   useEffect(() => {
     if (celebration === "true") {
       setShowConfetti(true);
-      setTimeout(() => setShowConfetti(false), 8000);
+      setTimeout(() => {
+        setShowConfetti(false);
+        router.push("/dashboard");
+      }, 8000);
       setActiveModal("celebration");
     }
   }, [celebration]);
