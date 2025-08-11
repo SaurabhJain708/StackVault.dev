@@ -91,6 +91,7 @@ import TemplateSection from "@/components/dashboard/ui/templateSection";
 import Spinner from "@/components/spinner";
 import { useRouter, useSearchParams } from "next/navigation";
 import PortfolioLiveMessage from "@/components/dashboard/ui/celebration";
+import { set } from "react-hook-form";
 
 type EditProjectState = { type: "editproject"; data: projectInput };
 type EditEducationState = { type: "editeducation"; data: educationInput };
@@ -112,6 +113,7 @@ export type ModalState =
   | "experience"
   | "education"
   | "project"
+  | "celebration"
   | EditProjectState
   | EditEducationState
   | EditSkillState
@@ -259,6 +261,7 @@ const Dashboard = () => {
     if (celebration === "true") {
       setShowConfetti(true);
       setTimeout(() => setShowConfetti(false), 8000);
+      setActiveModal("celebration");
     }
   }, [celebration]);
 
@@ -532,7 +535,7 @@ const Dashboard = () => {
               />
             </Modal>
           )}
-        {celebration && (
+        {activeModal === "celebration" && celebration && (
           <Modal title="Celebration" onClose={() => setActiveModal(null)}>
             <PortfolioLiveMessage userId={userId} />
           </Modal>
