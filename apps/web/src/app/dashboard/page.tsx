@@ -262,9 +262,7 @@ const Dashboard = () => {
       setShowConfetti(true);
       setTimeout(() => {
         setShowConfetti(false);
-        setActiveModal(null);
-        router.push("/dashboard");
-      }, 8000);
+      }, 15000);
       setActiveModal("celebration");
     }
   }, [celebration]);
@@ -540,7 +538,13 @@ const Dashboard = () => {
             </Modal>
           )}
         {activeModal === "celebration" && celebration && (
-          <Modal title="Celebration" onClose={() => setActiveModal(null)}>
+          <Modal
+            title="Celebration"
+            onClose={() => {
+              setActiveModal(null);
+              router.push("/dashboard");
+            }}
+          >
             <PortfolioLiveMessage userId={userId} />
           </Modal>
         )}
