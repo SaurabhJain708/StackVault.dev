@@ -3,6 +3,7 @@ import { useGetTemplateById } from "@/lib/query/template";
 import { useGetUser } from "@/lib/query/user";
 import { motion, Variants } from "framer-motion";
 import Link from "next/link";
+import { useState } from "react";
 
 export default function TemplateSection({
   sectionVariants,
@@ -18,8 +19,15 @@ export default function TemplateSection({
   const { data: user } = useGetUser();
   const templateId = user?.TemplateId;
   const { data: template } = useGetTemplateById(templateId);
-  console.log("Template Data:", template);
-  console.log("User Template ID:", templateId);
+
+  const portfolioLink = `https://www.stackvault.dev/portfolio/${userId}`;
+  const [copied, setCopied] = useState(false);
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(portfolioLink);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <motion.div
@@ -36,18 +44,44 @@ export default function TemplateSection({
       >
         Portfolio Template
       </h2>
+
       {templateId ? (
         <motion.div
           variants={itemVariants}
-          className="bg-gray-900/80 p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-700 hover:border-purple-600 transition-colors"
+          className="bg-gray-900/80 p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-700 hover:border-purple-600 transition-colors space-y-4"
         >
-          <h3 className="text-xl sm:text-2xl font-semibold text-white mb-2 truncate">
-            {template?.name || "Unnamed Template"}
-          </h3>
-          <p className="text-gray-400 text-sm sm:text-base leading-relaxed line-clamp-3">
-            {template?.description || "No description provided."}
-          </p>
-          <div className="text-right mt-4">
+          <div>
+            <h3 className="text-xl sm:text-2xl font-semibold text-white mb-2 truncate">
+              {template?.name || "Unnamed Template"}
+            </h3>
+            <p className="text-gray-400 text-sm sm:text-base leading-relaxed line-clamp-3">
+              {template?.description || "No description provided."}
+            </p>
+          </div>
+
+          {/* Copy Portfolio Link Section */}
+          <div className="pt-4 border-t border-gray-700">
+            <p className="text-gray-300 text-sm mb-2">
+              Share your live portfolio:
+            </p>
+            <div className="flex flex-col sm:flex-row items-center gap-3">
+              <input
+                type="text"
+                readOnly
+                value={portfolioLink}
+                className="flex-1 px-4 py-2 rounded-lg border border-gray-700 bg-gray-800 text-white text-sm select-all focus:ring-2 focus:ring-purple-500"
+                onFocus={(e) => e.target.select()}
+              />
+              <button
+                onClick={copyToClipboard}
+                className="whitespace-nowrap rounded-lg bg-gradient-to-r from-purple-600 to-pink-500 px-4 py-2 text-sm font-semibold text-white shadow-lg hover:scale-105 transition-all"
+              >
+                {copied ? "✅ Copied!" : "📋 Copy Link"}
+              </button>
+            </div>
+          </div>
+
+          <div className="text-right">
             <Link
               href="/templates"
               className="inline-block text-sm text-purple-400 font-semibold hover:text-purple-300 underline transition-colors"
