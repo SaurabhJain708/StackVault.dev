@@ -3,6 +3,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { skillInput, skillInputSchema } from "@repo/types";
+import { useState } from "react";
+import { generateDescription } from "@/lib/ai/gemini";
+import { toast } from "sonner";
+import GenerateWithAiButton from "./ui/generateWithAiButton";
 
 export default function SkillForm({
   onSubmit,
@@ -15,9 +19,39 @@ export default function SkillForm({
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
+    getValues,
   } = useForm<skillInput>({
     resolver: zodResolver(skillInputSchema),
   });
+
+  const [aiState, setAiState] = useState<
+    "idle" | "uploading" | "done" | "error"
+  >("idle");
+
+  async function writeAboutWithAi(
+    data?: skillInput,
+    existingDescription?: string | null,
+  ) {
+    setAiState("uploading");
+    try {
+      const response = await generateDescription(
+        `Summarize a skill in ≤200 characters: "${data?.name || "Unnamed skill"}". Existing: ${existingDescription || ""}. Only return plain text.`,
+      );
+      if (aiState === "uploading") {
+        toast.error("AI is already generating a description, please wait.");
+        return;
+      }
+      if (response) {
+        setValue("description", response);
+        toast.success("Description generated successfully!");
+        setAiState("done");
+      }
+    } catch (error) {
+      toast.error("Failed to generate description");
+      setAiState("error");
+    }
+  }
 
   return (
     <form
@@ -56,6 +90,13 @@ export default function SkillForm({
           rows={4}
           placeholder="Write a short description..."
           className="w-full rounded-lg border border-gray-600 bg-gray-700 px-4 py-2 text-white placeholder-gray-400 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 focus:outline-none transition"
+        />
+        <GenerateWithAiButton
+          state={aiState}
+          onSubmit={() => {
+            const values = getValues() as skillInput;
+            writeAboutWithAi(values, values.description);
+          }}
         />
         {errors.description && (
           <p className="text-sm text-red-400">{errors.description.message}</p>
