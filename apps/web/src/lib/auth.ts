@@ -31,6 +31,11 @@ export const authOptions: NextAuthOptions = {
             name: user.name,
             avatarUrl: user.image,
             username: user.email?.split("@")[0] || "",
+            TokenUsages: {
+              create: {
+                tokens: 2000,
+              },
+            },
           },
         });
       }

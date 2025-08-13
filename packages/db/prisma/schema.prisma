@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  provider      = "prisma-client-js"
+  output        = "../generated/prisma"
   binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
@@ -45,7 +45,8 @@ model Education {
   skills         Skill[]   @relation("EducationSkills")
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt 
+  updatedAt DateTime @updatedAt
+
   @@map("educations")
 }
 
@@ -132,6 +133,7 @@ model SocialLink {
 
   @@map("social_links")
 }
+
 enum TemplateStatus {
   Free
   Premium
@@ -142,12 +144,21 @@ model Template {
   id          String         @id @default(cuid())
   name        String
   status      TemplateStatus
-  image       String         // URL string for the image
+  image       String // URL string for the image
   description String
-  link        String         // URL or internal link
+  link        String // URL or internal link
 
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TokenUsage {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  tokens    Int      @default(2000)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
 }
 
 model User {
@@ -176,6 +187,7 @@ model User {
   givenRecommendations Recommendation[] @relation("GivenRecommendations")
   isProfileComplete    Boolean          @default(false)
   TemplateId           String?
+  TokenUsages          TokenUsage?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
