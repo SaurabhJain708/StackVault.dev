@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import { FileUploader } from "./utils/fileUploader";
 import { generateDescription } from "@/lib/ai/gemini";
 import { toast } from "sonner";
-import { HiOutlineSparkles } from "react-icons/hi";
 import GenerateWithAiButton from "./ui/generateWithAiButton";
 
 export default function UserProfileForm({
@@ -82,20 +81,20 @@ export default function UserProfileForm({
     existingBio?: string | null,
   ) {
     setAiState("uploading");
-
-    const response = await generateDescription(
-      `Write a concise, engaging bio (max 200 characters) for ${data.name}, age ${data.age}, from ${data.location}. Interests: ${data?.languages?.join(", ")}. Passionate about: ${data?.causes?.join(", ")}. Existing bio: ${existingBio}. Only return text.`,
-    );
-    if (aiState === "uploading") {
-      toast.error("AI is already generating a bio, please wait.");
-      return;
-    }
-    if (response) {
-      setValue("bio", response);
-      toast.success("Bio generated successfully!");
-      setAiState("done");
-    } else {
-      console.error("Failed to generate bio");
+    try {
+      const response = await generateDescription(
+        `Write a concise, engaging bio (max 200 characters) for ${data.name}, age ${data.age}, from ${data.location}. Interests: ${data?.languages?.join(", ")}. Passionate about: ${data?.causes?.join(", ")}. Existing bio: ${existingBio}. Only return text.`,
+      );
+      if (aiState === "uploading") {
+        toast.error("AI is already generating a bio, please wait.");
+        return;
+      }
+      if (response) {
+        setValue("bio", response);
+        toast.success("Bio generated successfully!");
+        setAiState("done");
+      }
+    } catch (error) {
       toast.error("Failed to generate bio");
       setAiState("error");
     }

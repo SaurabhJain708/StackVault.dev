@@ -6,6 +6,9 @@ import { certInput, certInputSchema } from "@repo/types";
 import { FileUploader } from "./utils/fileUploader";
 import { SkillsUploader } from "./utils/skillUploader";
 import { useEffect, useState } from "react";
+import { generateDescription } from "@/lib/ai/gemini";
+import { toast } from "sonner";
+import GenerateWithAiButton from "./ui/generateWithAiButton";
 
 export default function CertForm({
   onSubmit,
@@ -23,6 +26,7 @@ export default function CertForm({
     reset,
     setValue,
     control,
+    getValues,
   } = useForm({
     resolver: zodResolver(certInputSchema),
   });
@@ -66,7 +70,37 @@ export default function CertForm({
     }
   }, [skills, setValue]);
 
-  console.log("onSubmit fn:", onSubmit);
+  const [aiState, setAiState] = useState<
+    "idle" | "uploading" | "done" | "error"
+  >("idle");
+
+  async function writeAboutWithAi(
+    data?: certInput,
+    existingDescription?: string | null,
+  ) {
+    setAiState("uploading");
+    try {
+      const response = await generateDescription(
+        `Write a concise, engaging description for the certificate "${data?.name}"${
+          data?.acquiredAt
+            ? " acquired on " + data.acquiredAt.toDateString()
+            : ""
+        }. Existing description: ${existingDescription || ""}. Only return text,200 char`,
+      );
+      if (aiState === "uploading") {
+        toast.error("AI is already generating a description, please wait.");
+        return;
+      }
+      if (response) {
+        setValue("description", response);
+        toast.success("Description generated successfully!");
+        setAiState("done");
+      }
+    } catch (error) {
+      toast.error("Failed to generate description");
+      setAiState("error");
+    }
+  }
 
   return (
     <>
@@ -97,6 +131,7 @@ export default function CertForm({
               {...register("name")}
               id="name"
               type="text"
+              maxLength={100}
               className="mt-1 block w-full rounded-md bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-purple-600 focus:outline-none text-white px-3 py-2"
             />
             {errors.name && (
@@ -116,7 +151,15 @@ export default function CertForm({
               {...register("description")}
               id="description"
               rows={3}
+              maxLength={200}
               className="mt-1 block w-full rounded-md bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-purple-600 focus:outline-none text-white px-3 py-2"
+            />
+            <GenerateWithAiButton
+              state={aiState}
+              onSubmit={() => {
+                const values = getValues() as certInput;
+                writeAboutWithAi(values, values.description);
+              }}
             />
             {errors.description && (
               <p className="text-red-400 text-xs mt-1">
