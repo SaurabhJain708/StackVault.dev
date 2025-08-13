@@ -3,6 +3,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { prisma } from "@repo/db";
 import { getServerSession } from "next-auth";
+import { authOptions } from "../auth";
 
 const ai = new GoogleGenAI({});
 
@@ -11,9 +12,8 @@ async function main(prompt: string) {
     throw new Error("Prompt is required");
   }
   try {
-
-   const session = await getServerSession();
-if (!session?.user?.id) throw new Error("Not authenticated");
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) throw new Error("Not authenticated");
 
     const userTokenUsage = await prisma.tokenUsage.findUnique({
       where: { userId: session?.user?.id },
@@ -39,6 +39,7 @@ if (!session?.user?.id) throw new Error("Not authenticated");
 
     return response.text;
   } catch (error) {
+    console.error("Main function error:", error);
     throw new Error("Failed to fetch user data");
   }
 }
