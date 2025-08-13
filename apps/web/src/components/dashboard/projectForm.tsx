@@ -7,6 +7,9 @@ import type { projectInput } from "@repo/types";
 import { useEffect, useState } from "react";
 import { FileUploader } from "./utils/fileUploader";
 import { SkillsUploader } from "./utils/skillUploader";
+import { generateDescription } from "@/lib/ai/gemini";
+import { toast } from "sonner";
+import GenerateWithAiButton from "./ui/generateWithAiButton";
 
 export default function ProjectForm({
   onSubmit,
@@ -25,6 +28,7 @@ export default function ProjectForm({
     formState: { errors, isSubmitting },
     reset,
     setValue,
+    getValues,
   } = useForm({
     resolver: zodResolver(projectInputSchema),
   });
@@ -56,6 +60,34 @@ export default function ProjectForm({
     }
   }, [skills, setValue]);
 
+  const [aiState, setAiState] = useState<
+    "idle" | "uploading" | "done" | "error"
+  >("idle");
+
+  async function writeAboutWithAi(
+    data?: projectInput,
+    existingDescription?: string | null,
+  ) {
+    setAiState("uploading");
+    try {
+      const response = await generateDescription(
+        `Summarize a project in ≤200 characters: "${data?.name || "Unnamed project"}"${data?.skills?.length ? `, skills: ${data.skills.map((s) => s.name).join(", ")}` : ""}${data?.url ? `, URL: ${data.url}` : ""}. Existing: ${existingDescription || ""}. Only return plain text.`,
+      );
+      if (aiState === "uploading") {
+        toast.error("AI is already generating a description, please wait.");
+        return;
+      }
+      if (response) {
+        setValue("description", response);
+        toast.success("Description generated successfully!");
+        setAiState("done");
+      }
+    } catch (error) {
+      toast.error("Failed to generate description");
+      setAiState("error");
+    }
+  }
+
   return (
     <div className="rounded-xl border border-gray-700 bg-gray-800 p-6 shadow-lg space-y-6">
       <FileUploader Title="Upload Project Image" setUploadUrl={setCertUrl} />
@@ -73,6 +105,7 @@ export default function ProjectForm({
             {...register("name")}
             id="name"
             type="text"
+            maxLength={100}
             className="mt-1 w-full rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
           {errors.name && (
@@ -91,7 +124,15 @@ export default function ProjectForm({
             {...register("description")}
             id="description"
             rows={3}
+            maxLength={200}
             className="mt-1 w-full rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+          />
+          <GenerateWithAiButton
+            state={aiState}
+            onSubmit={() => {
+              const values = getValues() as projectInput;
+              writeAboutWithAi(values, values.description);
+            }}
           />
           {errors.description && (
             <p className="mt-1 text-xs text-red-400">
