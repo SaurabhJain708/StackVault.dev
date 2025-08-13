@@ -18,7 +18,7 @@ export default function GenerateWithAiButton({
       <HiOutlineSparkles className="w-5 h-5 text-yellow-400" />
       {state === "idle" && " Generate with AI"}
       {state === "uploading" && " Generating..."}
-      {state === "done" && " Done!"}
+      {state === "done" && " Generate Again!"}
       {state === "error" && " Error"}
     </button>
   );
