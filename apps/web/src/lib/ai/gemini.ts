@@ -5,14 +5,16 @@ import { prisma } from "@repo/db";
 import { getServerSession } from "next-auth";
 
 const ai = new GoogleGenAI({});
-const session = await getServerSession();
-if (!session?.user?.id) throw new Error("Not authenticated");
 
 async function main(prompt: string) {
   if (!prompt) {
     throw new Error("Prompt is required");
   }
   try {
+
+   const session = await getServerSession();
+if (!session?.user?.id) throw new Error("Not authenticated");
+
     const userTokenUsage = await prisma.tokenUsage.findUnique({
       where: { userId: session?.user?.id },
     });
