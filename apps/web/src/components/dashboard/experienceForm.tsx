@@ -7,6 +7,9 @@ import type { experienceInput } from "@repo/types";
 import { FileUploader } from "./utils/fileUploader";
 import { SkillsUploader } from "./utils/skillUploader";
 import { useEffect, useState } from "react";
+import { generateDescription } from "@/lib/ai/gemini";
+import { toast } from "sonner";
+import GenerateWithAiButton from "./ui/generateWithAiButton";
 
 export default function ExperienceForm({
   onSubmit,
@@ -26,6 +29,7 @@ export default function ExperienceForm({
     setValue,
     reset,
     control,
+    getValues,
   } = useForm({
     resolver: zodResolver(experienceInputSchema),
   });
@@ -66,6 +70,34 @@ export default function ExperienceForm({
     }
   }, [skills, setValue]);
 
+  const [aiState, setAiState] = useState<
+    "idle" | "uploading" | "done" | "error"
+  >("idle");
+
+  async function writeAboutWithAi(
+    data?: experienceInput,
+    existingDescription?: string | null,
+  ) {
+    setAiState("uploading");
+    try {
+      const response = await generateDescription(
+        `Write a concise, engaging description (max 200 chars) for ${data?.position || "a position"}${data?.company ? ` at ${data.company}` : ""}${data?.startDate ? `, started on ${new Date(data.startDate).toLocaleDateString()}` : ""}${data?.endDate ? `, ended on ${new Date(data.endDate).toLocaleDateString()}` : ""}${data?.companyUrl ? `, website: ${data.companyUrl}` : ""}. Existing description: ${existingDescription || ""}. Only return plain text.`,
+      );
+      if (aiState === "uploading") {
+        toast.error("AI is already generating a description, please wait.");
+        return;
+      }
+      if (response) {
+        setValue("description", response);
+        toast.success("Description generated successfully!");
+        setAiState("done");
+      }
+    } catch (error) {
+      toast.error("Failed to generate description");
+      setAiState("error");
+    }
+  }
+
   return (
     <div className="rounded-xl border border-gray-700 bg-gray-800 p-6 shadow-lg space-y-6">
       <FileUploader
@@ -86,6 +118,7 @@ export default function ExperienceForm({
             {...register("company")}
             id="company"
             type="text"
+            maxLength={100}
             className="mt-1 w-full rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
           {errors.company && (
@@ -106,6 +139,7 @@ export default function ExperienceForm({
             {...register("position")}
             id="position"
             type="text"
+            maxLength={100}
             className="mt-1 w-full rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
           {errors.position && (
@@ -213,7 +247,15 @@ export default function ExperienceForm({
             {...register("description")}
             id="description"
             rows={3}
+            maxLength={200}
             className="mt-1 w-full rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+          />
+          <GenerateWithAiButton
+            state={aiState}
+            onSubmit={() => {
+              const values = getValues() as experienceInput;
+              writeAboutWithAi(values, values.description);
+            }}
           />
           {errors.description && (
             <p className="mt-1 text-xs text-red-400">
