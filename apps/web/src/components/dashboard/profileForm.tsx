@@ -5,6 +5,10 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { userInput, userInputSchema } from "@repo/types";
 import { useEffect, useState } from "react";
 import { FileUploader } from "./utils/fileUploader";
+import { generateDescription } from "@/lib/ai/gemini";
+import { toast } from "sonner";
+import { HiOutlineSparkles } from "react-icons/hi";
+import GenerateWithAiButton from "./ui/generateWithAiButton";
 
 export default function UserProfileForm({
   onSubmit,
@@ -69,6 +73,33 @@ export default function UserProfileForm({
     name: "causes",
   });
 
+  const [aiState, setAiState] = useState<
+    "idle" | "uploading" | "done" | "error"
+  >("idle");
+
+  async function writeAboutWithAi(
+    data: userInput,
+    existingBio?: string | null,
+  ) {
+    setAiState("uploading");
+
+    const response = await generateDescription(
+      `Write a concise, engaging bio (max 200 characters) for ${data.name}, age ${data.age}, from ${data.location}. Interests: ${data?.languages?.join(", ")}. Passionate about: ${data?.causes?.join(", ")}. Existing bio: ${existingBio}. Only return text.`,
+    );
+    if (aiState === "uploading") {
+      toast.error("AI is already generating a bio, please wait.");
+      return;
+    }
+    if (response) {
+      setValue("bio", response);
+      toast.success("Bio generated successfully!");
+      setAiState("done");
+    } else {
+      console.error("Failed to generate bio");
+      toast.error("Failed to generate bio");
+      setAiState("error");
+    }
+  }
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -83,6 +114,7 @@ export default function UserProfileForm({
           <input
             {...register("name")}
             type="text"
+            maxLength={50}
             className="w-full rounded-lg bg-gray-800 border border-gray-600 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600"
           />
           {errors.name && (
@@ -110,6 +142,11 @@ export default function UserProfileForm({
             {...register("bio")}
             className="w-full rounded-lg bg-gray-800 border border-gray-600 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600"
             rows={4}
+            maxLength={300}
+          />
+          <GenerateWithAiButton
+            state={aiState}
+            onSubmit={() => writeAboutWithAi(defaultValues, defaultValues.bio)}
           />
           {errors.bio && (
             <p className="text-red-400 text-xs">{errors.bio.message}</p>
@@ -135,6 +172,8 @@ export default function UserProfileForm({
           <input
             {...register("location")}
             type="text"
+            maxLength={100}
+            placeholder="City, Country"
             className="w-full rounded-lg bg-gray-800 border border-gray-600 text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600"
           />
           {errors.location && (
@@ -149,6 +188,7 @@ export default function UserProfileForm({
             <div key={field.id} className="flex gap-2 mb-2">
               <input
                 {...register(`languages.${index}`)}
+                placeholder="English, Spanish, etc."
                 className="w-full rounded-lg bg-gray-800 border border-gray-600 text-white px-4 py-2"
               />
               <button
@@ -176,6 +216,7 @@ export default function UserProfileForm({
             <div key={field.id} className="flex gap-2 mb-2">
               <input
                 {...register(`causes.${index}`)}
+                placeholder="Environment, Education, etc."
                 className="w-full rounded-lg bg-gray-800 border border-gray-600 text-white px-4 py-2"
               />
               <button
