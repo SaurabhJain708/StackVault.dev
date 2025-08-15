@@ -83,8 +83,7 @@ export default function EducationForm({
     setAiState("uploading");
     try {
       const response = await generateDescription(
-        `
-Write a concise, engaging description (max 200 characters) for ${data?.degree || "a degree"} from ${data?.institution}${data?.fieldOfStudy ? ", field of study: " + data?.fieldOfStudy : ""}${data?.startDate ? ", started on " + new Date(data?.startDate).toLocaleDateString() : ""}${data?.endDate ? ", ended on " + new Date(data?.endDate).toLocaleDateString() : ""}${data?.grade ? ", grade: " + data?.grade : ""}. Existing description: ${existingDescription || ""}. Only return plain text, do not include extra instructions or formatting.`,
+        `engaging desc ≤200 char:${data?.degree || ""} from ${data?.institution}${data?.fieldOfStudy ? ", field of study: " + data?.fieldOfStudy : ""}${data?.startDate ? ", started " + new Date(data?.startDate).toLocaleDateString() : ""}${data?.endDate ? ", ended" + new Date(data?.endDate).toLocaleDateString() : ""}${data?.grade ? ", grade: " + data?.grade : ""}.desc: ${existingDescription || ""}.return text`,
       );
       if (aiState === "uploading") {
         toast.error("AI is already generating a description, please wait.");

@@ -19,7 +19,6 @@ export const experienceInputSchema = z.object({
   companyUrl: z.url().optional().or(z.literal("")),
   description: z.string().max(200).optional(),
   imageUrl: z.url().optional().or(z.literal("")),
-  credentialUrl: z.url().optional().or(z.literal("")),
   skills: z
     .array(z.object({ id: z.cuid(), name: z.string().optional() }))
     .max(5)

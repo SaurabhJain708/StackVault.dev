@@ -71,7 +71,7 @@ export default function ProjectForm({
     setAiState("uploading");
     try {
       const response = await generateDescription(
-        `Summarize a project in ≤200 characters: "${data?.name || "Unnamed project"}"${data?.skills?.length ? `, skills: ${data.skills.map((s) => s.name).join(", ")}` : ""}${data?.url ? `, URL: ${data.url}` : ""}. Existing: ${existingDescription || ""}. Only return plain text.`,
+        `engaging desc project ≤200 char: "${data?.name || ""}"${data?.skills?.length ? `, skills: ${data.skills.map((s) => s.name).join(", ")}` : ""}. desc: ${existingDescription || ""}.return text`,
       );
       if (aiState === "uploading") {
         toast.error("AI is already generating a description, please wait.");

@@ -49,5 +49,6 @@ export async function generateDescription(prompt: string) {
   if (!response) {
     throw new Error("Failed to generate description");
   }
+
   return response;
 }

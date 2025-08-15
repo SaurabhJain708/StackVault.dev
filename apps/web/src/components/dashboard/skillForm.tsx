@@ -36,7 +36,7 @@ export default function SkillForm({
     setAiState("uploading");
     try {
       const response = await generateDescription(
-        `Summarize a skill in ≤200 characters: "${data?.name || "Unnamed skill"}". Existing: ${existingDescription || ""}. Only return plain text.`,
+        `Summarize skill ≤200 char: "${data?.name || ""}". desc: ${existingDescription || ""}.return text.`,
       );
       if (aiState === "uploading") {
         toast.error("AI is already generating a description, please wait.");

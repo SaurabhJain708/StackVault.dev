@@ -81,7 +81,7 @@ export default function ExperienceForm({
     setAiState("uploading");
     try {
       const response = await generateDescription(
-        `Write a concise, engaging description (max 200 chars) for ${data?.position || "a position"}${data?.company ? ` at ${data.company}` : ""}${data?.startDate ? `, started on ${new Date(data.startDate).toLocaleDateString()}` : ""}${data?.endDate ? `, ended on ${new Date(data.endDate).toLocaleDateString()}` : ""}${data?.companyUrl ? `, website: ${data.companyUrl}` : ""}. Existing description: ${existingDescription || ""}. Only return plain text.`,
+        `engaging description ≤200 characters: ${data?.position || "a position"}${data?.company ? ` at ${data.company}` : ""}${data?.startDate ? `, started on ${new Date(data.startDate).toLocaleDateString()}` : ""}${data?.endDate ? `, ended ${new Date(data.endDate).toLocaleDateString()}` : ""} desc: ${existingDescription || ""}.return text.`,
       );
       if (aiState === "uploading") {
         toast.error("AI is already generating a description, please wait.");

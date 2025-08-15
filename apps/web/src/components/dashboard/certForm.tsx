@@ -81,11 +81,9 @@ export default function CertForm({
     setAiState("uploading");
     try {
       const response = await generateDescription(
-        `Write a concise, engaging description for the certificate "${data?.name}"${
-          data?.acquiredAt
-            ? " acquired on " + data.acquiredAt.toDateString()
-            : ""
-        }. Existing description: ${existingDescription || ""}. Only return text,200 char`,
+        `engaging desc for cert ≤200 char: "${data?.name}"${
+          data?.acquiredAt ? " acq on " + data.acquiredAt.toDateString() : ""
+        }.desc: ${existingDescription || ""}.return text`,
       );
       if (aiState === "uploading") {
         toast.error("AI is already generating a description, please wait.");

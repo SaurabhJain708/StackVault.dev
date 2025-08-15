@@ -8,6 +8,8 @@ import { FileUploader } from "./utils/fileUploader";
 import { generateDescription } from "@/lib/ai/gemini";
 import { toast } from "sonner";
 import GenerateWithAiButton from "./ui/generateWithAiButton";
+import { FaTrash } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa6";
 
 export default function UserProfileForm({
   onSubmit,
@@ -83,7 +85,7 @@ export default function UserProfileForm({
     setAiState("uploading");
     try {
       const response = await generateDescription(
-        `Write a concise, engaging bio (max 200 characters) for ${data.name}, age ${data.age}, from ${data.location}. Interests: ${data?.languages?.join(", ")}. Passionate about: ${data?.causes?.join(", ")}. Existing bio: ${existingBio}. Only return text.`,
+        `engaging bio ≤200 char:${data.name}, age ${data.age}, from ${data.location}. Interests: ${data?.languages?.join(", ")}. Passionate: ${data?.causes?.join(", ")}.bio: ${existingBio}.return text`,
       );
       if (aiState === "uploading") {
         toast.error("AI is already generating a bio, please wait.");
@@ -182,57 +184,73 @@ export default function UserProfileForm({
 
         {/* Languages */}
         <div>
-          <label className="block font-semibold">Languages</label>
-          {languageFields.map((field, index) => (
-            <div key={field.id} className="flex gap-2 mb-2">
-              <input
-                {...register(`languages.${index}`)}
-                placeholder="English, Spanish, etc."
-                className="w-full rounded-lg bg-gray-800 border border-gray-600 text-white px-4 py-2"
-              />
-              <button
-                type="button"
-                onClick={() => removeLanguage(index)}
-                className="px-3 py-1 bg-red-600 text-white rounded"
+          <label className="block font-semibold text-gray-300 mb-2">
+            Languages
+          </label>
+          <div className="space-y-2">
+            {languageFields.map((field, index) => (
+              <div
+                key={field.id}
+                className="flex items-center gap-2 bg-gray-800 border border-gray-700 rounded-lg px-3 py-2"
               >
-                Remove
-              </button>
-            </div>
-          ))}
+                <input
+                  {...register(`languages.${index}`)}
+                  placeholder="English, Spanish, etc."
+                  className="flex-1 bg-transparent border-none text-white focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeLanguage(index)}
+                  className="p-2 text-red-400 hover:text-red-500 hover:bg-red-500/10 rounded transition"
+                  aria-label="Remove language"
+                >
+                  <FaTrash size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
           <button
             type="button"
             onClick={() => appendLanguage("")}
-            className="mt-2 px-4 py-2 bg-blue-600 text-white rounded"
+            className="mt-3 flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition"
           >
-            Add Language
+            <FaPlus size={14} /> Add Language
           </button>
         </div>
 
         {/* Causes */}
         <div>
-          <label className="block font-semibold">Causes</label>
-          {causeFields.map((field, index) => (
-            <div key={field.id} className="flex gap-2 mb-2">
-              <input
-                {...register(`causes.${index}`)}
-                placeholder="Environment, Education, etc."
-                className="w-full rounded-lg bg-gray-800 border border-gray-600 text-white px-4 py-2"
-              />
-              <button
-                type="button"
-                onClick={() => removeCause(index)}
-                className="px-3 py-1 bg-red-600 text-white rounded"
+          <label className="block font-semibold text-gray-300 mb-2">
+            Causes
+          </label>
+          <div className="space-y-2">
+            {causeFields.map((field, index) => (
+              <div
+                key={field.id}
+                className="flex items-center gap-2 bg-gray-800 border border-gray-700 rounded-lg px-3 py-2"
               >
-                Remove
-              </button>
-            </div>
-          ))}
+                <input
+                  {...register(`causes.${index}`)}
+                  placeholder="Environment, Education, etc."
+                  className="flex-1 bg-transparent border-none text-white focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeCause(index)}
+                  className="p-2 text-red-400 hover:text-red-500 hover:bg-red-500/10 rounded transition"
+                  aria-label="Remove cause"
+                >
+                  <FaTrash size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
           <button
             type="button"
             onClick={() => appendCause("")}
-            className="mt-2 px-4 py-2 bg-blue-600 text-white rounded"
+            className="mt-3 flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition"
           >
-            Add Cause
+            <FaPlus size={14} /> Add Cause
           </button>
         </div>
 
