@@ -274,7 +274,6 @@ export default function EducationForm({
             className="form-textarea w-full bg-gray-800 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-purple-600 focus:outline-none px-4 py-2"
           />
           <GenerateWithAiButton
-            state={aiState}
             onSubmit={() => {
               const values = getValues() as educationInput;
               writeAboutWithAi(values, values.description);

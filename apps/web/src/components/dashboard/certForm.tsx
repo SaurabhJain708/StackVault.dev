@@ -153,7 +153,6 @@ export default function CertForm({
               className="mt-1 block w-full rounded-md bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-purple-600 focus:outline-none text-white px-3 py-2"
             />
             <GenerateWithAiButton
-              state={aiState}
               onSubmit={() => {
                 const values = getValues() as certInput;
                 writeAboutWithAi(values, values.description);

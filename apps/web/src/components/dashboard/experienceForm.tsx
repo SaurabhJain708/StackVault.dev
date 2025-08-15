@@ -251,7 +251,6 @@ export default function ExperienceForm({
             className="mt-1 w-full rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
           <GenerateWithAiButton
-            state={aiState}
             onSubmit={() => {
               const values = getValues() as experienceInput;
               writeAboutWithAi(values, values.description);

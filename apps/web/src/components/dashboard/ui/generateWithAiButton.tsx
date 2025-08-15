@@ -1,12 +1,12 @@
+import { useAIStore } from "@/lib/zustand/aiState";
 import { HiOutlineSparkles } from "react-icons/hi";
 
 export default function GenerateWithAiButton({
   onSubmit,
-  state,
 }: {
   onSubmit: () => void;
-  state: "idle" | "uploading" | "done" | "error";
 }) {
+  const { aiState } = useAIStore();
   return (
     <button
       type="button"
@@ -16,10 +16,10 @@ export default function GenerateWithAiButton({
                      text-white font-semibold shadow-lg"
     >
       <HiOutlineSparkles className="w-5 h-5 text-yellow-400" />
-      {state === "idle" && " Generate with AI"}
-      {state === "uploading" && " Generating..."}
-      {state === "done" && " Generate Again!"}
-      {state === "error" && " Error"}
+      {aiState === "idle" && " Generate with AI"}
+      {aiState === "uploading" && " Generating..."}
+      {aiState === "done" && " Generate with AI"}
+      {aiState === "error" && " Generate with AI"}
     </button>
   );
 }

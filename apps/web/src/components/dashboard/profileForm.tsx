@@ -5,11 +5,10 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { userInput, userInputSchema } from "@repo/types";
 import { useEffect, useState } from "react";
 import { FileUploader } from "./utils/fileUploader";
-import { generateDescription } from "@/lib/ai/gemini";
-import { toast } from "sonner";
 import GenerateWithAiButton from "./ui/generateWithAiButton";
 import { FaTrash } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
+import { writeWithAi } from "@/lib/ai/generateWithAi";
 
 export default function UserProfileForm({
   onSubmit,
@@ -74,33 +73,14 @@ export default function UserProfileForm({
     name: "causes",
   });
 
-  const [aiState, setAiState] = useState<
-    "idle" | "uploading" | "done" | "error"
-  >("idle");
-
   async function writeAboutWithAi(
     data: userInput,
     existingBio?: string | null,
   ) {
-    setAiState("uploading");
-    try {
-      const response = await generateDescription(
-        `engaging bio ≤200 char:${data.name}, age ${data.age}, from ${data.location}. Interests: ${data?.languages?.join(", ")}. Passionate: ${data?.causes?.join(", ")}.bio: ${existingBio}.return text`,
-      );
-      if (aiState === "uploading") {
-        toast.error("AI is already generating a bio, please wait.");
-        return;
-      }
-      if (response) {
-        setValue("bio", response);
-        toast.success("Bio generated successfully!");
-        setAiState("done");
-      }
-    } catch (error) {
-      toast.error("Failed to generate bio");
-      setAiState("error");
-    }
+    const prompt = `engaging bio ≤200 char:${data.name}, age ${data.age}, from ${data.location}. Interests: ${data?.languages?.join(", ")}. Passionate: ${data?.causes?.join(", ")}.bio: ${existingBio}.return text`;
+    await writeWithAi<userInput>(prompt, setValue, "bio");
   }
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -146,7 +126,6 @@ export default function UserProfileForm({
             maxLength={300}
           />
           <GenerateWithAiButton
-            state={aiState}
             onSubmit={() => writeAboutWithAi(defaultValues, defaultValues.bio)}
           />
           {errors.bio && (
