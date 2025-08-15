@@ -3,10 +3,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { skillInput, skillInputSchema } from "@repo/types";
-import { useState } from "react";
-import { generateDescription } from "@/lib/ai/gemini";
-import { toast } from "sonner";
 import GenerateWithAiButton from "./ui/generateWithAiButton";
+import { writeWithAi } from "@/lib/ai/generateWithAi";
 
 export default function SkillForm({
   onSubmit,
@@ -24,33 +22,12 @@ export default function SkillForm({
   } = useForm<skillInput>({
     resolver: zodResolver(skillInputSchema),
   });
-
-  const [aiState, setAiState] = useState<
-    "idle" | "uploading" | "done" | "error"
-  >("idle");
-
   async function writeAboutWithAi(
     data?: skillInput,
     existingDescription?: string | null,
   ) {
-    setAiState("uploading");
-    try {
-      const response = await generateDescription(
-        `Summarize skill ≤200 char: "${data?.name || ""}". desc: ${existingDescription || ""}.return text.`,
-      );
-      if (aiState === "uploading") {
-        toast.error("AI is already generating a description, please wait.");
-        return;
-      }
-      if (response) {
-        setValue("description", response);
-        toast.success("Description generated successfully!");
-        setAiState("done");
-      }
-    } catch (error) {
-      toast.error("Failed to generate description");
-      setAiState("error");
-    }
+    const prompt = `Summarize skill ≤200 char: "${data?.name || ""}". desc: ${existingDescription || ""}.return text.`;
+    await writeWithAi<skillInput>(prompt, setValue, "description");
   }
 
   return (
