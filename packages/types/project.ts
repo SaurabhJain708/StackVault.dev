@@ -12,9 +12,15 @@ export type TemplateProject = Omit<Project, "createdAt" | "updatedAt"> & {
 };
 
 export const projectInputSchema = z.object({
-  name: z.string().max(100),
-  description: z.string().max(200).optional(),
-  imageUrl: z.url().optional(),
+  name: z
+    .string()
+    .min(1, "Project name is required")
+    .max(100, "Project name must be less than 100 characters"),
+  description: z
+    .string()
+    .max(200, "Project description must be less than 200 characters")
+    .optional(),
+  imageUrl: z.url().optional().or(z.literal("")),
   url: z.url().optional().or(z.literal("")),
   skills: z
     .array(z.object({ id: z.cuid(), name: z.string().optional() }))

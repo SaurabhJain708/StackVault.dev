@@ -6,7 +6,10 @@ export type socialLink = SocialLink;
 export type TemplateSocialLink = Omit<SocialLink, "createdAt" | "updatedAt">;
 
 export const socialLinkInputSchema = z.object({
-  platform: z.string().max(30),
+  platform: z
+    .string()
+    .min(1, "Platform name is required")
+    .max(30, "Platform name must be less than 30 characters"),
   url: z.url(),
   id: z.string().optional(),
 });

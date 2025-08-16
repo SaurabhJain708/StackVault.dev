@@ -46,12 +46,20 @@ import { z } from "zod";
 
 export const userInputSchema = z.object({
   id: z.string().optional(),
-  name: z.string().max(50),
+  name: z.string().max(50, "Name must be less than 50 characters").optional(),
   age: z.number().int().optional(),
   avatarUrl: z.url().optional().or(z.literal("")),
-  bio: z.string().max(200).nullable().optional(),
+  bio: z
+    .string()
+    .max(200, "Bio must be less than 200 characters")
+    .nullable()
+    .optional(),
   available: z.boolean().optional(),
-  location: z.string().max(100).nullable().optional(),
+  location: z
+    .string()
+    .max(100, "Location must be less than 100 characters")
+    .nullable()
+    .optional(),
   resumeUrl: z.url().optional().or(z.literal("")),
   languages: z.array(z.string()).optional(),
   causes: z.array(z.string()).optional(),

@@ -12,8 +12,8 @@ export type TemplateExperience = Omit<Experience, "createdAt" | "updatedAt"> & {
 };
 
 export const experienceInputSchema = z.object({
-  company: z.string().max(100),
-  position: z.string().max(100),
+  company: z.string().min(1, "Company name is required").max(100),
+  position: z.string().min(1, "Position is required").max(100),
   startDate: z.coerce.date(),
   endDate: z.coerce.date().optional(),
   companyUrl: z.url().optional().or(z.literal("")),

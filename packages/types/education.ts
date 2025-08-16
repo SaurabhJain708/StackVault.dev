@@ -12,15 +12,24 @@ export type TemplateEducation = Omit<Education, "createdAt" | "updatedAt"> & {
 };
 
 export const educationInputSchema = z.object({
-  institution: z.string().max(100),
-  degree: z.string().max(100),
-  fieldOfStudy: z.string().max(100).optional(),
+  institution: z
+    .string()
+    .min(1, "Institution name is required")
+    .max(100, "Institution name must be less than 100 characters"),
+  degree: z
+    .string()
+    .min(1, "Degree is required")
+    .max(100, "Degree must be less than 100 characters"),
+  fieldOfStudy: z
+    .string()
+    .max(100, "Field of study must be less than 100 characters")
+    .optional(),
   startDate: z.coerce.date(),
   endDate: z.coerce.date().optional().or(z.literal("")),
   institutionUrl: z.url().optional().or(z.literal("")),
   description: z.string().max(200).optional(),
   imageUrl: z.url().nullable().optional().or(z.literal("")),
-  grade: z.string().max(10).optional(),
+  grade: z.string().max(10, "Grade must be less than 10 characters").optional(),
   credentialUrl: z
     .preprocess((val) => (val === "" ? undefined : val), z.string())
     .optional()

@@ -12,9 +12,15 @@ export type TemplateCert = Omit<Cert, "createdAt" | "updatedAt"> & {
 };
 
 export const certInputSchema = z.object({
-  name: z.string().max(100),
-  description: z.string().max(200).optional(),
-  imageUrl: z.url().nullable().optional(),
+  name: z
+    .string()
+    .min(1, "Certification name is required")
+    .max(100, "Certification name must be less than 100 characters"),
+  description: z
+    .string()
+    .max(200, "Certification description must be less than 200 characters")
+    .optional(),
+  imageUrl: z.url().nullable().optional().or(z.literal("")),
   acquiredAt: z.coerce.date().optional(),
   credentialUrl: z.url().or(z.literal("")).optional(),
   skills: z
