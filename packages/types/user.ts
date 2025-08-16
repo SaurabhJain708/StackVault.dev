@@ -48,7 +48,7 @@ export const userInputSchema = z.object({
   id: z.string().optional(),
   name: z.string().max(50, "Name must be less than 50 characters").optional(),
   age: z.number().int().optional(),
-  avatarUrl: z.url().optional().or(z.literal("")),
+  avatarUrl: z.url().optional().nullable().or(z.literal("")),
   bio: z
     .string()
     .max(200, "Bio must be less than 200 characters")
@@ -60,7 +60,7 @@ export const userInputSchema = z.object({
     .max(100, "Location must be less than 100 characters")
     .nullable()
     .optional(),
-  resumeUrl: z.url().optional().or(z.literal("")),
+  resumeUrl: z.url().optional().nullable().or(z.literal("")),
   languages: z.array(z.string()).optional(),
   causes: z.array(z.string()).optional(),
   TemplateId: z.string().nullable().optional(),

@@ -4,7 +4,6 @@ import { GoogleGenAI } from "@google/genai";
 import { prisma } from "@repo/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth";
-import { InsufficientTokensError } from "../types/error";
 
 const ai = new GoogleGenAI({});
 
@@ -20,7 +19,7 @@ async function main(prompt: string) {
       where: { userId: session?.user?.id },
     });
     if (!userTokenUsage || userTokenUsage.tokens <= 0) {
-      throw new InsufficientTokensError();
+      throw new Error("INSUFFICIENT_TOKENS");
     }
 
     const response = await ai.models.generateContent({
@@ -41,17 +40,19 @@ async function main(prompt: string) {
     return response.text;
   } catch (error) {
     console.error("AI generation error:", error);
-    throw new Error("Failed to generate description");
+    throw error;
   }
 }
 
 export async function generateDescription(prompt: string) {
   try {
     const response = await main(prompt);
-    if (!response) throw new Error("Empty response from AI");
+    if (!response) {
+      return "No description generated. Please try again.";
+    }
     return response;
   } catch (error) {
-    if (error instanceof InsufficientTokensError) throw error;
-    throw new Error("Failed to generate description");
+    console.error("Error in generateDescription:", error);
+    throw error;
   }
 }

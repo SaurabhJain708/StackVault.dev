@@ -26,12 +26,13 @@ export const educationInputSchema = z.object({
     .optional(),
   startDate: z.coerce.date(),
   endDate: z.coerce.date().optional().or(z.literal("")),
-  institutionUrl: z.url().optional().or(z.literal("")),
+  institutionUrl: z.url().nullable().optional().or(z.literal("")),
   description: z.string().max(200).optional(),
   imageUrl: z.url().nullable().optional().or(z.literal("")),
   grade: z.string().max(10, "Grade must be less than 10 characters").optional(),
   credentialUrl: z
     .preprocess((val) => (val === "" ? undefined : val), z.string())
+    .nullable()
     .optional()
     .or(z.literal("")),
   skills: z

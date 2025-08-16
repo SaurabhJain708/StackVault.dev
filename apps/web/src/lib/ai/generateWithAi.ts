@@ -2,7 +2,6 @@ import { toast } from "sonner";
 import { generateDescription } from "./gemini";
 import { Path, PathValue, UseFormSetValue } from "react-hook-form";
 import { useAIStore } from "@/lib/zustand/aiState";
-import { InsufficientTokensError } from "../types/error";
 
 export async function writeWithAi<T extends Record<string, unknown>>(
   prompt: string,
@@ -28,7 +27,7 @@ export async function writeWithAi<T extends Record<string, unknown>>(
       setAIState("done");
     }
   } catch (error) {
-    if (error instanceof InsufficientTokensError) {
+    if (error instanceof Error && error.message === "INSUFFICIENT_TOKENS") {
       toast.warning("Insufficient tokens, Upgrade to Premium");
     } else {
       toast.error("Failed to generate text");

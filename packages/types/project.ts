@@ -20,8 +20,8 @@ export const projectInputSchema = z.object({
     .string()
     .max(200, "Project description must be less than 200 characters")
     .optional(),
-  imageUrl: z.url().optional().or(z.literal("")),
-  url: z.url().optional().or(z.literal("")),
+  imageUrl: z.url().optional().nullable().or(z.literal("")),
+  url: z.url().optional().nullable().or(z.literal("")),
   skills: z
     .array(z.object({ id: z.cuid(), name: z.string().optional() }))
     .max(5)
