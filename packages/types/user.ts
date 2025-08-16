@@ -65,6 +65,7 @@ export const userInputSchema = z.object({
   causes: z.array(z.string()).optional(),
   TemplateId: z.string().nullable().optional(),
   stars: z.number().int().optional(),
+  badges: z.array(z.string()).optional(),
 });
 export type userInput = z.infer<typeof userInputSchema>;
 

@@ -32,6 +32,7 @@ export default function UserProfileForm({
         ? defaultValues.languages
         : [""],
       causes: defaultValues.causes?.length ? defaultValues.causes : [""],
+      badges: defaultValues.badges?.length ? defaultValues.badges : [""],
     },
   });
 
@@ -71,6 +72,15 @@ export default function UserProfileForm({
     control,
     // @ts-expect-error: react-hook-form useFieldArray types bug workaround
     name: "causes",
+  });
+  const {
+    fields: badgesFields,
+    append: appendBadge,
+    remove: removeBadge,
+  } = useFieldArray({
+    control,
+    // @ts-expect-error: react-hook-form useFieldArray types bug workaround
+    name: "badges",
   });
 
   async function writeAboutWithAi(
@@ -159,6 +169,41 @@ export default function UserProfileForm({
           {errors.location && (
             <p className="text-red-400 text-xs">{errors.location.message}</p>
           )}
+        </div>
+
+        <div>
+          <label className="block font-semibold text-gray-300 mb-2">
+            Badges
+          </label>
+          <div className="space-y-2">
+            {badgesFields.map((field, index) => (
+              <div
+                key={field.id}
+                className="flex items-center gap-2 bg-gray-800 border border-gray-700 rounded-lg px-3 py-2"
+              >
+                <input
+                  {...register(`badges.${index}`)}
+                  placeholder="e.g. Open Source Contributor"
+                  className="flex-1 bg-transparent border-none text-white focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeBadge(index)}
+                  className="p-2 text-red-400 hover:text-red-500 hover:bg-red-500/10 rounded transition"
+                  aria-label="Remove badge"
+                >
+                  <FaTrash size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={() => appendBadge("")}
+            className="mt-3 flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition"
+          >
+            <FaPlus size={14} /> Add Badge
+          </button>
         </div>
 
         {/* Languages */}
