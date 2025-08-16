@@ -6,9 +6,8 @@ import { educationInput, educationInputSchema } from "@repo/types";
 import { useEffect, useState } from "react";
 import { FileUploader } from "./utils/fileUploader";
 import { SkillsUploader } from "./utils/skillUploader";
-import { generateDescription } from "@/lib/ai/gemini";
-import { toast } from "sonner";
 import GenerateWithAiButton from "./ui/generateWithAiButton";
+import { writeWithAi } from "@/lib/ai/generateWithAi";
 
 type skills = { id: string; name: string }[];
 
@@ -72,32 +71,13 @@ export default function EducationForm({
     }
   }, [skillId, setValue]);
 
-  const [aiState, setAiState] = useState<
-    "idle" | "uploading" | "done" | "error"
-  >("idle");
-
   async function writeAboutWithAi(
     data?: educationInput,
     existingDescription?: string | null,
   ) {
-    setAiState("uploading");
-    try {
-      const response = await generateDescription(
-        `engaging desc ≤200 char:${data?.degree || ""} from ${data?.institution}${data?.fieldOfStudy ? ", field of study: " + data?.fieldOfStudy : ""}${data?.startDate ? ", started " + new Date(data?.startDate).toLocaleDateString() : ""}${data?.endDate ? ", ended" + new Date(data?.endDate).toLocaleDateString() : ""}${data?.grade ? ", grade: " + data?.grade : ""}.desc: ${existingDescription || ""}.return text`,
-      );
-      if (aiState === "uploading") {
-        toast.error("AI is already generating a description, please wait.");
-        return;
-      }
-      if (response) {
-        setValue("description", response);
-        toast.success("Description generated successfully!");
-        setAiState("done");
-      }
-    } catch (error) {
-      toast.error("Failed to generate description");
-      setAiState("error");
-    }
+    const prompt = `engaging desc ≤200 char:${data?.degree || ""} from ${data?.institution}${data?.fieldOfStudy ? ",field of study: " + data?.fieldOfStudy : ""}${data?.grade ? ", grade: " + data?.grade : ""}.desc: ${existingDescription || ""}.return text`;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await writeWithAi<educationInput>(prompt, setValue as any, "description");
   }
 
   return (

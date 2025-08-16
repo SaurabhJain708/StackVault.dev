@@ -6,9 +6,8 @@ import { certInput, certInputSchema } from "@repo/types";
 import { FileUploader } from "./utils/fileUploader";
 import { SkillsUploader } from "./utils/skillUploader";
 import { useEffect, useState } from "react";
-import { generateDescription } from "@/lib/ai/gemini";
-import { toast } from "sonner";
 import GenerateWithAiButton from "./ui/generateWithAiButton";
+import { writeWithAi } from "@/lib/ai/generateWithAi";
 
 export default function CertForm({
   onSubmit,
@@ -36,14 +35,12 @@ export default function CertForm({
 
   useEffect(() => {
     if (isEdit && defaultValues) {
-      console.log("Default values for edit:", defaultValues); // <--- Add this
       const parsedDefaults = {
         ...defaultValues,
         acquiredAt: defaultValues.acquiredAt
           ? new Date(defaultValues.acquiredAt)
           : undefined,
       };
-
       reset(parsedDefaults);
       setValue("id", defaultValues.id);
       if (defaultValues.skills) {
@@ -70,34 +67,15 @@ export default function CertForm({
     }
   }, [skills, setValue]);
 
-  const [aiState, setAiState] = useState<
-    "idle" | "uploading" | "done" | "error"
-  >("idle");
-
   async function writeAboutWithAi(
     data?: certInput,
     existingDescription?: string | null,
   ) {
-    setAiState("uploading");
-    try {
-      const response = await generateDescription(
-        `engaging desc for cert ≤200 char: "${data?.name}"${
-          data?.acquiredAt ? " acq on " + data.acquiredAt.toDateString() : ""
-        }.desc: ${existingDescription || ""}.return text`,
-      );
-      if (aiState === "uploading") {
-        toast.error("AI is already generating a description, please wait.");
-        return;
-      }
-      if (response) {
-        setValue("description", response);
-        toast.success("Description generated successfully!");
-        setAiState("done");
-      }
-    } catch (error) {
-      toast.error("Failed to generate description");
-      setAiState("error");
-    }
+    const prompt = `engaging desc for cert ≤200 char: "${data?.name}"${
+      data?.acquiredAt ? " acq on " + data.acquiredAt.toDateString() : ""
+    }.desc: ${existingDescription || ""}.return text`;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await writeWithAi<certInput>(prompt, setValue as any, "description");
   }
 
   return (

@@ -7,9 +7,8 @@ import type { experienceInput } from "@repo/types";
 import { FileUploader } from "./utils/fileUploader";
 import { SkillsUploader } from "./utils/skillUploader";
 import { useEffect, useState } from "react";
-import { generateDescription } from "@/lib/ai/gemini";
-import { toast } from "sonner";
 import GenerateWithAiButton from "./ui/generateWithAiButton";
+import { writeWithAi } from "@/lib/ai/generateWithAi";
 
 export default function ExperienceForm({
   onSubmit,
@@ -70,32 +69,13 @@ export default function ExperienceForm({
     }
   }, [skills, setValue]);
 
-  const [aiState, setAiState] = useState<
-    "idle" | "uploading" | "done" | "error"
-  >("idle");
-
   async function writeAboutWithAi(
     data?: experienceInput,
     existingDescription?: string | null,
   ) {
-    setAiState("uploading");
-    try {
-      const response = await generateDescription(
-        `engaging description ≤200 characters: ${data?.position || "a position"}${data?.company ? ` at ${data.company}` : ""}${data?.startDate ? `, started on ${new Date(data.startDate).toLocaleDateString()}` : ""}${data?.endDate ? `, ended ${new Date(data.endDate).toLocaleDateString()}` : ""} desc: ${existingDescription || ""}.return text.`,
-      );
-      if (aiState === "uploading") {
-        toast.error("AI is already generating a description, please wait.");
-        return;
-      }
-      if (response) {
-        setValue("description", response);
-        toast.success("Description generated successfully!");
-        setAiState("done");
-      }
-    } catch (error) {
-      toast.error("Failed to generate description");
-      setAiState("error");
-    }
+    const prompt = `engaging description ≤200 characters: ${data?.position || "a position"}${data?.company ? ` at ${data.company}` : ""}${data?.startDate ? `, started on ${new Date(data.startDate).toLocaleDateString()}` : ""}${data?.endDate ? `, ended ${new Date(data.endDate).toLocaleDateString()}` : ""} desc: ${existingDescription || ""}.return text.`;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await writeWithAi<experienceInput>(prompt, setValue as any, "description");
   }
 
   return (

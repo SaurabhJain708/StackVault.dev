@@ -7,9 +7,8 @@ import type { projectInput } from "@repo/types";
 import { useEffect, useState } from "react";
 import { FileUploader } from "./utils/fileUploader";
 import { SkillsUploader } from "./utils/skillUploader";
-import { generateDescription } from "@/lib/ai/gemini";
-import { toast } from "sonner";
 import GenerateWithAiButton from "./ui/generateWithAiButton";
+import { writeWithAi } from "@/lib/ai/generateWithAi";
 
 export default function ProjectForm({
   onSubmit,
@@ -60,32 +59,13 @@ export default function ProjectForm({
     }
   }, [skills, setValue]);
 
-  const [aiState, setAiState] = useState<
-    "idle" | "uploading" | "done" | "error"
-  >("idle");
-
   async function writeAboutWithAi(
     data?: projectInput,
     existingDescription?: string | null,
   ) {
-    setAiState("uploading");
-    try {
-      const response = await generateDescription(
-        `engaging desc project ≤200 char: "${data?.name || ""}"${data?.skills?.length ? `, skills: ${data.skills.map((s) => s.name).join(", ")}` : ""}. desc: ${existingDescription || ""}.return text`,
-      );
-      if (aiState === "uploading") {
-        toast.error("AI is already generating a description, please wait.");
-        return;
-      }
-      if (response) {
-        setValue("description", response);
-        toast.success("Description generated successfully!");
-        setAiState("done");
-      }
-    } catch (error) {
-      toast.error("Failed to generate description");
-      setAiState("error");
-    }
+    const prompt = `engaging desc project ≤200 char: "${data?.name || ""}"${data?.skills?.length ? `, skills: ${data.skills.map((s) => s.name).join(", ")}` : ""}. desc: ${existingDescription || ""}.return text`;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await writeWithAi<projectInput>(prompt, setValue as any, "description");
   }
 
   return (
