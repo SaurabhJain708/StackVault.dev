@@ -1,12 +1,25 @@
 import { NextResponse } from "next/server";
 
-export async function GET(_request: Request) {
+export async function GET() {
   try {
     const response = new NextResponse("Logout successful", { status: 200 });
-    response.cookies.delete("__next_hmr_refresh_hash__");
-    response.cookies.delete("next-auth.callback-url");
-    response.cookies.delete("next-auth.csrf-token");
-    response.cookies.delete("next-auth.session-token");
+
+    const cookieNames = [
+      "__next_hmr_refresh_hash__",
+      "next-auth.callback-url",
+      "next-auth.csrf-token",
+      "next-auth.session-token",
+    ];
+
+    cookieNames.forEach((name) => {
+      response.cookies.set({
+        name,
+        value: "",
+        maxAge: 0,
+        path: "/", // important to match
+      });
+    });
+
     return response;
   } catch (error) {
     console.error("Error fetching user:", error);
