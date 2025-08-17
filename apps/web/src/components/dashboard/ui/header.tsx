@@ -1,6 +1,7 @@
 "use client";
 import { useGetUser, useLogout } from "@/lib/query/user";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -16,9 +17,11 @@ export default function Header() {
       transition={{ duration: 0.5 }}
       className="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-md py-4 px-8 flex justify-between items-center border-b border-gray-800 shadow-lg"
     >
-      <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">
-        StackVault
-      </div>
+      <Link href="/">
+        <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">
+          StackVault
+        </div>
+      </Link>
       <div className="flex items-center space-x-4">
         <span className="text-gray-400 text-sm hidden sm:block">
           Welcome, {userData?.name.split(" ")[0]}
