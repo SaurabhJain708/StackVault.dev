@@ -19,7 +19,7 @@ export async function GET() {
         name,
         value: "",
         maxAge: 0,
-        path: "/", // important to match
+        path: "/",
       });
     });
 
