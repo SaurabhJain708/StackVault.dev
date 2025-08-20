@@ -91,7 +91,6 @@ import TemplateSection from "@/components/dashboard/ui/templateSection";
 import Spinner from "@/components/spinner";
 import { useRouter, useSearchParams } from "next/navigation";
 import PortfolioLiveMessage from "@/components/dashboard/ui/celebration";
-import { set } from "react-hook-form";
 
 type EditProjectState = { type: "editproject"; data: projectInput };
 type EditEducationState = { type: "editeducation"; data: educationInput };

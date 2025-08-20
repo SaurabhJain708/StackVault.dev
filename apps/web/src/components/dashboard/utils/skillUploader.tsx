@@ -1,6 +1,8 @@
 "use client";
 import { useCreateSkill, useDeleteSkill } from "@/lib/query/createSkill";
+import SkillBadge from "@/lib/skillBadge";
 import React, { useState } from "react";
+import { PREDEFINED_SKILLS } from "@/lib/predefinedskills";
 
 export const SkillsUploader = ({
   setSkillId,
@@ -12,24 +14,22 @@ export const SkillsUploader = ({
   skills?: { id: string; name: string }[];
 }) => {
   const { mutateAsync } = useCreateSkill();
+  const deleteSkill = useDeleteSkill();
 
   const [skill, setSkill] = useState("");
   const [status, setStatus] = useState<
     "idle" | "submitting" | "done" | "error"
   >("idle");
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const isMax = skills.length >= 5;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!skill.trim() || isMax) return;
-
+  const addSkill = async (name: string) => {
+    if (!name.trim() || isMax) return;
     setStatus("submitting");
     try {
-      const response = await mutateAsync({ name: skill.trim() });
-
-      setSkillId((prev) => [...prev, { id: response.id, name: skill.trim() }]);
-
+      const response = await mutateAsync({ name: name.trim() });
+      setSkillId((prev) => [...prev, { id: response.id, name: name.trim() }]);
       setStatus("done");
       setSkill("");
     } catch (err) {
@@ -38,24 +38,32 @@ export const SkillsUploader = ({
     }
   };
 
-  const deleteSkill = useDeleteSkill();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await addSkill(skill);
+  };
 
   const handleDeleteSkill = (id: string) => {
     deleteSkill.mutate(id);
-    skills.filter((skill) => skill.id !== id);
     setSkillId((prev) => prev.filter((skill) => skill.id !== id));
   };
+
+  const filteredSuggestions = PREDEFINED_SKILLS.filter(
+    (s) =>
+      s.toLowerCase().includes(skill.toLowerCase()) &&
+      !skills.some((sk) => sk.name.toLowerCase() === s.toLowerCase()),
+  );
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-5 rounded-2xl border border-gray-700 bg-gray-900 p-6 shadow-xl mt-6 mb-8"
+      className="relative space-y-5 rounded-2xl border border-gray-700 bg-gray-900 p-6 shadow-xl mt-6 mb-8"
     >
       <label className="block text-sm font-semibold text-gray-300">
         Related Skills
       </label>
 
-      {/* Skill Tags */}
+      {/* Current Skills */}
       <div className="flex flex-wrap gap-2">
         {skills.map((s) => (
           <div
@@ -75,20 +83,44 @@ export const SkillsUploader = ({
         ))}
       </div>
 
-      {/* Skill Input */}
+      {/* Input with dropdown */}
       {!isMax && (
-        <input
-          type="text"
-          value={skill}
-          onChange={(e) => setSkill(e.target.value)}
-          placeholder="e.g. TypeScript"
-          disabled={isMax}
-          className={`block w-full rounded-md border px-4 py-2 text-sm text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 transition ${
-            isMax
-              ? "bg-gray-700 border-gray-600 cursor-not-allowed opacity-70"
-              : "bg-gray-800 border-gray-600 focus:ring-blue-500"
-          }`}
-        />
+        <div className="relative">
+          <input
+            type="text"
+            value={skill}
+            onChange={(e) => {
+              e.stopPropagation();
+              setSkill(e.target.value);
+              setShowDropdown(true);
+            }}
+            onClick={() => setShowDropdown((prev) => !prev)}
+            onFocus={() => setShowDropdown(true)}
+            onBlur={() => setTimeout(() => setShowDropdown(false), 300)}
+            placeholder="e.g. TypeScript"
+            className="block w-full rounded-md border px-4 py-2 text-sm text-gray-100 placeholder-gray-400 bg-gray-800 border-gray-600 focus:ring-blue-500"
+          />
+
+          {showDropdown && filteredSuggestions.length > 0 && (
+            <ul className="absolute z-10 mt-1 w-full max-h-40 overflow-y-auto rounded-md border border-gray-700 bg-gray-800 shadow-lg">
+              {filteredSuggestions.map((s) => (
+                <li
+                  key={s}
+                  onClick={() => {
+                    setSkill(s);
+                    setTimeout(() => {
+                      setShowDropdown(false);
+                    }, 100);
+                  }}
+                  className="flex items-center gap-2 cursor-pointer px-4 py-2 text-sm text-gray-200 hover:bg-blue-600"
+                >
+                  <SkillBadge name={s} />
+                  <span>{s}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       )}
 
       {/* Submit Button */}
