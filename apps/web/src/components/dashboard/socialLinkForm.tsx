@@ -4,18 +4,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { socialLinkInput, socialLinkInputSchema } from "@repo/types";
-
-// common platforms (could move to constants)
-const SOCIAL_PLATFORMS = [
-  { name: "LinkedIn", url: "https://linkedin.com/in/" },
-  { name: "GitHub", url: "https://github.com/" },
-  { name: "Twitter", url: "https://twitter.com/" },
-  { name: "Instagram", url: "https://instagram.com/" },
-  { name: "Facebook", url: "https://facebook.com/" },
-  { name: "YouTube", url: "https://youtube.com/" },
-  { name: "Hashnode", url: "https://hashnode.com/" },
-  { name: "Dev.to", url: "https://dev.to/" },
-];
+import { SOCIAL_PLATFORMS, SOCIAL_MEDIA_ICONS } from "@/lib/social-media-icons";
+import SocialMediaBadge from "@/lib/socialMediaBadge";
 
 export default function SocialLinkForm({
   onSubmit,
@@ -68,25 +58,47 @@ export default function SocialLinkForm({
         {/* Dropdown */}
         {showDropdown && filteredPlatforms.length > 0 && (
           <ul className="absolute z-10 w-full mt-1 bg-gray-900 border border-gray-700 rounded-lg shadow-lg max-h-48 overflow-y-auto">
-            {filteredPlatforms.map((p) => (
-              <li
-                key={p.name}
-                onMouseDown={() => {
-                  setPlatformQuery(p.name);
-                  setValue("platform", p.name, { shouldValidate: true });
-                  setValue("url", p.url, { shouldValidate: true });
-                  setShowDropdown(false);
-                }}
-                className="px-4 py-2 cursor-pointer hover:bg-gray-700 text-sm text-gray-200"
-              >
-                {p.name}
-              </li>
-            ))}
+            {filteredPlatforms.map((p) => {
+              const Icon = SOCIAL_MEDIA_ICONS[p.name];
+              return (
+                <li
+                  key={p.name}
+                  onMouseDown={() => {
+                    setPlatformQuery(p.name);
+                    setValue("platform", p.name, { shouldValidate: true });
+                    setValue("url", p.url, { shouldValidate: true });
+                    setShowDropdown(false);
+                  }}
+                  className="px-4 py-2 cursor-pointer hover:bg-gray-700 text-sm text-gray-200 flex items-center gap-3"
+                >
+                  {Icon ? (
+                    <Icon className="w-4 h-4" />
+                  ) : (
+                    <span className="w-4 h-4 flex items-center justify-center text-xs font-bold">
+                      {p.name.charAt(0)}
+                    </span>
+                  )}
+                  <span>{p.name}</span>
+                  {p.category && (
+                    <span className="ml-auto text-xs text-gray-400 bg-gray-800 px-2 py-1 rounded">
+                      {p.category}
+                    </span>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         )}
 
         {errors.platform && (
           <p className="text-xs text-red-400 mt-1">{errors.platform.message}</p>
+        )}
+        
+        {/* Platform Preview */}
+        {platformQuery && SOCIAL_MEDIA_ICONS[platformQuery] && (
+          <div className="mt-2">
+            <SocialMediaBadge platform={platformQuery} size="small" />
+          </div>
         )}
       </div>
 

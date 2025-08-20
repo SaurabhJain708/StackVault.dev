@@ -3,6 +3,7 @@ import { useGetSocialLinks } from "@/lib/query/socialLink";
 import { socialLink } from "@repo/types";
 import { motion, Variants } from "framer-motion";
 import { Plus, X, AlertTriangle } from "lucide-react";
+import SocialMediaBadge from "@/lib/socialMediaBadge";
 
 export default function SocialLinkSection({
   sectionVariants,
@@ -77,20 +78,16 @@ export default function SocialLinkSection({
 
         {/* ✅ Rendered Data */}
         {socialLinkData?.map((link: socialLink) => (
-          <motion.a
+          <motion.div
             key={link.id}
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
             variants={itemVariants}
             className="bg-gray-800/70 p-4 rounded-xl shadow-lg border border-gray-700 flex items-center justify-between hover:border-purple-600 transition-colors"
           >
-            <div className="flex items-center space-x-3">
-              <div className="w-6 h-6 rounded-full bg-gray-700 flex items-center justify-center text-sm font-semibold text-white">
-                {link?.platform[0]}
-              </div>
-              <span className="text-sm font-medium">{link?.platform}</span>
-            </div>
+            <SocialMediaBadge 
+              platform={link.platform} 
+              url={link.url}
+              size="default"
+            />
             <button
               onClick={(e) => {
                 e.preventDefault(); // prevent opening link on delete click
@@ -100,7 +97,7 @@ export default function SocialLinkSection({
             >
               <X size={16} />
             </button>
-          </motion.a>
+          </motion.div>
         ))}
       </div>
     </motion.div>
