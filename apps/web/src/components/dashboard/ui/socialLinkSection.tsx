@@ -1,5 +1,6 @@
 import { ModalState } from "@/app/dashboard/page";
 import { useGetSocialLinks } from "@/lib/query/socialLink";
+import SocialMediaBadge from "@/lib/SocialMediaBadge";
 import { socialLink } from "@repo/types";
 import { motion, Variants } from "framer-motion";
 import { Plus, X, AlertTriangle } from "lucide-react";
@@ -86,8 +87,8 @@ export default function SocialLinkSection({
             className="bg-gray-800/70 p-4 rounded-xl shadow-lg border border-gray-700 flex items-center justify-between hover:border-purple-600 transition-colors"
           >
             <div className="flex items-center space-x-3">
-              <div className="w-6 h-6 rounded-full bg-gray-700 flex items-center justify-center text-sm font-semibold text-white">
-                {link?.platform[0]}
+              <div className="w-6 h-6 rounded-full bg-gray-700 flex items-center justify-center ">
+                <SocialMediaBadge name={link?.platform} />
               </div>
               <span className="text-sm font-medium">{link?.platform}</span>
             </div>

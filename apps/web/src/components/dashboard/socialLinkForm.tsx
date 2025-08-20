@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { socialLinkInput, socialLinkInputSchema } from "@repo/types";
+import SocialMediaBadge from "@/lib/SocialMediaBadge";
 
 // common platforms (could move to constants)
 const SOCIAL_PLATFORMS = [
@@ -60,7 +61,7 @@ export default function SocialLinkForm({
             setValue("platform", e.target.value, { shouldValidate: true });
           }}
           onFocus={() => setShowDropdown(true)}
-          onBlur={() => setTimeout(() => setShowDropdown(false), 100)}
+          onBlur={() => setTimeout(() => setShowDropdown(false), 300)}
           placeholder="e.g. LinkedIn"
           className="block w-full rounded-lg bg-gray-800 border border-gray-600 px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
         />
@@ -75,11 +76,14 @@ export default function SocialLinkForm({
                   setPlatformQuery(p.name);
                   setValue("platform", p.name, { shouldValidate: true });
                   setValue("url", p.url, { shouldValidate: true });
-                  setShowDropdown(false);
+                  setTimeout(() => {
+                    setShowDropdown(false);
+                  }, 100);
                 }}
-                className="px-4 py-2 cursor-pointer hover:bg-gray-700 text-sm text-gray-200"
+                className="flex items-center gap-2 cursor-pointer px-4 py-2 text-sm text-gray-200 hover:bg-blue-600"
               >
-                {p.name}
+                <SocialMediaBadge name={p.name} />
+                <span>{p.name}</span>
               </li>
             ))}
           </ul>
