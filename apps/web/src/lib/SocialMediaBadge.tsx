@@ -23,7 +23,7 @@ export const SOCIAL_ICONS: Record<string, IconType> = {
 export default function SocialMediaBadge({ name }: { name: string }) {
   const Icon = SOCIAL_ICONS[name];
   return (
-    <div className="flex items-center  rounded bg-gray-800 text-white">
+    <div className="flex items-center  rounded bg-transparent">
       {Icon ? (
         <Icon className="w-4 h-4" />
       ) : (

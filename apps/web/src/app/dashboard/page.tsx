@@ -91,6 +91,7 @@ import TemplateSection from "@/components/dashboard/ui/templateSection";
 import Spinner from "@/components/spinner";
 import { useRouter, useSearchParams } from "next/navigation";
 import PortfolioLiveMessage from "@/components/dashboard/ui/celebration";
+import CustomDomainSection from "@/components/dashboard/ui/customDomain";
 
 type EditProjectState = { type: "editproject"; data: projectInput };
 type EditEducationState = { type: "editeducation"; data: educationInput };
@@ -104,6 +105,7 @@ type DeleteSocialLinkState = { type: "deletesocialLink"; id: string };
 type DeleteExperienceState = { type: "deleteexperience"; id: string };
 type DeleteEducationState = { type: "deleteeducation"; id: string };
 type DeleteProjectState = { type: "deleteproject"; id: string };
+type EditCustomDomain = { type: "domain"; domain: string };
 export type ModalState =
   | null
   | "cert"
@@ -113,6 +115,7 @@ export type ModalState =
   | "education"
   | "project"
   | "celebration"
+  | EditCustomDomain
   | EditProjectState
   | EditEducationState
   | EditSkillState
@@ -290,6 +293,14 @@ const Dashboard = () => {
         >
           {/* Section: User Profile */}
           <UserProfile
+            sectionVariants={sectionVariants}
+            isInView={isInView}
+            itemVariants={itemVariants}
+            setActiveModal={setActiveModal}
+          />
+
+          {/* Section: Custom Domain */}
+          <CustomDomainSection
             sectionVariants={sectionVariants}
             isInView={isInView}
             itemVariants={itemVariants}

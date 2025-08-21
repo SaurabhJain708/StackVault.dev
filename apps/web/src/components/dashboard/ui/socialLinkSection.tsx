@@ -97,7 +97,7 @@ export default function SocialLinkSection({
                 e.preventDefault(); // prevent opening link on delete click
                 setActiveModal({ type: "deletesocialLink", id: link.id });
               }}
-              className="text-gray-400 hover:text-white ml-2"
+              className="text-gray-400 cursor-pointer hover:text-white ml-2"
             >
               <X size={16} />
             </button>

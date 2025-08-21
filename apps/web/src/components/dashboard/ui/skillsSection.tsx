@@ -75,7 +75,7 @@ export default function SkillsSection({
                 onClick={() =>
                   setActiveModal({ type: "deleteskill", id: skill.id })
                 }
-                className="text-gray-400 hover:text-white ml-2"
+                className="text-gray-400 cursor-pointer hover:text-white ml-2"
               >
                 <X size={16} />
               </button>
