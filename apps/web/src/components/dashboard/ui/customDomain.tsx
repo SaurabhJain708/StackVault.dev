@@ -1,4 +1,5 @@
 import { ModalState } from "@/app/dashboard/page";
+import { useGetDomains } from "@/lib/query/domain";
 import { useGetUser } from "@/lib/query/user";
 import { motion, Variants } from "framer-motion";
 
@@ -13,7 +14,7 @@ export default function CustomDomainSection({
   setActiveModal: (modal: ModalState) => void;
   itemVariants: Variants;
 }) {
-  const { data: userData, isLoading, isError } = useGetUser();
+  const { data: userData, isLoading, isError } = useGetDomains();
   return (
     <motion.div
       id="domain"
@@ -65,7 +66,7 @@ export default function CustomDomainSection({
           className="bg-gray-800/70 p-6 rounded-2xl shadow-lg border border-gray-700 transition-colors"
         >
           <h3 className="text-lg font-semibold text-white">
-            {userData?.domain}
+            {userData?.domain}.stackvault.dev
           </h3>
         </motion.div>
       )}

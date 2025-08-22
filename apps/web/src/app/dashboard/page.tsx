@@ -5,6 +5,7 @@ import { motion, AnimatePresence, useInView } from "framer-motion";
 import { Modal } from "@/components/modals/dashboard.modal";
 import {
   certInput,
+  domainInput,
   educationInput,
   experienceInput,
   projectInput,
@@ -55,6 +56,9 @@ const UserProfileForm = dynamic(
     loading: () => <Spinner />,
   },
 );
+const DomainForm = dynamic(() => import("@/components/dashboard/domainForm"), {
+  loading: () => <Spinner />,
+});
 
 import { useCreateCert, useDeleteCert, useUpdateCert } from "@/lib/query/cert";
 import {
@@ -92,6 +96,7 @@ import Spinner from "@/components/spinner";
 import { useRouter, useSearchParams } from "next/navigation";
 import PortfolioLiveMessage from "@/components/dashboard/ui/celebration";
 import CustomDomainSection from "@/components/dashboard/ui/customDomain";
+import { useUpdateDomain } from "@/lib/query/domain";
 
 type EditProjectState = { type: "editproject"; data: projectInput };
 type EditEducationState = { type: "editeducation"; data: educationInput };
@@ -165,6 +170,7 @@ const Dashboard = () => {
   const addExperience = useCreateExperience(userId);
   const addEducation = useCreateEducation(userId);
   const addProject = useCreateProject(userId);
+  const updateDomain = useUpdateDomain();
 
   const addSkill = useCreateSkill();
 
@@ -243,6 +249,10 @@ const Dashboard = () => {
   };
   const handleEditExperience = (formData: experienceInput) => {
     editExperience.mutate(formData);
+    setActiveModal(null);
+  };
+  const handleEditDomain = (domain: domainInput) => {
+    updateDomain.mutate(domain);
     setActiveModal(null);
   };
 
@@ -547,6 +557,14 @@ const Dashboard = () => {
               />
             </Modal>
           )}
+        {typeof activeModal === "object" && activeModal?.type === "domain" && (
+          <Modal
+            title="Edit Custom Domain"
+            onClose={() => setActiveModal(null)}
+          >
+            <DomainForm isEdit={true} onSubmit={handleEditDomain} />
+          </Modal>
+        )}
         {activeModal === "celebration" && celebration && (
           <Modal
             title="Celebration"

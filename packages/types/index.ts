@@ -6,3 +6,4 @@ export * from "./cert";
 export * from "./education";
 export * from "./recommendation";
 export * from "./socialLink";
+export * from "./domain";
