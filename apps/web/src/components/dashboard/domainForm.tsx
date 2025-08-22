@@ -65,7 +65,7 @@ export default function DomainForm({
             {...register("domain", { required: "Domain is required" })}
             id="domain"
             type="text"
-            placeholder="e.g., saurav"
+            placeholder="e.g., john"
             className="flex-1 rounded-lg border border-gray-600 bg-gray-700 px-4 py-2 text-white placeholder-gray-400 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 focus:outline-none transition"
           />
           <span className="text-gray-400">.stackvault.dev</span>

@@ -1,9 +1,23 @@
 // middleware.ts
 import { withAuth } from "next-auth/middleware";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export default withAuth(
-  function middleware() {
+  function middleware(req: NextRequest) {
+    const url = req.nextUrl.clone();
+    const host = req.headers.get("host"); // e.g., john.stackvault.dev
+
+    if (host) {
+      const domainParts = host.split(".");
+      const subdomain = domainParts.length > 2 ? domainParts[0] : null;
+
+      // Skip www and main domain
+      if (subdomain && subdomain !== "www" && subdomain !== "stackvault") {
+        // Redirect to /profile/[subdomain]
+        url.pathname = `/profile/${subdomain}`;
+        return NextResponse.redirect(url);
+      }
+    }
     return NextResponse.next();
   },
   {

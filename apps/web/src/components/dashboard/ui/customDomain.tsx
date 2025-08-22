@@ -1,6 +1,5 @@
 import { ModalState } from "@/app/dashboard/page";
 import { useGetDomains } from "@/lib/query/domain";
-import { useGetUser } from "@/lib/query/user";
 import { motion, Variants } from "framer-motion";
 
 export default function CustomDomainSection({

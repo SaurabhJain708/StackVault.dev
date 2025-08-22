@@ -1,4 +1,6 @@
 import Spinner from "@/components/spinner";
+import { getUserByDomain } from "@/lib/actions/getUserByDomain";
+import UserHead from "@/lib/overideMetada";
 import dynamic from "next/dynamic";
 
 const AtlasTemplate = dynamic(() => import("@/components/templates/Atlas"), {
@@ -28,9 +30,13 @@ async function getFullUser(userId: string) {
 export default async function UserPage({
   params,
 }: {
-  params: Promise<{ userId: string }>;
+  params: Promise<{ subdomain: string }>;
 }) {
-  const { userId } = await params;
+  const { subdomain } = await params;
+  const userId = await getUserByDomain(subdomain);
+  if (!userId) {
+    return <div>User not found</div>;
+  }
   const userData = await getFullUser(userId);
 
   let TemplateComponent = null;
@@ -49,5 +55,13 @@ export default async function UserPage({
 
   if (!userData) return <div>User not found</div>;
 
-  return <div className="relative">{TemplateComponent}</div>;
+  return (
+    <>
+      <UserHead
+        title={userData.name || "User Portfolio"}
+        favicon={userData.avatarUrl || "/favicon.ico"}
+      />
+      <div className="relative">{TemplateComponent}</div>
+    </>
+  );
 }
