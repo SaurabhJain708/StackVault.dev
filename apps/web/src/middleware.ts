@@ -36,7 +36,16 @@ export default withAuth(
           pathname === "/login" ||
           pathname.startsWith("/portfolio/") ||
           pathname.startsWith("/preview/") ||
-          pathname === "/templates"
+          pathname === "/templates" ||
+          pathname.startsWith("/profile/") ||
+          pathname === "aboutus" ||
+          pathname === "/blogs" ||
+          pathname === "/careers" ||
+          pathname === "/contact" ||
+          pathname === "/privacypolicy" ||
+          pathname === "/termsofservice" ||
+          pathname === "/api/template" ||
+          pathname === "/api/templatebyid"
         ) {
           return true;
         }
