@@ -21,6 +21,9 @@ const PulseTemplate = dynamic(() => import("@/components/templates/Pulse"), {
   loading: () => <Spinner />,
 });
 
+const messageContainer =
+  "flex flex-col items-center justify-center h-[70vh] text-center gap-4 text-gray-600";
+
 export default function PremiumUserPage({
   params,
 }: {
@@ -42,11 +45,23 @@ export default function PremiumUserPage({
   );
 
   if (loadingUserId || loadingUserData) {
-    return <Spinner />;
+    return (
+      <div className={messageContainer}>
+        <Spinner />
+        <p className="text-lg font-medium">Loading user data...</p>
+      </div>
+    );
   }
 
   if (!userId || !userData) {
-    return <div>User not found</div>;
+    return (
+      <div className={messageContainer}>
+        <p className="text-xl font-semibold text-red-500">User not found</p>
+        <p className="text-gray-500">
+          The user you are looking for does not exist.
+        </p>
+      </div>
+    );
   }
 
   let TemplateComponent = null;
@@ -65,7 +80,16 @@ export default function PremiumUserPage({
       TemplateComponent = <AtlasTemplate data={userData} />;
       break;
     default:
-      return <div>Template not found</div>;
+      return (
+        <div className={messageContainer}>
+          <p className="text-xl font-semibold text-red-500">
+            Template not found
+          </p>
+          <p className="text-gray-500">
+            This user does not have a valid template assigned.
+          </p>
+        </div>
+      );
   }
 
   return (

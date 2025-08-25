@@ -670,37 +670,36 @@ const Portfolio: React.FC<PortfolioProps> = ({ data }) => {
           {/* Avatar */}
           <div className="avatar-container">
             <img
-              src={data.avatarUrl || "/default-avatar.png"}
-              alt={data.name}
+              src={data?.avatarUrl ?? "/default-avatar.png"}
+              alt={data?.name ?? "Avatar"}
               className="avatar"
             />
             <div className="avatar-ring"></div>
           </div>
 
           {/* Name & Title */}
-          <h1 className="hero-name">{data.name}</h1>
+          <h1 className="hero-name">{data?.name ?? "Anonymous"}</h1>
           <p className="hero-title">
-            {data?.experiencesWithSkills &&
-            data.experiencesWithSkills.length > 0
-              ? data.experiencesWithSkills[0].position
-              : "Software Developer"}{" "}
-            • {data?.location}
+            {data?.experiencesWithSkills?.[0]?.position ?? "Software Developer"}{" "}
+            • {data?.location ?? "Unknown"}
           </p>
-          <p className="hero-bio">{data.bio}</p>
+          <p className="hero-bio">{data?.bio ?? ""}</p>
 
           {/* Badges */}
-          <div className="badges">
-            {data.badges.map((badge, i) => (
-              <span key={i} className="badge">
-                {badge}
-              </span>
-            ))}
-          </div>
+          {data?.badges?.length > 0 && (
+            <div className="badges">
+              {data.badges.map((badge, i) => (
+                <span key={i} className="badge">
+                  {badge}
+                </span>
+              ))}
+            </div>
+          )}
 
           {/* Action Buttons */}
           <div className="button-group">
             <a
-              href={data.resumeUrl || "#"}
+              href={data?.resumeUrl ?? "#"}
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-primary"
@@ -713,20 +712,22 @@ const Portfolio: React.FC<PortfolioProps> = ({ data }) => {
           </div>
 
           {/* Social Links */}
-          <div className="social-links">
-            {data?.socialLinks?.map((link) => (
-              <a
-                key={link.id}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                title={link.platform}
-                className="social-link"
-              >
-                {link.platform}
-              </a>
-            ))}
-          </div>
+          {data?.socialLinks?.length > 0 && (
+            <div className="social-links">
+              {data.socialLinks.map((link) => (
+                <a
+                  key={link.id}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={link.platform}
+                  className="social-link"
+                >
+                  {link.platform}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -734,26 +735,33 @@ const Portfolio: React.FC<PortfolioProps> = ({ data }) => {
       <section id="about" className="section">
         <h2 className="section-title">About Me</h2>
         <div className="grid grid-2">
-          <div className="card">
-            <h3>Languages</h3>
-            <div>
-              {data.languages.map((lang, i) => (
-                <span key={i} className="badge" style={{ margin: "0.25rem" }}>
-                  {lang}
-                </span>
-              ))}
+          {/* Languages */}
+          {data?.languages?.length > 0 && (
+            <div className="card">
+              <h3>Languages</h3>
+              <div>
+                {data.languages.map((lang, i) => (
+                  <span key={i} className="badge" style={{ margin: "0.25rem" }}>
+                    {lang}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
-          <div className="card">
-            <h3>Causes I Care About</h3>
-            <div>
-              {data.causes.map((cause, i) => (
-                <span key={i} className="badge" style={{ margin: "0.25rem" }}>
-                  {cause}
-                </span>
-              ))}
+          )}
+
+          {/* Causes */}
+          {data?.causes?.length > 0 && (
+            <div className="card">
+              <h3>Causes I Care About</h3>
+              <div>
+                {data.causes.map((cause, i) => (
+                  <span key={i} className="badge" style={{ margin: "0.25rem" }}>
+                    {cause}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
 
@@ -761,26 +769,31 @@ const Portfolio: React.FC<PortfolioProps> = ({ data }) => {
       <section id="skills" className="section">
         <h2 className="section-title">Skills & Expertise</h2>
         <div className="grid grid-3">
-          {data.skillsWithRelations.map((skill) => (
-            <div key={skill.id} className="card">
-              <h3>{skill.name}</h3>
-              <p>{skill.description}</p>
-              {skill.projects.length > 0 && (
-                <div>
-                  <h4>Related Projects:</h4>
-                  {skill.projects.map((project) => (
-                    <div
-                      key={project.id}
-                      className="text-responsive"
-                      style={{ color: "#d1d5db", marginBottom: "0.25rem" }}
-                    >
-                      • {project.name}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
+          {data?.skillsWithRelations?.length > 0 ? (
+            data.skillsWithRelations.map((skill) => (
+              <div key={skill.id} className="card">
+                <h3>{skill.name}</h3>
+                <p>{skill.description}</p>
+
+                {skill?.projects?.length > 0 && (
+                  <div>
+                    <h4>Related Projects:</h4>
+                    {skill.projects.map((project) => (
+                      <div
+                        key={project.id}
+                        className="text-responsive"
+                        style={{ color: "#d1d5db", marginBottom: "0.25rem" }}
+                      >
+                        • {project.name}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))
+          ) : (
+            <p>No skills available.</p>
+          )}
         </div>
       </section>
 
@@ -788,46 +801,82 @@ const Portfolio: React.FC<PortfolioProps> = ({ data }) => {
       <section id="experience" className="section">
         <h2 className="section-title">Professional Experience</h2>
         <div className="timeline">
-          {data.experiencesWithSkills.map((exp, index) => (
-            <div key={exp.id} className="timeline-item">
-              <div className="timeline-dot"></div>
-              {index < data.experiencesWithSkills.length - 1 && (
-                <div className="timeline-line"></div>
-              )}
-              <div className="card">
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "flex-start",
-                    marginBottom: "1rem",
-                    flexWrap: "wrap",
-                    gap: "1rem",
-                  }}
-                >
-                  <div>
-                    <h3>{exp.position}</h3>
-                    <h4>{exp.company}</h4>
-                  </div>
+          {data?.experiencesWithSkills?.length > 0 ? (
+            data.experiencesWithSkills.map((exp, index) => (
+              <div key={exp.id} className="timeline-item">
+                <div className="timeline-dot"></div>
+                {index < data.experiencesWithSkills.length - 1 && (
+                  <div className="timeline-line"></div>
+                )}
+                <div className="card">
                   <div
                     style={{
-                      textAlign: "right",
-                      fontSize: "0.875rem",
-                      color: "#9ca3af",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "flex-start",
+                      marginBottom: "1rem",
+                      flexWrap: "wrap",
+                      gap: "1rem",
                     }}
                   >
                     <div>
-                      {formatDate(exp.startDate)} - {formatDate(exp.endDate)}
+                      <h3>{exp?.position ?? "Unknown Position"}</h3>
+                      <h4>{exp?.company ?? "Unknown Company"}</h4>
                     </div>
-                    <div style={{ fontSize: "0.75rem", marginTop: "0.25rem" }}>
-                      {getExperienceDuration(exp.startDate, exp.endDate)}
+                    <div
+                      style={{
+                        textAlign: "right",
+                        fontSize: "0.875rem",
+                        color: "#9ca3af",
+                      }}
+                    >
+                      <div>
+                        {formatDate(exp?.startDate)} -{" "}
+                        {formatDate(exp?.endDate)}
+                      </div>
+                      <div
+                        style={{ fontSize: "0.75rem", marginTop: "0.25rem" }}
+                      >
+                        {getExperienceDuration(exp?.startDate, exp?.endDate)}
+                      </div>
                     </div>
                   </div>
+                  <p>{exp?.description ?? ""}</p>
+                  {exp?.skills?.length > 0 && (
+                    <div>
+                      {exp.skills.map((skill) => (
+                        <span
+                          key={skill.id}
+                          className="badge"
+                          style={{ margin: "0.25rem" }}
+                        >
+                          {skill.name}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <p>{exp.description}</p>
-                {exp.skills && exp.skills.length > 0 && (
-                  <div>
-                    {exp.skills.map((skill) => (
+              </div>
+            ))
+          ) : (
+            <p>No professional experience listed.</p>
+          )}
+        </div>
+      </section>
+
+      {/* Projects Section */}
+      <section id="projects" className="section">
+        <h2 className="section-title">Featured Projects</h2>
+        <div className="grid grid-2">
+          {data?.projectsWithSkills?.length > 0 ? (
+            data.projectsWithSkills.map((project) => (
+              <div key={project.id} className="card">
+                <h3>{project?.name ?? "Untitled Project"}</h3>
+                <p>{project?.description ?? ""}</p>
+
+                {project?.skills?.length > 0 && (
+                  <div style={{ marginBottom: "1.5rem" }}>
+                    {project.skills.map((skill) => (
                       <span
                         key={skill.id}
                         className="badge"
@@ -838,45 +887,22 @@ const Portfolio: React.FC<PortfolioProps> = ({ data }) => {
                     ))}
                   </div>
                 )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
 
-      {/* Projects Section */}
-      <section id="projects" className="section">
-        <h2 className="section-title">Featured Projects</h2>
-        <div className="grid grid-2">
-          {data.projectsWithSkills.map((project) => (
-            <div key={project.id} className="card">
-              <h3>{project.name}</h3>
-              <p>{project.description}</p>
-              {project.skills && project.skills.length > 0 && (
-                <div style={{ marginBottom: "1.5rem" }}>
-                  {project.skills.map((skill) => (
-                    <span
-                      key={skill.id}
-                      className="badge"
-                      style={{ margin: "0.25rem" }}
-                    >
-                      {skill.name}
-                    </span>
-                  ))}
-                </div>
-              )}
-              {project.url && (
-                <a
-                  href={project.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-primary"
-                >
-                  View Project →
-                </a>
-              )}
-            </div>
-          ))}
+                {project?.url && (
+                  <a
+                    href={project.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-primary"
+                  >
+                    View Project →
+                  </a>
+                )}
+              </div>
+            ))
+          ) : (
+            <p>No projects available.</p>
+          )}
         </div>
       </section>
 
@@ -884,62 +910,72 @@ const Portfolio: React.FC<PortfolioProps> = ({ data }) => {
       <section id="education" className="section">
         <h2 className="section-title">Education</h2>
         <div className="grid grid-2">
-          {data.educationsWithSkills.map((edu) => (
-            <div key={edu.id} className="card">
-              <h3>
-                {edu.degree} in {edu.fieldOfStudy}
-              </h3>
-              <h4>{edu.institution}</h4>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginBottom: "1rem",
-                  fontSize: "0.875rem",
-                  color: "#9ca3af",
-                  flexWrap: "wrap",
-                  gap: "0.5rem",
-                }}
-              >
-                <span>
-                  {formatDate(edu.startDate)} - {formatDate(edu.endDate)}
-                </span>
-                {edu.grade && (
-                  <span style={{ color: "#a855f7" }}>{edu.grade}</span>
+          {data?.educationsWithSkills?.length > 0 ? (
+            data.educationsWithSkills.map((edu) => (
+              <div key={edu.id} className="card">
+                <h3>
+                  {edu?.degree ?? "Degree"} in {edu?.fieldOfStudy ?? "Field"}
+                </h3>
+                <h4>{edu?.institution ?? "Institution"}</h4>
+
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    marginBottom: "1rem",
+                    fontSize: "0.875rem",
+                    color: "#9ca3af",
+                    flexWrap: "wrap",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <span>
+                    {formatDate(edu?.startDate)} - {formatDate(edu?.endDate)}
+                  </span>
+                  {edu?.grade && (
+                    <span style={{ color: "#a855f7" }}>{edu.grade}</span>
+                  )}
+                </div>
+
+                {edu?.description && <p>{edu.description}</p>}
+
+                {edu?.activities?.length > 0 && (
+                  <div>
+                    <h4>Activities:</h4>
+                    {edu.activities.map((activity, idx) => (
+                      <span
+                        key={idx}
+                        className="badge"
+                        style={{ margin: "0.25rem" }}
+                      >
+                        {activity}
+                      </span>
+                    ))}
+                  </div>
                 )}
               </div>
-              {edu.description && <p>{edu.description}</p>}
-              {edu.activities && edu.activities.length > 0 && (
-                <div>
-                  <h4>Activities:</h4>
-                  {edu.activities.map((activity, idx) => (
-                    <span
-                      key={idx}
-                      className="badge"
-                      style={{ margin: "0.25rem" }}
-                    >
-                      {activity}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
+            ))
+          ) : (
+            <p>No education records available.</p>
+          )}
         </div>
       </section>
 
       {/* Certifications Section */}
-      {data.certsWithSkills && data.certsWithSkills.length > 0 && (
+      {data?.certsWithSkills?.length > 0 && (
         <section id="certifications" className="section">
           <h2 className="section-title">Certifications</h2>
           <div className="grid grid-3">
             {data.certsWithSkills.map((cert) => (
               <div key={cert.id} className="card">
-                <h3>{cert.name}</h3>
+                <h3>{cert?.name ?? "Untitled Certification"}</h3>
                 <p style={{ fontSize: "0.875rem", color: "#9ca3af" }}>
-                  Acquired: {formatDate(cert.acquiredAt)}
+                  Acquired:{" "}
+                  {cert?.acquiredAt
+                    ? formatDate(cert.acquiredAt)
+                    : "Unknown Date"}
                 </p>
-                {cert.credentialUrl && (
+                {cert?.credentialUrl && (
                   <a
                     href={cert.credentialUrl}
                     target="_blank"
@@ -963,16 +999,18 @@ const Portfolio: React.FC<PortfolioProps> = ({ data }) => {
             <h3>Get In Touch</h3>
             <p style={{ fontSize: "1.125rem", marginBottom: "2rem" }}>
               I&apos;m currently{" "}
-              {data.available ? "available" : "not available"} for new
+              {data?.available ? "available" : "not available"} for new
               opportunities.
-              {data.available && " Let's discuss how we can work together!"}
+              {data?.available && " Let's discuss how we can work together!"}
             </p>
 
             <div className="button-group" style={{ marginBottom: "2rem" }}>
-              <a href={`mailto:${data.email}`} className="btn btn-primary">
-                Send Email
-              </a>
-              {data.resumeUrl && (
+              {data?.email && (
+                <a href={`mailto:${data.email}`} className="btn btn-primary">
+                  Send Email
+                </a>
+              )}
+              {data?.resumeUrl && (
                 <a
                   href={data.resumeUrl}
                   target="_blank"
@@ -984,29 +1022,31 @@ const Portfolio: React.FC<PortfolioProps> = ({ data }) => {
               )}
             </div>
 
-            <div className="social-links" style={{ marginBottom: "2rem" }}>
-              {data.socialLinks.map((link) => (
-                <a
-                  key={link.id}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title={link.platform}
-                  className="social-link"
-                  style={{
-                    width: "6rem",
-                    height: "3.5rem",
-                    fontSize: "1.25rem",
-                  }}
-                >
-                  {link.platform}
-                </a>
-              ))}
-            </div>
+            {data?.socialLinks?.length > 0 && (
+              <div className="social-links" style={{ marginBottom: "2rem" }}>
+                {data.socialLinks.map((link) => (
+                  <a
+                    key={link.id}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={link.platform}
+                    className="social-link"
+                    style={{
+                      width: "6rem",
+                      height: "3.5rem",
+                      fontSize: "1.25rem",
+                    }}
+                  >
+                    {link.platform}
+                  </a>
+                ))}
+              </div>
+            )}
 
             <div style={{ fontSize: "0.875rem", color: "#9ca3af" }}>
-              <div>📍 {data.location}</div>
-              <div>⭐ {data.stars} GitHub stars</div>
+              {data?.location && <div>📍 {data.location}</div>}
+              {data?.stars != null && <div>⭐ {data.stars} GitHub stars</div>}
             </div>
           </div>
         </div>

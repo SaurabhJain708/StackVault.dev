@@ -19,6 +19,10 @@ const HorizonTemplate = dynamic(
 const PulseTemplate = dynamic(() => import("@/components/templates/Pulse"), {
   loading: () => <Spinner />,
 });
+
+const messageContainer =
+  "flex flex-col items-center justify-center h-[70vh] text-center gap-4 text-gray-600";
+
 export default function UserPage({
   params,
 }: {
@@ -27,9 +31,33 @@ export default function UserPage({
   const { userId } = use(params); // unwrap the promise
   const { data: userData, isLoading } = useGetFullUser(userId);
 
-  if (isLoading) return <Spinner />;
-  if (!userData) return <div>User not found</div>;
-  if (!userData.TemplateId) return <div>Template not found</div>;
+  if (isLoading)
+    return (
+      <div className={messageContainer}>
+        <Spinner />
+        <p className="text-lg font-medium">Loading user data...</p>
+      </div>
+    );
+
+  if (!userData)
+    return (
+      <div className={messageContainer}>
+        <p className="text-xl font-semibold text-red-500">User not found</p>
+        <p className="text-gray-500">
+          The user you are looking for does not exist.
+        </p>
+      </div>
+    );
+
+  if (!userData.TemplateId)
+    return (
+      <div className={messageContainer}>
+        <p className="text-xl font-semibold text-red-500">Template not found</p>
+        <p className="text-gray-500">
+          This user does not have a template assigned.
+        </p>
+      </div>
+    );
 
   let TemplateComponent = null;
 
@@ -47,7 +75,13 @@ export default function UserPage({
       TemplateComponent = <AtlasTemplate data={userData} />;
       break;
     default:
-      return <div>Template not found</div>;
+      return (
+        <div className={messageContainer}>
+          <p className="text-xl font-semibold text-red-500">
+            Template not found
+          </p>
+        </div>
+      );
   }
 
   return <div className="relative">{TemplateComponent}</div>;
