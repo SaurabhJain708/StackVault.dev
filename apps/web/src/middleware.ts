@@ -33,7 +33,7 @@ export default withAuth(
           pathname.startsWith("/auth/") ||
           pathname.startsWith("/api/auth/") ||
           pathname === "/favicon.ico" ||
-          pathname.startsWith("/api/public/") ||
+          pathname.startsWith("/api/public") ||
           pathname === "/login" ||
           pathname.startsWith("/portfolio/") ||
           pathname.startsWith("/preview/") ||
