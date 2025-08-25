@@ -228,6 +228,10 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
     }
   `;
 
+  const styles ={
+  
+  }
+
   const containerStyle: React.CSSProperties = {
     fontFamily:
       '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -397,7 +401,6 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
           >
             {data.name}
           </h1>
-
           <p
             style={{
               fontSize: "1.4rem",
@@ -406,8 +409,8 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
               animation: isLoaded ? "fadeInUp 1s ease-out 0.4s both" : "",
             }}
           >
-            {data.experiencesWithSkills[0]?.position || "Software Developer"} •{" "}
-            {data.location}
+            {data?.experiencesWithSkills?.[0]?.position || "Software Developer"}{" "}
+            • {data?.location || ""}
           </p>
 
           <p
@@ -434,7 +437,7 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
               animation: isLoaded ? "fadeInUp 1s ease-out 0.8s both" : "",
             }}
           >
-            {data.badges.map((badge, index) => (
+            {data?.badges?.map((badge, index) => (
               <span
                 key={index}
                 className="badge"
@@ -516,7 +519,7 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
               animation: isLoaded ? "fadeInUp 1s ease-out 1.2s both" : "",
             }}
           >
-            {data.socialLinks.map((link) => (
+            {data?.socialLinks?.map((link) => (
               <a
                 key={link.id}
                 href={link.url}
@@ -582,7 +585,7 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
               Languages
             </h3>
             <div>
-              {data.languages.map((lang, index) => (
+              {data?.languages?.map((lang, index) => (
                 <span
                   key={index}
                   style={{
@@ -613,7 +616,7 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
               Causes I Care About
             </h3>
             <div>
-              {data.causes.map((cause, index) => (
+              {data?.causes?.map((cause, index) => (
                 <span
                   key={index}
                   style={{
@@ -661,7 +664,7 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
             gap: "2rem",
           }}
         >
-          {data.skillsWithRelations.map((skill, index) => (
+          {data?.skillsWithRelations?.map((skill) => (
             <div key={skill.id} className="card">
               <h3
                 style={{
@@ -692,7 +695,7 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
                   >
                     Related Projects:
                   </h4>
-                  {skill.projects.map((project) => (
+                  {skill?.projects?.map((project) => (
                     <div
                       key={project.id}
                       style={{
@@ -734,7 +737,7 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
             paddingLeft: "2rem",
           }}
         >
-          {data.experiencesWithSkills.map((exp, index) => (
+          {data?.experiencesWithSkills?.map((exp, index) => (
             <div
               key={exp.id}
               style={{
@@ -823,9 +826,9 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
                 >
                   {exp.description}
                 </p>
-                {exp.skills && exp.skills.length > 0 && (
+                {exp?.skills && exp.skills.length > 0 && (
                   <div>
-                    {exp.skills.map((skill) => (
+                    {exp?.skills?.map((skill) => (
                       <span
                         key={skill.id}
                         style={{
@@ -875,7 +878,7 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
             gap: "2rem",
           }}
         >
-          {data.projectsWithSkills.map((project, index) => (
+          {data?.projectsWithSkills?.map((project) => (
             <div key={project.id} className="card">
               <h3
                 style={{
@@ -897,7 +900,7 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
               </p>
               {project.skills && project.skills.length > 0 && (
                 <div style={{ marginBottom: "1.5rem" }}>
-                  {project.skills.map((skill) => (
+                  {project?.skills?.map((skill) => (
                     <span
                       key={skill.id}
                       style={{
@@ -967,7 +970,7 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
             gap: "2rem",
           }}
         >
-          {data.educationsWithSkills.map((edu, index) => (
+          {data?.educationsWithSkills?.map((edu) => (
             <div key={edu.id} className="card">
               <h3
                 style={{
@@ -1027,7 +1030,7 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
                   >
                     Activities:
                   </h5>
-                  {edu.activities.map((activity, idx) => (
+                  {edu?.activities?.map((activity, idx) => (
                     <span
                       key={idx}
                       style={{
@@ -1151,7 +1154,7 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
                 marginBottom: "2rem",
               }}
             >
-              {data.socialLinks.map((link) => (
+              {data?.socialLinks?.map((link) => (
                 <a
                   key={link.id}
                   href={link.url}

@@ -714,7 +714,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ data }) => {
 
           {/* Social Links */}
           <div className="social-links">
-            {data.socialLinks.map((link) => (
+            {data?.socialLinks?.map((link) => (
               <a
                 key={link.id}
                 href={link.url}
