@@ -680,8 +680,11 @@ const Portfolio: React.FC<PortfolioProps> = ({ data }) => {
           {/* Name & Title */}
           <h1 className="hero-name">{data.name}</h1>
           <p className="hero-title">
-            {data.experiencesWithSkills[0]?.position || "Software Developer"} •{" "}
-            {data.location}
+            {data?.experiencesWithSkills &&
+            data.experiencesWithSkills.length > 0
+              ? data.experiencesWithSkills[0].position
+              : "Software Developer"}{" "}
+            • {data?.location}
           </p>
           <p className="hero-bio">{data.bio}</p>
 

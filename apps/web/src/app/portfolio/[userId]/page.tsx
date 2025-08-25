@@ -29,6 +29,7 @@ export default function UserPage({
 
   if (isLoading) return <Spinner />;
   if (!userData) return <div>User not found</div>;
+  if (!userData.TemplateId) return <div>Template not found</div>;
 
   let TemplateComponent = null;
 
