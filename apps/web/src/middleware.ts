@@ -45,7 +45,8 @@ export default withAuth(
           pathname === "/privacypolicy" ||
           pathname === "/termsofservice" ||
           pathname === "/api/template" ||
-          pathname === "/api/templatebyid"
+          pathname === "/api/templatebyid" ||
+          pathname === "/"
         ) {
           return true;
         }
