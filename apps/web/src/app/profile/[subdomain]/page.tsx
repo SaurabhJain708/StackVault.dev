@@ -21,7 +21,7 @@ const PulseTemplate = dynamic(() => import("@/components/templates/Pulse"), {
   loading: () => <Spinner />,
 });
 
-export default function UserPage({
+export default function PremiumUserPage({
   params,
 }: {
   params: Promise<{ subdomain: string }>;
