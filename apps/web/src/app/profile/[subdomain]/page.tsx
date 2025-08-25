@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import dynamic from "next/dynamic";
 import Spinner from "@/components/spinner";
 import { getUserByDomain } from "@/lib/actions/getUserByDomain";
@@ -24,17 +24,18 @@ const PulseTemplate = dynamic(() => import("@/components/templates/Pulse"), {
 export default function UserPage({
   params,
 }: {
-  params: { subdomain: string };
+  params: Promise<{ subdomain: string }>;
 }) {
+  const { subdomain } = use(params);
   const [userId, setUserId] = useState<string | null>(null);
   const [loadingUserId, setLoadingUserId] = useState(true);
 
   // Fetch userId on mount
   useEffect(() => {
-    getUserByDomain(params.subdomain)
+    getUserByDomain(subdomain)
       .then((id) => setUserId(id))
       .finally(() => setLoadingUserId(false));
-  }, [params.subdomain]);
+  }, [subdomain]);
 
   const { data: userData, isLoading: loadingUserData } = useGetFullUser(
     userId ?? "",
