@@ -1,7 +1,10 @@
+"use client";
 import Spinner from "@/components/spinner";
 import { getUserByDomain } from "@/lib/actions/getUserByDomain";
 import UserHead from "@/lib/overideMetada";
+import { useGetFullUser } from "@/lib/query/user";
 import dynamic from "next/dynamic";
+import { use } from "react";
 
 const AtlasTemplate = dynamic(() => import("@/components/templates/Atlas"), {
   loading: () => <Spinner />,
@@ -19,25 +22,13 @@ const PulseTemplate = dynamic(() => import("@/components/templates/Pulse"), {
   loading: () => <Spinner />,
 });
 
-async function getFullUser(userId: string) {
-  const res = await fetch(
-    `${process.env.NEXTAUTH_URL}/api/public?userid=${userId}`,
-    { cache: "no-store" },
-  );
-  return res.json();
-}
-
-export default async function UserPage({
+export default function UserPage({
   params,
 }: {
-  params: Promise<{ subdomain: string }>;
+  params: Promise<{ userId: string }>;
 }) {
-  const { subdomain } = await params;
-  const userId = await getUserByDomain(subdomain);
-  if (!userId) {
-    return <div>User not found</div>;
-  }
-  const userData = await getFullUser(userId);
+  const { userId } = use(params);
+  const { data: userData } = useGetFullUser(userId);
 
   let TemplateComponent = null;
 
