@@ -227,11 +227,6 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
       }
     }
   `;
-
-  const styles ={
-  
-  }
-
   const containerStyle: React.CSSProperties = {
     fontFamily:
       '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -345,119 +340,138 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
             marginTop: "100px",
           }}
         >
-          <div
-            className="hero-avatar"
-            style={{
-              position: "relative",
-              display: "inline-flex",
-              marginBottom: "2rem",
-              background: "none",
-              border: "none",
-              width: "clamp(120px, 40vw, 200px)", // min: 120px, max: 200px
-              height: "clamp(120px, 40vw, 200px)",
-              borderRadius: "50%",
-            }}
-          >
-            <img
-              src={data.avatarUrl || "/default-avatar.png"}
-              alt={data.name}
+          {/* Avatar */}
+          {data?.avatarUrl && (
+            <div
+              className="hero-avatar"
               style={{
-                width: "100%",
-                height: "100%",
+                position: "relative",
+                display: "inline-flex",
+                marginBottom: "2rem",
+                background: "none",
+                border: "none",
+                width: "clamp(120px, 40vw, 200px)",
+                height: "clamp(120px, 40vw, 200px)",
                 borderRadius: "50%",
-                objectFit: "cover",
-                border: "4px solid #3b82f6",
-                boxShadow:
-                  "0 0 30px rgba(59, 130, 246, 0.4), 0 0 60px rgba(168, 85, 247, 0.2)",
               }}
-            />
+            >
+              <img
+                src={data.avatarUrl}
+                alt={data.name}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                  border: "4px solid #3b82f6",
+                  boxShadow:
+                    "0 0 30px rgba(59, 130, 246, 0.4), 0 0 60px rgba(168, 85, 247, 0.2)",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  top: "-8%",
+                  left: "-8%",
+                  right: "-8%",
+                  bottom: "-8%",
+                  border: "2px dashed rgba(168, 85, 247, 0.4)",
+                  borderRadius: "50%",
+                  animation: "spin 20s linear infinite",
+                }}
+              ></div>
+            </div>
+          )}
+
+          {/* Name */}
+          {data?.name && (
+            <h1
+              className="hero-name"
+              style={{
+                fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
+                fontWeight: 900,
+                marginBottom: "1rem",
+                background:
+                  "linear-gradient(135deg, #00ffff, #ff00ff, #00ffff)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                textShadow: "0 0 20px rgba(0, 255, 255, 0.5)",
+                animation: isLoaded ? "fadeInUp 1s ease-out 0.2s both" : "",
+              }}
+            >
+              {data.name}
+            </h1>
+          )}
+
+          {/* Position & Location */}
+          {(data?.experiencesWithSkills?.[0]?.position || data?.location) && (
+            <p
+              style={{
+                fontSize: "1.4rem",
+                color: "#aaa",
+                marginBottom: "1.5rem",
+                animation: isLoaded ? "fadeInUp 1s ease-out 0.4s both" : "",
+              }}
+            >
+              {data?.experiencesWithSkills?.[0]?.position ||
+                "Software Developer"}
+              {data?.location && ` • ${data.location}`}
+            </p>
+          )}
+
+          {/* Bio */}
+          {data?.bio && (
+            <p
+              style={{
+                fontSize: "1.1rem",
+                lineHeight: 1.8,
+                marginBottom: "2rem",
+                color: "#ccc",
+                maxWidth: "600px",
+                margin: "0 auto 2rem",
+                animation: isLoaded ? "fadeInUp 1s ease-out 0.6s both" : "",
+              }}
+            >
+              {data.bio}
+            </p>
+          )}
+
+          {/* Badges */}
+          {data?.badges?.length > 0 && (
             <div
               style={{
-                position: "absolute",
-                top: "-8%",
-                left: "-8%",
-                right: "-8%",
-                bottom: "-8%",
-                border: "2px dashed rgba(168, 85, 247, 0.4)",
-                borderRadius: "50%",
-                animation: "spin 20s linear infinite",
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                gap: "0.5rem",
+                marginBottom: "2rem",
+                animation: isLoaded ? "fadeInUp 1s ease-out 0.8s both" : "",
               }}
-            ></div>
-          </div>
+            >
+              {data.badges.map((badge, index) => (
+                <span
+                  key={index}
+                  className="badge"
+                  style={{
+                    display: "inline-block",
+                    padding: "0.5rem 1.2rem",
+                    background: "rgba(0, 255, 255, 0.2)",
+                    color: "#00ffff",
+                    borderRadius: "25px",
+                    fontSize: "0.9rem",
+                    fontWeight: 600,
+                    border: "1px solid rgba(0, 255, 255, 0.3)",
+                    margin: "0.25rem",
+                  }}
+                >
+                  {badge}
+                </span>
+              ))}
+            </div>
+          )}
 
-          <h1
-            className="hero-name"
-            style={{
-              fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
-              fontWeight: 900,
-              marginBottom: "1rem",
-              background: "linear-gradient(135deg, #00ffff, #ff00ff, #00ffff)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              textShadow: "0 0 20px rgba(0, 255, 255, 0.5)",
-              animation: isLoaded ? "fadeInUp 1s ease-out 0.2s both" : "",
-            }}
-          >
-            {data.name}
-          </h1>
-          <p
-            style={{
-              fontSize: "1.4rem",
-              color: "#aaa",
-              marginBottom: "1.5rem",
-              animation: isLoaded ? "fadeInUp 1s ease-out 0.4s both" : "",
-            }}
-          >
-            {data?.experiencesWithSkills?.[0]?.position || "Software Developer"}{" "}
-            • {data?.location || ""}
-          </p>
-
-          <p
-            style={{
-              fontSize: "1.1rem",
-              lineHeight: 1.8,
-              marginBottom: "2rem",
-              color: "#ccc",
-              maxWidth: "600px",
-              margin: "0 auto 2rem",
-              animation: isLoaded ? "fadeInUp 1s ease-out 0.6s both" : "",
-            }}
-          >
-            {data.bio}
-          </p>
-
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "center",
-              gap: "0.5rem",
-              marginBottom: "2rem",
-              animation: isLoaded ? "fadeInUp 1s ease-out 0.8s both" : "",
-            }}
-          >
-            {data?.badges?.map((badge, index) => (
-              <span
-                key={index}
-                className="badge"
-                style={{
-                  display: "inline-block",
-                  padding: "0.5rem 1.2rem",
-                  background: "rgba(0, 255, 255, 0.2)",
-                  color: "#00ffff",
-                  borderRadius: "25px",
-                  fontSize: "0.9rem",
-                  fontWeight: 600,
-                  border: "1px solid rgba(0, 255, 255, 0.3)",
-                  margin: "0.25rem",
-                }}
-              >
-                {badge}
-              </span>
-            ))}
-          </div>
-
+          {/* Hero Actions */}
           <div
             className="hero-actions"
             style={{
@@ -468,28 +482,31 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
               animation: isLoaded ? "fadeInUp 1s ease-out 1s both" : "",
             }}
           >
-            <a
-              href={data.resumeUrl || "#"}
-              className="btn"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                padding: "0.75rem 2rem",
-                borderRadius: "50px",
-                background: "linear-gradient(135deg, #00ffff, #0088cc)",
-                color: "#000",
-                textDecoration: "none",
-                fontSize: "1rem",
-                fontWeight: 700,
-                border: "none",
-                cursor: "pointer",
-                boxShadow: "0 5px 15px rgba(0, 255, 255, 0.4)",
-              }}
-            >
-              Download Resume
-            </a>
+            {data?.resumeUrl && (
+              <a
+                href={data.resumeUrl}
+                className="btn"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  padding: "0.75rem 2rem",
+                  borderRadius: "50px",
+                  background: "linear-gradient(135deg, #00ffff, #0088cc)",
+                  color: "#000",
+                  textDecoration: "none",
+                  fontSize: "1rem",
+                  fontWeight: 700,
+                  border: "none",
+                  cursor: "pointer",
+                  boxShadow: "0 5px 15px rgba(0, 255, 255, 0.4)",
+                }}
+              >
+                Download Resume
+              </a>
+            )}
+
             <a
               href="#contact"
               className="btn"
@@ -511,42 +528,45 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
             </a>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              gap: "1rem",
-              justifyContent: "center",
-              animation: isLoaded ? "fadeInUp 1s ease-out 1.2s both" : "",
-            }}
-          >
-            {data?.socialLinks?.map((link) => (
-              <a
-                key={link.id}
-                href={link.url}
-                className="social-link"
-                target="_blank"
-                rel="noopener noreferrer"
-                title={link.platform}
-                style={{
-                  width: "auto",
-                  height: "50px",
-                  borderRadius: "10%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  background: "rgba(0, 255, 255, 0.1)",
-                  color: "#00ffff",
-                  textDecoration: "none",
-                  border: "1px solid rgba(0, 255, 255, 0.3)",
-                  fontSize: "1.2rem",
-                  fontWeight: 700,
-                  padding: "10px",
-                }}
-              >
-                {link.platform}
-              </a>
-            ))}
-          </div>
+          {/* Social Links */}
+          {data?.socialLinks?.length > 0 && (
+            <div
+              style={{
+                display: "flex",
+                gap: "1rem",
+                justifyContent: "center",
+                animation: isLoaded ? "fadeInUp 1s ease-out 1.2s both" : "",
+              }}
+            >
+              {data.socialLinks.map((link) => (
+                <a
+                  key={link.id}
+                  href={link.url}
+                  className="social-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={link.platform}
+                  style={{
+                    width: "auto",
+                    height: "50px",
+                    borderRadius: "10%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    background: "rgba(0, 255, 255, 0.1)",
+                    color: "#00ffff",
+                    textDecoration: "none",
+                    border: "1px solid rgba(0, 255, 255, 0.3)",
+                    fontSize: "1.2rem",
+                    fontWeight: 700,
+                    padding: "10px",
+                  }}
+                >
+                  {link.platform}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -656,62 +676,74 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
         >
           Skills & Expertise
         </h2>
-        <div
-          className="grid3"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: "2rem",
-          }}
-        >
-          {data?.skillsWithRelations?.map((skill) => (
-            <div key={skill.id} className="card">
-              <h3
-                style={{
-                  marginBottom: "1rem",
-                  color: "#00ffff",
-                  fontSize: "1.3rem",
-                }}
-              >
-                {skill.name}
-              </h3>
-              <p
-                style={{
-                  marginBottom: "1.5rem",
-                  color: "#ccc",
-                  lineHeight: 1.6,
-                }}
-              >
-                {skill.description}
-              </p>
-              {skill.projects.length > 0 && (
-                <div>
-                  <h4
+
+        {data?.skillsWithRelations?.length > 0 && (
+          <div
+            className="grid3"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+              gap: "2rem",
+            }}
+          >
+            {data.skillsWithRelations.map((skill) => (
+              <div key={skill.id} className="card">
+                {skill.name && (
+                  <h3
                     style={{
-                      fontSize: "1rem",
-                      marginBottom: "0.5rem",
-                      color: "#ff00ff",
+                      marginBottom: "1rem",
+                      color: "#00ffff",
+                      fontSize: "1.3rem",
                     }}
                   >
-                    Related Projects:
-                  </h4>
-                  {skill?.projects?.map((project) => (
-                    <div
-                      key={project.id}
+                    {skill.name}
+                  </h3>
+                )}
+
+                {skill.description && (
+                  <p
+                    style={{
+                      marginBottom: "1.5rem",
+                      color: "#ccc",
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    {skill.description}
+                  </p>
+                )}
+
+                {skill.projects?.length > 0 && (
+                  <div>
+                    <h4
                       style={{
-                        fontSize: "0.9rem",
-                        marginBottom: "0.25rem",
-                        color: "#aaa",
+                        fontSize: "1rem",
+                        marginBottom: "0.5rem",
+                        color: "#ff00ff",
                       }}
                     >
-                      • {project.name}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+                      Related Projects:
+                    </h4>
+                    {skill.projects.map(
+                      (project) =>
+                        project.name && (
+                          <div
+                            key={project.id}
+                            style={{
+                              fontSize: "0.9rem",
+                              marginBottom: "0.25rem",
+                              color: "#aaa",
+                            }}
+                          >
+                            • {project.name}
+                          </div>
+                        ),
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Experience Section */}
@@ -730,128 +762,155 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
         >
           Professional Experience
         </h2>
-        <div
-          className="timeline"
-          style={{
-            position: "relative",
-            paddingLeft: "2rem",
-          }}
-        >
-          {data?.experiencesWithSkills?.map((exp, index) => (
-            <div
-              key={exp.id}
-              style={{
-                position: "relative",
-                paddingBottom: "3rem",
-                marginLeft: "1rem",
-              }}
-            >
+
+        {data?.experiencesWithSkills?.length > 0 && (
+          <div
+            className="timeline"
+            style={{
+              position: "relative",
+              paddingLeft: "2rem",
+            }}
+          >
+            {data.experiencesWithSkills.map((exp, index) => (
               <div
+                key={exp.id}
                 style={{
-                  position: "absolute",
-                  left: "-1.5rem",
-                  top: "1rem",
-                  width: "1rem",
-                  height: "1rem",
-                  background: "#00ffff",
-                  borderRadius: "50%",
-                  border: "3px solid #0a0f1a",
-                  boxShadow: "0 0 15px rgba(0, 255, 255, 0.7)",
+                  position: "relative",
+                  paddingBottom: "3rem",
+                  marginLeft: "1rem",
                 }}
-              ></div>
-              {index < data.experiencesWithSkills.length - 1 && (
+              >
+                {/* Timeline Dot */}
                 <div
                   style={{
                     position: "absolute",
-                    left: "-1rem",
-                    top: "2rem",
-                    bottom: 0,
-                    width: "2px",
-                    background: "linear-gradient(to bottom, #00ffff, #ff00ff)",
+                    left: "-1.5rem",
+                    top: "1rem",
+                    width: "1rem",
+                    height: "1rem",
+                    background: "#00ffff",
+                    borderRadius: "50%",
+                    border: "3px solid #0a0f1a",
+                    boxShadow: "0 0 15px rgba(0, 255, 255, 0.7)",
                   }}
                 ></div>
-              )}
-              <div className="card">
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "flex-start",
-                    marginBottom: "1rem",
-                    flexWrap: "wrap",
-                    gap: "1rem",
-                  }}
-                >
-                  <div>
-                    <h3
-                      style={{
-                        color: "#00ffff",
-                        marginBottom: "0.5rem",
-                        fontSize: "1.3rem",
-                      }}
-                    >
-                      {exp.position}
-                    </h3>
-                    <h4
-                      style={{
-                        color: "#ff00ff",
-                        marginBottom: "0.5rem",
-                        fontSize: "1.1rem",
-                      }}
-                    >
-                      {exp.company}
-                    </h4>
-                  </div>
+
+                {/* Timeline Line */}
+                {index < data.experiencesWithSkills.length - 1 && (
                   <div
                     style={{
-                      textAlign: "right",
-                      fontSize: "0.9rem",
-                      color: "#aaa",
+                      position: "absolute",
+                      left: "-1rem",
+                      top: "2rem",
+                      bottom: 0,
+                      width: "2px",
+                      background:
+                        "linear-gradient(to bottom, #00ffff, #ff00ff)",
+                    }}
+                  ></div>
+                )}
+
+                <div className="card">
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "flex-start",
+                      marginBottom: "1rem",
+                      flexWrap: "wrap",
+                      gap: "1rem",
                     }}
                   >
                     <div>
-                      {formatDate(exp.startDate)} - {formatDate(exp.endDate)}
+                      {exp.position && (
+                        <h3
+                          style={{
+                            color: "#00ffff",
+                            marginBottom: "0.5rem",
+                            fontSize: "1.3rem",
+                          }}
+                        >
+                          {exp.position}
+                        </h3>
+                      )}
+
+                      {exp.company && (
+                        <h4
+                          style={{
+                            color: "#ff00ff",
+                            marginBottom: "0.5rem",
+                            fontSize: "1.1rem",
+                          }}
+                        >
+                          {exp.company}
+                        </h4>
+                      )}
                     </div>
-                    <div style={{ fontSize: "0.8rem", marginTop: "0.25rem" }}>
-                      {getExperienceDuration(exp.startDate, exp.endDate)}
-                    </div>
-                  </div>
-                </div>
-                <p
-                  style={{
-                    marginBottom: "1rem",
-                    color: "#ccc",
-                    lineHeight: 1.6,
-                  }}
-                >
-                  {exp.description}
-                </p>
-                {exp?.skills && exp.skills.length > 0 && (
-                  <div>
-                    {exp?.skills?.map((skill) => (
-                      <span
-                        key={skill.id}
+
+                    {(exp.startDate || exp.endDate) && (
+                      <div
                         style={{
-                          display: "inline-block",
-                          padding: "0.3rem 0.8rem",
-                          background: "rgba(0, 255, 255, 0.15)",
-                          color: "#00ffff",
-                          borderRadius: "15px",
-                          fontSize: "0.8rem",
-                          fontWeight: 600,
-                          margin: "0.2rem",
-                          border: "1px solid rgba(0, 255, 255, 0.2)",
+                          textAlign: "right",
+                          fontSize: "0.9rem",
                         }}
                       >
-                        {skill.name}
-                      </span>
-                    ))}
+                        <div>
+                          {exp.startDate && formatDate(exp.startDate)} -{" "}
+                          {exp.endDate && formatDate(exp.endDate)}
+                        </div>
+                        {exp.startDate && exp.endDate && (
+                          <div
+                            style={{ fontSize: "0.8rem", marginTop: "0.25rem" }}
+                          >
+                            {getExperienceDuration(exp.startDate, exp.endDate)}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
-                )}
+
+                  {exp.description && (
+                    <p
+                      style={{
+                        marginBottom: "1rem",
+                        color: "#ccc",
+                        lineHeight: 1.6,
+                      }}
+                    >
+                      {exp.description}
+                    </p>
+                  )}
+
+                  {exp.skills?.length > 0 && (
+                    <div>
+                      {exp.skills.map(
+                        (skill) =>
+                          skill.name && (
+                            <span
+                              key={skill.id}
+                              style={{
+                                display: "inline-block",
+                                padding: "0.3rem 0.8rem",
+                                background: "rgba(0, 255, 255, 0.15)",
+                                color: "#00ffff",
+                                borderRadius: "15px",
+                                fontSize: "0.8rem",
+                                fontWeight: 600,
+                                margin: "0.2rem",
+                                border: "1px solid rgba(0, 255, 255, 0.2)",
+                              }}
+                            >
+                              {skill.name}
+                            </span>
+                          ),
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Projects Section */}
@@ -870,80 +929,93 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
         >
           Featured Projects
         </h2>
-        <div
-          className="grid2"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-            gap: "2rem",
-          }}
-        >
-          {data?.projectsWithSkills?.map((project) => (
-            <div key={project.id} className="card">
-              <h3
-                style={{
-                  marginBottom: "1rem",
-                  color: "#00ffff",
-                  fontSize: "1.3rem",
-                }}
-              >
-                {project.name}
-              </h3>
-              <p
-                style={{
-                  marginBottom: "1.5rem",
-                  color: "#ccc",
-                  lineHeight: 1.6,
-                }}
-              >
-                {project.description}
-              </p>
-              {project.skills && project.skills.length > 0 && (
-                <div style={{ marginBottom: "1.5rem" }}>
-                  {project?.skills?.map((skill) => (
-                    <span
-                      key={skill.id}
-                      style={{
-                        display: "inline-block",
-                        padding: "0.3rem 0.8rem",
-                        background: "rgba(255, 0, 255, 0.15)",
-                        color: "#ff00ff",
-                        borderRadius: "15px",
-                        fontSize: "0.8rem",
-                        fontWeight: 600,
-                        margin: "0.2rem",
-                        border: "1px solid rgba(255, 0, 255, 0.2)",
-                      }}
-                    >
-                      {skill.name}
-                    </span>
-                  ))}
-                </div>
-              )}
-              {project.url && (
-                <a
-                  href={project.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn"
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    padding: "0.6rem 1.5rem",
-                    borderRadius: "25px",
-                    background: "linear-gradient(135deg, #00ffff, #0088cc)",
-                    color: "#000",
-                    textDecoration: "none",
-                    fontSize: "0.9rem",
-                    fontWeight: 600,
-                  }}
-                >
-                  View Project →
-                </a>
-              )}
-            </div>
-          ))}
-        </div>
+
+        {data?.projectsWithSkills?.length > 0 && (
+          <div
+            className="grid2"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+              gap: "2rem",
+            }}
+          >
+            {data.projectsWithSkills.map((project) => (
+              <div key={project.id} className="card">
+                {project.name && (
+                  <h3
+                    style={{
+                      marginBottom: "1rem",
+                      color: "#00ffff",
+                      fontSize: "1.3rem",
+                    }}
+                  >
+                    {project.name}
+                  </h3>
+                )}
+
+                {project.description && (
+                  <p
+                    style={{
+                      marginBottom: "1.5rem",
+                      color: "#ccc",
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    {project.description}
+                  </p>
+                )}
+
+                {project.skills?.length > 0 && (
+                  <div style={{ marginBottom: "1.5rem" }}>
+                    {project.skills.map(
+                      (skill) =>
+                        skill.name && (
+                          <span
+                            key={skill.id}
+                            style={{
+                              display: "inline-block",
+                              padding: "0.3rem 0.8rem",
+                              background: "rgba(255, 0, 255, 0.15)",
+                              color: "#ff00ff",
+                              borderRadius: "15px",
+                              fontSize: "0.8rem",
+                              fontWeight: 600,
+                              margin: "0.2rem",
+                              border: "1px solid rgba(255, 0, 255, 0.2)",
+                            }}
+                          >
+                            {skill.name}
+                          </span>
+                        ),
+                    )}
+                  </div>
+                )}
+
+                {project.url && (
+                  <a
+                    href={project.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn"
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      padding: "0.6rem 1.5rem",
+                      borderRadius: "25px",
+                      background: "linear-gradient(135deg, #00ffff, #0088cc)",
+                      color: "#000",
+                      textDecoration: "none",
+                      fontSize: "0.9rem",
+                      fontWeight: 600,
+                    }}
+                  >
+                    View Project →
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Education Section */}
@@ -962,97 +1034,114 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
         >
           Education
         </h2>
-        <div
-          className="grid2"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-            gap: "2rem",
-          }}
-        >
-          {data?.educationsWithSkills?.map((edu) => (
-            <div key={edu.id} className="card">
-              <h3
-                style={{
-                  marginBottom: "0.5rem",
-                  color: "#00ffff",
-                  fontSize: "1.3rem",
-                }}
-              >
-                {edu.degree} in {edu.fieldOfStudy}
-              </h3>
-              <h4
-                style={{
-                  marginBottom: "1rem",
-                  color: "#ff00ff",
-                  fontSize: "1.1rem",
-                }}
-              >
-                {edu.institution}
-              </h4>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginBottom: "1rem",
-                  fontSize: "0.9rem",
-                  color: "#aaa",
-                  flexWrap: "wrap",
-                  gap: "0.5rem",
-                }}
-              >
-                <span>
-                  {formatDate(edu.startDate)} - {formatDate(edu.endDate)}
-                </span>
-                {edu.grade && (
-                  <span style={{ color: "#00ffff" }}>{edu.grade}</span>
-                )}
-              </div>
-              {edu.description && (
-                <p
-                  style={{
-                    marginBottom: "1rem",
-                    color: "#ccc",
-                    lineHeight: 1.6,
-                  }}
-                >
-                  {edu.description}
-                </p>
-              )}
-              {edu.activities && edu.activities.length > 0 && (
-                <div>
-                  <h5
+
+        {data?.educationsWithSkills?.length > 0 && (
+          <div
+            className="grid2"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+              gap: "2rem",
+            }}
+          >
+            {data.educationsWithSkills.map((edu) => (
+              <div key={edu.id} className="card">
+                {(edu.degree || edu.fieldOfStudy) && (
+                  <h3
                     style={{
-                      fontSize: "1rem",
                       marginBottom: "0.5rem",
-                      color: "#ff00ff",
+                      color: "#00ffff",
+                      fontSize: "1.3rem",
                     }}
                   >
-                    Activities:
-                  </h5>
-                  {edu?.activities?.map((activity, idx) => (
-                    <span
-                      key={idx}
+                    {edu.degree} {edu.fieldOfStudy && `in ${edu.fieldOfStudy}`}
+                  </h3>
+                )}
+
+                {edu.institution && (
+                  <h4
+                    style={{
+                      marginBottom: "1rem",
+                      color: "#ff00ff",
+                      fontSize: "1.1rem",
+                    }}
+                  >
+                    {edu.institution}
+                  </h4>
+                )}
+
+                {(edu.startDate || edu.endDate || edu.grade) && (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginBottom: "1rem",
+                      fontSize: "0.9rem",
+                      color: "#aaa",
+                      flexWrap: "wrap",
+                      gap: "0.5rem",
+                    }}
+                  >
+                    <span>
+                      {edu.startDate && formatDate(edu.startDate)} -{" "}
+                      {edu.endDate && formatDate(edu.endDate)}
+                    </span>
+                    {edu.grade && (
+                      <span style={{ color: "#00ffff" }}>{edu.grade}</span>
+                    )}
+                  </div>
+                )}
+
+                {edu.description && (
+                  <p
+                    style={{
+                      marginBottom: "1rem",
+                      color: "#ccc",
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    {edu.description}
+                  </p>
+                )}
+
+                {edu.activities?.length > 0 && (
+                  <div>
+                    <h5
                       style={{
-                        display: "inline-block",
-                        padding: "0.3rem 0.8rem",
-                        background: "rgba(0, 255, 255, 0.15)",
-                        color: "#00ffff",
-                        borderRadius: "15px",
-                        fontSize: "0.8rem",
-                        fontWeight: 600,
-                        margin: "0.2rem",
-                        border: "1px solid rgba(0, 255, 255, 0.2)",
+                        fontSize: "1rem",
+                        marginBottom: "0.5rem",
+                        color: "#ff00ff",
                       }}
                     >
-                      {activity}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+                      Activities:
+                    </h5>
+                    {edu.activities.map(
+                      (activity, idx) =>
+                        activity && (
+                          <span
+                            key={idx}
+                            style={{
+                              display: "inline-block",
+                              padding: "0.3rem 0.8rem",
+                              background: "rgba(0, 255, 255, 0.15)",
+                              color: "#00ffff",
+                              borderRadius: "15px",
+                              fontSize: "0.8rem",
+                              fontWeight: 600,
+                              margin: "0.2rem",
+                              border: "1px solid rgba(0, 255, 255, 0.2)",
+                            }}
+                          >
+                            {activity}
+                          </span>
+                        ),
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Contact Section */}
@@ -1071,30 +1160,24 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
         >
           Let&apos;s Connect
         </h2>
+
         <div style={{ textAlign: "center" }}>
           <div className="card" style={{ maxWidth: "600px", margin: "0 auto" }}>
-            <h3
-              style={{
-                marginBottom: "1rem",
-                color: "#00ffff",
-                fontSize: "1.5rem",
-              }}
-            >
-              Get In Touch
-            </h3>
-            <p
-              style={{
-                marginBottom: "2rem",
-                color: "#ccc",
-                fontSize: "1.1rem",
-                lineHeight: 1.6,
-              }}
-            >
-              I&apos;m currently{" "}
-              {data.available ? "available" : "not available"} for new
-              opportunities.
-              {data.available && " Let's discuss how we can work together!"}
-            </p>
+            {data.available !== undefined && (
+              <p
+                style={{
+                  marginBottom: "2rem",
+                  color: "#ccc",
+                  fontSize: "1.1rem",
+                  lineHeight: 1.6,
+                }}
+              >
+                I&apos;m currently{" "}
+                {data.available ? "available" : "not available"} for new
+                opportunities.
+                {data.available && " Let's discuss how we can work together!"}
+              </p>
+            )}
 
             <div
               style={{
@@ -1105,23 +1188,26 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
                 marginBottom: "2rem",
               }}
             >
-              <a
-                href={`mailto:${data.email}`}
-                className="btn"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  padding: "0.75rem 2rem",
-                  borderRadius: "50px",
-                  background: "linear-gradient(135deg, #00ffff, #0088cc)",
-                  color: "#000",
-                  textDecoration: "none",
-                  fontSize: "1rem",
-                  fontWeight: 700,
-                }}
-              >
-                Send Email
-              </a>
+              {data.email && (
+                <a
+                  href={`mailto:${data.email}`}
+                  className="btn"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    padding: "0.75rem 2rem",
+                    borderRadius: "50px",
+                    background: "linear-gradient(135deg, #00ffff, #0088cc)",
+                    color: "#000",
+                    textDecoration: "none",
+                    fontSize: "1rem",
+                    fontWeight: 700,
+                  }}
+                >
+                  Send Email
+                </a>
+              )}
+
               {data.resumeUrl && (
                 <a
                   href={data.resumeUrl}
@@ -1146,53 +1232,67 @@ const PulsePortfolio: React.FC<PortfolioProps> = ({ data }) => {
               )}
             </div>
 
-            <div
-              style={{
-                display: "flex",
-                gap: "1rem",
-                justifyContent: "center",
-                marginBottom: "2rem",
-              }}
-            >
-              {data?.socialLinks?.map((link) => (
-                <a
-                  key={link.id}
-                  href={link.url}
-                  className="social-link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title={link.platform}
-                  style={{
-                    width: "auto",
-                    height: "60px",
-                    borderRadius: "20%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    background: "rgba(0, 255, 255, 0.1)",
-                    color: "#00ffff",
-                    textDecoration: "none",
-                    border: "1px solid rgba(0, 255, 255, 0.3)",
-                    fontSize: "1.5rem",
-                    fontWeight: 700,
-                    padding: "10px",
-                  }}
-                >
-                  {link.platform}
-                </a>
-              ))}
-            </div>
+            {data?.socialLinks?.length > 0 && (
+              <div
+                style={{
+                  display: "flex",
+                  gap: "1rem",
+                  justifyContent: "center",
+                  marginBottom: "2rem",
+                }}
+              >
+                {data.socialLinks.map(
+                  (link) =>
+                    link.url &&
+                    link.platform && (
+                      <a
+                        key={link.id}
+                        href={link.url}
+                        className="social-link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={link.platform}
+                        style={{
+                          width: "auto",
+                          height: "60px",
+                          borderRadius: "20%",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          background: "rgba(0, 255, 255, 0.1)",
+                          color: "#00ffff",
+                          textDecoration: "none",
+                          border: "1px solid rgba(0, 255, 255, 0.3)",
+                          fontSize: "1.5rem",
+                          fontWeight: 700,
+                          padding: "10px",
+                        }}
+                      >
+                        {link.platform}
+                      </a>
+                    ),
+                )}
+              </div>
+            )}
 
-            <div
-              style={{
-                fontSize: "0.9rem",
-                color: "#aaa",
-                lineHeight: 1.6,
-              }}
-            >
-              <div style={{ marginBottom: "0.5rem" }}>📍 {data.location}</div>
-              <div>⭐ {data.stars} GitHub stars</div>
-            </div>
+            {(data.location || data.stars !== undefined) && (
+              <div
+                style={{
+                  fontSize: "0.9rem",
+                  color: "#aaa",
+                  lineHeight: 1.6,
+                }}
+              >
+                {data.location && (
+                  <div style={{ marginBottom: "0.5rem" }}>
+                    📍 {data.location}
+                  </div>
+                )}
+                {data.stars !== undefined && (
+                  <div>⭐ {data.stars} GitHub stars</div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </section>
