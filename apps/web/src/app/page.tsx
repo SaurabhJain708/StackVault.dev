@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { useGetAllTemplates } from "@/lib/query/template";
 import { Template } from "@repo/db";
 
+// Back after being hacked
 // Main App component for the landing page
 const App = () => {
   const router = useRouter();
