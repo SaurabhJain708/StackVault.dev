@@ -625,7 +625,7 @@ const App = () => {
             truly stands out and opens new opportunities. Your future starts
             now.
           </motion.p>
-          <Link href="/login">
+          <Link href="/dashboard">
             <motion.button
               className="px-12 py-6 bg-gradient-to-r from-pink-600 to-purple-600 text-white font-bold text-2xl rounded-full shadow-2xl hover:shadow-pink-500/50 transition-all duration-300 ease-in-out transform hover:-translate-y-2 focus:outline-none focus:ring-4 focus:ring-pink-600 focus:ring-opacity-75 relative overflow-hidden group"
               variants={buttonVariants}
