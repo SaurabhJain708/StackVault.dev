@@ -95,10 +95,12 @@ export default function PremiumUserPage({
 
   return (
     <>
+    {userData && (
       <UserHead
         title={userData.name || "User Portfolio"}
         favicon={userData.avatarUrl || "/favicon.ico"}
       />
+    )}
       <div className="relative">{TemplateComponent}</div>
     </>
   );
