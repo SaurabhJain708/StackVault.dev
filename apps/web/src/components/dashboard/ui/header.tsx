@@ -2,12 +2,10 @@
 import { useGetUser, useLogout } from "@/lib/query/user";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function Header() {
   const [logout, setLogout] = useState(false);
-  const router = useRouter();
   const logouthandler = useLogout();
   const { data: userData } = useGetUser();
   return (
@@ -43,9 +41,9 @@ export default function Header() {
             </p>
             <button
               onClick={() => {
-                router.push("/");
                 setLogout(false);
                 logouthandler.mutate();
+                window.location.href = "/";
               }}
               className="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600 transition"
             >
