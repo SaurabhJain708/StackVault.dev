@@ -12,5 +12,6 @@ export const useGetUserData = (userId: string) => {
     queryFn: () => getFullUser(userId),
     refetchOnMount: "always", // always refetch when component mounts
     refetchOnWindowFocus: false, // optional: don't refetch on window focus
+    enabled: !!userId, // only run this query if userId is truthy
   });
 };

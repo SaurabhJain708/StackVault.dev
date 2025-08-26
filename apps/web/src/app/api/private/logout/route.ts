@@ -15,11 +15,12 @@ export async function GET() {
     ];
 
     cookieNames.forEach((name) => {
-      response.cookies.set({
-        name,
-        value: "",
+      response.cookies.set(name, "", {
         maxAge: 0,
         path: "/",
+        httpOnly: true,
+        secure: true,
+        sameSite: "lax",
       });
     });
 

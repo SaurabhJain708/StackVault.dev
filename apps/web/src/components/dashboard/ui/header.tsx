@@ -29,6 +29,7 @@ export default function Header() {
         <div
           onClick={() => setLogout((prev) => !prev)}
           className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-sm font-semibold"
+          onBlur={() => setLogout(false)}
         >
           {userData?.name
             .split(" ")

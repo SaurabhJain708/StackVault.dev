@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { use } from "react";
 import dynamic from "next/dynamic";
 import Spinner from "@/components/spinner";
-import { getUserByDomain } from "@/lib/actions/getUserByDomain";
 import { useGetFullUser } from "@/lib/query/user";
 import UserHead from "@/lib/overideMetada";
+import { useGetUserByDomain } from "@/lib/query/getUserbyDomain";
 
 const AtlasTemplate = dynamic(() => import("@/components/templates/Atlas"), {
   loading: () => <Spinner />,
@@ -30,21 +30,17 @@ export default function PremiumUserPage({
   params: Promise<{ subdomain: string }>;
 }) {
   const { subdomain } = use(params);
-  const [userId, setUserId] = useState<string | null>(null);
-  const [loadingUserId, setLoadingUserId] = useState(true);
 
-  // Fetch userId on mount
-  useEffect(() => {
-    getUserByDomain(subdomain)
-      .then((id) => setUserId(id))
-      .finally(() => setLoadingUserId(false));
-  }, [subdomain]);
+  const { data: userIdData, isLoading: loadingUserIdData } =
+    useGetUserByDomain(subdomain);
+
+  const userId = userIdData?.userId || null;
 
   const { data: userData, isLoading: loadingUserData } = useGetFullUser(
     userId ?? "",
   );
 
-  if (loadingUserId || loadingUserData) {
+  if (loadingUserData || loadingUserIdData) {
     return (
       <div className={messageContainer}>
         <Spinner />
