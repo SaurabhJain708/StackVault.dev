@@ -35,6 +35,8 @@ export default function PremiumUserPage({
   const { data: userIdData, isLoading: loadingUserIdData } =
     useGetUserByDomain(subdomain);
 
+    console.log("userIdData:", userIdData);
+
   const userId = userIdData?.id || null;
 
   console.log("userId:", userId);
