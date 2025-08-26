@@ -30,19 +30,19 @@ export default function PremiumUserPage({
   params: Promise<{ subdomain: string }>;
 }) {
   const { subdomain } = use(params);
-  console.log(subdomain)
+  console.log("subdomain:", subdomain);
 
   const { data: userIdData, isLoading: loadingUserIdData } =
     useGetUserByDomain(subdomain);
 
   const userId = userIdData?.userId || null;
 
-  console.log(userId)
+  console.log("userId:", userId);
   const { data: userData, isLoading: loadingUserData } = useGetFullUser(
     userId ?? ""
   );
 
-  console.log(userData)
+  console.log("userData:", userData);
   if (loadingUserData || loadingUserIdData) {
     return (
       <div className={messageContainer}>
