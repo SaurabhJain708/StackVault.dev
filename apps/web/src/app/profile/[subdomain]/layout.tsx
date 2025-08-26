@@ -1,7 +1,9 @@
-export default function SubdomainLayout({
+import RootLayout from "@/app/layout";
+
+export default function PremiumUserLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return <RootLayout showFooter={false}>{children}</RootLayout>;
 }

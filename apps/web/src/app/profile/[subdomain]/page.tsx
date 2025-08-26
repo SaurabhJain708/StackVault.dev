@@ -1,10 +1,9 @@
 "use client";
 
-import { use } from "react";
+import { use, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Spinner from "@/components/spinner";
 import { useGetUserData } from "@/lib/query/fullUser";
-import UserHead from "@/lib/overideMetada";
 import { useGetUserByDomain } from "@/lib/query/getUserbyDomain";
 
 const AtlasTemplate = dynamic(() => import("@/components/templates/Atlas"), {
@@ -30,21 +29,31 @@ export default function PremiumUserPage({
   params: Promise<{ subdomain: string }>;
 }) {
   const { subdomain } = use(params);
-  console.log("subdomain:", subdomain);
 
   const { data: userIdData, isLoading: loadingUserIdData } =
     useGetUserByDomain(subdomain);
 
-  console.log("userIdData:", userIdData);
-
   const userId = userIdData?.userId || null;
 
-  console.log("userId:", userId);
   const { data: userData, isLoading: loadingUserData } = useGetUserData(
     userId ?? "",
   );
 
-  console.log("userData:", userData);
+  useEffect(() => {
+    if (!userData) return;
+
+    document.title = userData.name || "User Portfolio";
+
+    let link: HTMLLinkElement | null =
+      document.querySelector("link[rel~='icon']");
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = "icon";
+      document.head.appendChild(link);
+    }
+    link.href = userData.avatarUrl || "/favicon.ico";
+  }, [userData]);
+
   if (loadingUserData || loadingUserIdData) {
     return (
       <div className={messageContainer}>
@@ -95,12 +104,6 @@ export default function PremiumUserPage({
 
   return (
     <>
-    {userData && (
-      <UserHead
-        title={userData.name || "User Portfolio"}
-        favicon={userData.avatarUrl || "/favicon.ico"}
-      />
-    )}
       <div className="relative">{TemplateComponent}</div>
     </>
   );

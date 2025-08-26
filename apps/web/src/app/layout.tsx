@@ -23,8 +23,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  showFooter = true,
 }: Readonly<{
   children: React.ReactNode;
+  showFooter?: boolean;
 }>) {
   return (
     <html className="scroll-smooth" lang="en">
@@ -35,7 +37,7 @@ export default function RootLayout({
           <Providers>{children}</Providers>
         </QueryProvider>
         <Toaster richColors position="top-center" closeButton />
-        <Footer />
+        {showFooter && <Footer />}
       </body>
     </html>
   );
