@@ -37,7 +37,7 @@ export default function PremiumUserPage({
 
   console.log("userIdData:", userIdData);
 
-  const userId = userIdData?.id || null;
+  const userId = userIdData?.userId || null;
 
   console.log("userId:", userId);
   const { data: userData, isLoading: loadingUserData } = useGetUserData(
