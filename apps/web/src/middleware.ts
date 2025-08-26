@@ -13,7 +13,10 @@ export default withAuth(
 
       // Skip www and main domain
       if (subdomain && subdomain !== "www" && subdomain !== "stackvault") {
-        if (!req.nextUrl.pathname.startsWith(`/profile/${subdomain}`)) {
+        if (
+          !req.nextUrl.pathname.startsWith(`/profile/${subdomain}`) &&
+          !req.nextUrl.pathname.startsWith("/api")
+        ) {
           url.pathname = `/profile/${subdomain}`;
           return NextResponse.redirect(url);
         }

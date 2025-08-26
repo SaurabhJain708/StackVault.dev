@@ -15,7 +15,7 @@ const CanvasTemplate = dynamic(() => import("@/components/templates/Canvas"), {
 });
 const HorizonTemplate = dynamic(
   () => import("@/components/templates/Horizon"),
-  { loading: () => <Spinner /> }
+  { loading: () => <Spinner /> },
 );
 const PulseTemplate = dynamic(() => import("@/components/templates/Pulse"), {
   loading: () => <Spinner />,
@@ -35,13 +35,13 @@ export default function PremiumUserPage({
   const { data: userIdData, isLoading: loadingUserIdData } =
     useGetUserByDomain(subdomain);
 
-    console.log("userIdData:", userIdData);
+  console.log("userIdData:", userIdData);
 
   const userId = userIdData?.id || null;
 
   console.log("userId:", userId);
   const { data: userData, isLoading: loadingUserData } = useGetUserData(
-    userId ?? ""
+    userId ?? "",
   );
 
   console.log("userData:", userData);
