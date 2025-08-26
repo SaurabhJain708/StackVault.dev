@@ -15,7 +15,7 @@ const CanvasTemplate = dynamic(() => import("@/components/templates/Canvas"), {
 });
 const HorizonTemplate = dynamic(
   () => import("@/components/templates/Horizon"),
-  { loading: () => <Spinner /> },
+  { loading: () => <Spinner /> }
 );
 const PulseTemplate = dynamic(() => import("@/components/templates/Pulse"), {
   loading: () => <Spinner />,
@@ -30,16 +30,19 @@ export default function PremiumUserPage({
   params: Promise<{ subdomain: string }>;
 }) {
   const { subdomain } = use(params);
+  console.log(subdomain)
 
   const { data: userIdData, isLoading: loadingUserIdData } =
     useGetUserByDomain(subdomain);
 
   const userId = userIdData?.userId || null;
 
+  console.log(userId)
   const { data: userData, isLoading: loadingUserData } = useGetFullUser(
-    userId ?? "",
+    userId ?? ""
   );
 
+  console.log(userData)
   if (loadingUserData || loadingUserIdData) {
     return (
       <div className={messageContainer}>
