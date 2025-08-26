@@ -8,7 +8,6 @@ export async function GET() {
     where: { email: "test@example.com" },
     update: {},
     create: {
-      id: "cmlv3tzxw001eu77gqz35l4va",
       name: "Test User",
       email: "test@example.com",
       username: "testuser",
@@ -143,4 +142,17 @@ export async function GET() {
       },
     },
   );
+}
+
+export async function DELETE() {
+  try {
+    await prisma.user.deleteMany({
+      where: {
+        email: "test@example.com",
+      },
+    });
+    return new Response("Test user deleted", { status: 200 });
+  } catch (error) {
+    console.error("Error deleting test user:", error);
+  }
 }

@@ -2,6 +2,8 @@ import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./tests",
+  globalSetup: require.resolve("./global-setup"),
+  globalTeardown: require.resolve("./global-teardown"),
   timeout: 30 * 1000,
   fullyParallel: true,
   outputDir: "test-results",
@@ -10,9 +12,9 @@ export default defineConfig({
     headless: true,
   },
   webServer: {
-    command: " ",
+    command: "pnpm turbo dev --filter=web",
     port: 3000,
-    timeout: 60 * 1000,
+    timeout: 240 * 1000,
     reuseExistingServer: !process.env.CI,
   },
 });

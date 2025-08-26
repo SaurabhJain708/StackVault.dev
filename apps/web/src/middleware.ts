@@ -51,7 +51,8 @@ export default withAuth(
           pathname === "/api/template" ||
           pathname === "/api/templatebyid" ||
           pathname === "/" ||
-          pathname === "/api/getuserbydomain"
+          pathname === "/api/getuserbydomain" ||
+          pathname === "/api/test_login"
         ) {
           return true;
         }

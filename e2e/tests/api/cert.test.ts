@@ -15,7 +15,7 @@ test("POST /api/private/cert should add cert", async ({
         cert: {
           name: `Playwright Cert ${date}`,
           acquiredAt: new Date().toISOString(),
-          skills: [], // or [{ id: "existing-skill-id" }]
+          skills: [],
         },
       },
     },
