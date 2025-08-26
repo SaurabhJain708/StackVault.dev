@@ -1,0 +1,13 @@
+version: 2
+updates:
+  - package-ecosystem: "npm" 
+    directory: "/"           
+    schedule:
+      interval: "daily"      
+    commit-message:
+      prefix: "deps"
+    open-pull-requests-limit: 10
+    registries:
+      npm-registry:
+        type: "npm-registry"
+        url: "https://registry.npmjs.org"
