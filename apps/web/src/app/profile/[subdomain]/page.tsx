@@ -3,7 +3,7 @@
 import { use } from "react";
 import dynamic from "next/dynamic";
 import Spinner from "@/components/spinner";
-import { useGetFullUser } from "@/lib/query/user";
+import { useGetUserData } from "@/lib/query/fullUser";
 import UserHead from "@/lib/overideMetada";
 import { useGetUserByDomain } from "@/lib/query/getUserbyDomain";
 
@@ -38,7 +38,7 @@ export default function PremiumUserPage({
   const userId = userIdData?.userId || null;
 
   console.log("userId:", userId);
-  const { data: userData, isLoading: loadingUserData } = useGetFullUser(
+  const { data: userData, isLoading: loadingUserData } = useGetUserData(
     userId ?? ""
   );
 
