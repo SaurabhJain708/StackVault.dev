@@ -60,18 +60,3 @@ jobs:
 
       - name: Lint
         run: pnpm lint
-
-      # --- Docker ---
-      - name: Build Docker image
-        run: |
-          docker build -t stackvault:latest .
-
-      # --- Tag Docker image for ECR ---
-      - name: Tag Docker image
-        run: |
-          docker tag ${{ env.IMAGE_NAME }}:latest ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.IMAGE_NAME }}:latest
-
-      # --- Push Docker image to ECR ---
-      - name: Push Docker image
-        run: |
-          docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.IMAGE_NAME }}:latest
