@@ -1,0 +1,77 @@
+name: Dev CI/CD
+
+on:
+  push:
+    branches: [dev]
+
+concurrency:
+  group: prod-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      # --- Checkout code ---
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # --- Setup PNPM & Node ---
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          cache: "pnpm"
+
+      # --- CACHES ---
+      - name: Cache Turbo
+        if: always()
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.cache/turbo
+          key: turbo-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: turbo-${{ runner.os }}-
+
+      - name: Get pnpm store path
+        if: always()
+        id: pnpm-cache
+        run: echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm store
+        if: always()
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: pnpm-store-${{ runner.os }}-
+
+      # --- QUALITY GATES ---
+      - name: Check formatting
+        run: pnpm prettier --check .
+
+      - name: Lint
+        run: pnpm lint
+
+      # --- Docker ---
+      - name: Build Docker image
+        run: |
+          docker build -t stackvault:latest .
+
+      # --- Tag Docker image for ECR ---
+      - name: Tag Docker image
+        run: |
+          docker tag ${{ env.IMAGE_NAME }}:latest ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.IMAGE_NAME }}:latest
+
+      # --- Push Docker image to ECR ---
+      - name: Push Docker image
+        run: |
+          docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.IMAGE_NAME }}:latest

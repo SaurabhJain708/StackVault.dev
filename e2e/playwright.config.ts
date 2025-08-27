@@ -1,6 +1,10 @@
 import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
+  reporter: [
+    ["html", { outputFolder: "playwright-report" }],
+    ["json", { outputFile: "test-results/results.json" }],
+  ],
   testDir: "./tests",
   globalSetup: require.resolve("./global-setup"),
   globalTeardown: require.resolve("./global-teardown"),
