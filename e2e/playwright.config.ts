@@ -13,7 +13,6 @@ export default defineConfig({
   },
   webServer: {
     command: "bash ./test-start.sh",
-    port: 3000,
     timeout: 300 * 1000,
     reuseExistingServer: false,
     stdout: "pipe",
