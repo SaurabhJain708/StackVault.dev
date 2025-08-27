@@ -34,6 +34,7 @@ jobs:
 
       # --- CACHES ---
       - name: Cache Turbo
+        if: always()
         uses: actions/cache@v4
         with:
           path: node_modules/.cache/turbo
@@ -41,15 +42,25 @@ jobs:
           restore-keys: turbo-${{ runner.os }}-
 
       - name: Get pnpm store path
+        if: always()
         id: pnpm-cache
         run: echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
       - name: Cache pnpm store
+        if: always()
         uses: actions/cache@v4
         with:
           path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
           key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: pnpm-store-${{ runner.os }}-
+
+      - name: Cache Playwright browsers
+        if: always()
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-browsers-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: playwright-browsers-${{ runner.os }}-
 
       # --- Install dependencies ---
       - name: Install dependencies
@@ -93,30 +104,28 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-            : "${NEXTAUTH_SECRET:?env var missing}"
-            : "${NEXTAUTH_URL:?env var missing}"
-            : "${DATABASE_URL:?env var missing}"
-
+          : "${NEXTAUTH_SECRET:?env var missing}"
+          : "${NEXTAUTH_URL:?env var missing}"
+          : "${DATABASE_URL:?env var missing}"
 
       - name: Start web server in background
         env:
-            NODE_ENV: production
-            NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-            NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
-            GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-            GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-            CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
-            CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
-            CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
-            DATABASE_URL: ${{ secrets.DATABASE_URL }}
-            GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          NODE_ENV: production
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-            pnpm turbo run start --filter=web 
-            for i in {1..30}; do
-              nc -z localhost 3000 && echo "Server is up!" && break
-              sleep 1
-            done
-
+          pnpm turbo run start --filter=web 
+          for i in {1..30}; do
+            nc -z localhost 3000 && echo "Server is up!" && break
+            sleep 1
+          done
 
       # --- Run E2E ---
       - name: Run Playwright E2E
