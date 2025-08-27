@@ -111,7 +111,7 @@ jobs:
             DATABASE_URL: ${{ secrets.DATABASE_URL }}
             GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-            pnpm turbo run start --filter=web > server.log 2>&1 &
+            pnpm turbo run start --filter=web 2>&1 | tee server.log &
             for i in {1..30}; do
               nc -z localhost 3000 && echo "Server is up!" && break
               sleep 1
