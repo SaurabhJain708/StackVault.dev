@@ -77,14 +77,10 @@ jobs:
 
       # --- QUALITY GATES ---
       - name: Check formatting
-        run: pnpm format
+        run: npx prettier --check "**/*.{ts,tsx,js,jsx,json,css,scss,md}"
 
       - name: Lint
         run: pnpm lint
-
-      # --- BUILD ---
-      - name: Build (affected only)
-        run: pnpm turbo run build --filter=...[HEAD^] || pnpm turbo run build
 
       # --- E2E ---
       - name: Run Playwright E2E
@@ -108,34 +104,3 @@ jobs:
           path: test-results
           if-no-files-found: ignore
           retention-days: 7
-
-  deploy:
-    needs: ci
-    runs-on: ubuntu-latest
-    if: ${{ needs.ci.result == 'success' }}
-    timeout-minutes: 15
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          cache: "pnpm"
-
-      - name: Install Vercel CLI
-        run: pnpm add -g vercel@latest
-
-      # --- Deploy to Vercel ---
-      - name: Vercel Pull (prod env)
-        run: vercel pull --yes --environment=production --token ${{ secrets.VERCEL_TOKEN }}
-
-      - name: Vercel Build (prebuilt)
-        run: vercel build --prod --token ${{ secrets.VERCEL_TOKEN }}
-
-      - name: Vercel Deploy (promote to prod)
-        run: vercel deploy --prebuilt --prod --token ${{ secrets.VERCEL_TOKEN }}
