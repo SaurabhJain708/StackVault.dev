@@ -14,7 +14,7 @@ permissions:
 jobs:
   ci:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
       # --- Checkout code ---
@@ -51,33 +51,23 @@ jobs:
           key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: pnpm-store-${{ runner.os }}-
 
-      - name: Cache node_modules
-        uses: actions/cache@v4
-        with:
-          path: "**/node_modules"
-          key: node-modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: node-modules-${{ runner.os }}-
-
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: playwright-${{ runner.os }}-
-
       # --- Install dependencies ---
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Install Playwright (browsers + deps)
-        run: pnpm exec playwright install --with-deps
+      - name: Install Playwright browsers & dependencies
+        run: npx playwright install --with-deps
 
       # --- QUALITY GATES ---
       - name: Check formatting
-        run: npx prettier --check "**/*.{ts,tsx,js,jsx,json,css,scss,md}"
+        run: pnpm prettier --check .
 
       - name: Lint
         run: pnpm lint
+
+      # --- Build & Start Production Server ---
+      - name: Build web
+        run: pnpm turbo run build --filter=web
 
       - name: Start web server in background
         env:
@@ -92,19 +82,22 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          pnpm turbo run dev --filter=web &
-          until nc -z localhost 3000; do sleep 1; done
-          echo "Server is up"
-
-
-      - name: Wait for port 3000
-        run: |
-          until nc -z localhost 3000; do
-          sleep 1
+          pnpm turbo run start --filter=web &
+          for i in {1..30}; do
+            nc -z localhost 3000 && echo "Server is up!" && exit 0
+            sleep 1
           done
-      # --- E2E ---
+          echo "Server did not start in time" >&2
+          exit 1
+
+      # --- Run E2E ---
       - name: Run Playwright E2E
         run: npx playwright test --config=./e2e/playwright.config.ts
+
+      # --- Stop server ---
+      - name: Stop server
+        if: always()
+        run: kill $(lsof -t -i:3000) || true
 
       # --- ARTIFACTS ON FAILURE ---
       - name: Upload Playwright report (HTML)
