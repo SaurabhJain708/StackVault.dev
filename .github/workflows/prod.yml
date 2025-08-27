@@ -70,12 +70,19 @@ jobs:
           key: node-modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: node-modules-${{ runner.os }}-
 
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: playwright-${{ runner.os }}-
+
       # --- Install dependencies ---
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Setup Playwright
-        uses: microsoft/playwright-github-action@v1
+      - name: Install Playwright (browsers + deps)
+        run: pnpm exec playwright install --with-deps
 
       # --- QUALITY GATES ---
       - name: Check formatting
@@ -84,8 +91,8 @@ jobs:
       - name: Lint
         run: pnpm lint
 
-      - name: Start web server
-        run: pnpm turbo dev --filter=web &
+      - name: Start web server (Turbo dev) in foreground
+        run: pnpm turbo dev --filter=web&
 
       - name: Wait for port 3000
         run: |
