@@ -92,8 +92,9 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
+          cp .env.ci .env.local
           npx concurrently -k -s first -n "SERVER,TEST" \
-            "pnpm turbo run dev --filter=web" \
+            "pnpm turbo run dev --filter=web --force" \
             "bash -c 'until nc -z localhost 3000; do sleep 1; done && npx playwright test --config=./e2e/playwright.config.ts'"
 
       - name: Wait for port 3000
