@@ -12,8 +12,7 @@ export default defineConfig({
     headless: true,
   },
   webServer: {
-    command: "",
-    port: 3000,
+    command: " ",
     timeout: 240 * 1000,
     reuseExistingServer: !process.env.CI,
   },
