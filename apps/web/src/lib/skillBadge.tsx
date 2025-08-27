@@ -13,3 +13,4 @@ export default function SkillBadge({ name }: { name: string }) {
     </div>
   );
 }
+ 
