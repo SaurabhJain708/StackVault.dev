@@ -99,7 +99,7 @@ jobs:
 
 
       - name: Start web server in background
-          env:
+        env:
             NODE_ENV: production
             NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
             NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
@@ -110,7 +110,7 @@ jobs:
             CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
             DATABASE_URL: ${{ secrets.DATABASE_URL }}
             GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          run: |
+        run: |
             pnpm turbo run start --filter=web > server.log 2>&1 &
             for i in {1..30}; do
               nc -z localhost 3000 && echo "Server is up!" && break
