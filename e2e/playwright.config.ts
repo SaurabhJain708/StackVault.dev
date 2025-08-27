@@ -16,8 +16,6 @@ export default defineConfig({
     port: 3000,
     timeout: 300 * 1000,
     reuseExistingServer: false,
-    stdout: "pipe",
-    stderr: "pipe",
     env: {
       NODE_ENV: process.env.CI
         ? "development"
