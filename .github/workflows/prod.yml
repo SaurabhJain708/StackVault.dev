@@ -89,7 +89,7 @@ jobs:
           CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: pnpm turbo run build --filter=web 
+        run: pnpm turbo run build --filter=web
 
       - name: Check env vars
         env:
@@ -121,14 +121,27 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-            pnpm add -D concurrently -w
-            npx concurrently \
-              "pnpm turbo run start --filter=web" \
-              "for i in {1..30}; do nc -z localhost 3000 && break; sleep 1; done && npx playwright test --config=./e2e/playwright.config.ts" \
-              --names "server,e2e" \
-              --prefix "[{name}]" \
-              --kill-others
+          export NODE_ENV=production
+          export NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
+          export NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
+          export GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+          export GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+          export CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          export CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}
+          export CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
+          export DATABASE_URL=${{ secrets.DATABASE_URL }}
+          export GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
 
+          # install concurrently once
+          pnpm add -D concurrently -w
+
+          # run server + playwright together
+          npx concurrently \
+            "pnpm turbo run start --filter=web" \
+            "for i in {1..30}; do nc -z localhost 3000 && break; sleep 1; done && npx playwright test --config=./e2e/playwright.config.ts" \
+            --names "server,e2e" \
+            --prefix "[{name}]" \
+            --kill-others
 
       # --- Stop server ---
       - name: Stop server
