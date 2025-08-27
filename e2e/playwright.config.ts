@@ -12,10 +12,12 @@ export default defineConfig({
     headless: true,
   },
   webServer: {
-    command: "pnpm turbo run dev --filter=web --cache=local:r,remote:r",
+    command: "bash ./test-start.sh",
     port: 3000,
     timeout: 300 * 1000,
     reuseExistingServer: false,
+    stdout: "pipe",
+    stderr: "pipe",
     env: {
       NODE_ENV: process.env.CI
         ? "development"
