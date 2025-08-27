@@ -12,7 +12,7 @@ export default defineConfig({
     headless: true,
   },
   webServer: {
-    command: "pnpm turbo dev --filter=web --port 3000 --hostname 0.0.0.0",
+    command: "pnpm turbo dev --filter=web",
     port: 3000,
     timeout: 240 * 1000,
     reuseExistingServer: !process.env.CI,
