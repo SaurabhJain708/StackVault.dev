@@ -110,19 +110,18 @@ jobs:
 
       - name: Start server and run E2E
         run: |
-          # Create temporary .env.production for Next.js
-          cat <<EOF > .env.production
-          NODE_ENV=production
-          NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
-          NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
-          DATABASE_URL=${{ secrets.DATABASE_URL }}
-          GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
-          CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}
-          CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}
-          CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
-          GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
-          EOF
+          # Create temporary .env.production inside web app
+          cat <<EOF > apps/web/.env.production
+            NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
+            NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
+            GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+            GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+            CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}
+            CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}
+            CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
+            GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
+            EOF
 
             # install concurrently locally
             pnpm add -D concurrently -w
