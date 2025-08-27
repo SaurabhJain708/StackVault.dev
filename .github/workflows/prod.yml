@@ -69,6 +69,13 @@ jobs:
       - name: Build web
         run: pnpm turbo run build --filter=web
 
+      - name: Check env vars
+        run: |
+            : "${NEXTAUTH_SECRET:?env var missing}"
+            : "${NEXTAUTH_URL:?env var missing}"
+            : "${DATABASE_URL:?env var missing}"
+
+
       - name: Start web server in background
         env:
           NODE_ENV: production
