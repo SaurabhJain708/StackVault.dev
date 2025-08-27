@@ -59,7 +59,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-browsers-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          key: playwright-browsers-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: playwright-browsers-${{ runner.os }}-
 
       # --- Install dependencies ---
@@ -108,7 +108,7 @@ jobs:
           : "${NEXTAUTH_URL:?env var missing}"
           : "${DATABASE_URL:?env var missing}"
 
-      - name: Start web server in background
+      - name: Start server and run E2E
         env:
           NODE_ENV: production
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
@@ -121,19 +121,13 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          pnpm turbo run start --filter=web &
-          for i in {1..30}; do
-            nc -z localhost 3000 && echo "Server is up!" && break
-            sleep 1
-          done
-
-      # --- Run E2E ---
-      - name: Run Playwright E2E
-        run: npx playwright test --config=./e2e/playwright.config.ts
-
-      - name: Print server logs if E2E fails
-        if: failure()
-        run: cat server.log
+          pnpm add -D concurrently
+          npx concurrently \
+            "pnpm turbo run start --filter=web" \
+            "for i in {1..30}; do nc -z localhost 3000 && break; sleep 1; done && npx playwright test --config=./e2e/playwright.config.ts" \
+            --names "server,e2e" \
+            --prefix "[{name}]" \
+            --kill-others
 
       # --- Stop server ---
       - name: Stop server
