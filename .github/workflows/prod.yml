@@ -1,0 +1,139 @@
+name: Prod CI/CD
+
+on:
+  push:
+    branches: [ main ]  # your prod branch
+
+concurrency:
+  group: prod-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  NODE_ENV: production
+  # Uncomment if you use Turbo remote cache
+  # TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+  # TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      # --- CACHES ---
+      - name: Cache Turbo
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules/.cache/turbo
+          key: turbo-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            turbo-${{ runner.os }}-
+
+      - name: Get pnpm store path
+        id: pnpm-cache
+        run: echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: pnpm-store-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            pnpm-store-${{ runner.os }}-
+
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            playwright-${{ runner.os }}-
+
+      - name: Install Playwright (browsers + deps)
+        run: pnpm exec playwright install --with-deps
+
+      # --- QUALITY GATES ---
+      - name: Check formatting
+        run: pnpm format
+
+      - name: Lint
+        run: pnpm lint
+
+      # --- BUILD (affected only) ---
+      - name: Build (affected)
+        run: pnpm turbo run build --filter=...[HEAD^]  || pnpm turbo run build
+        # The '...[HEAD^]' tries to build only what's changed; falls back to full build if needed.
+
+      # --- E2E ---
+      - name: Run Playwright E2E
+        run: npx playwright test --config=./e2e/playwright.config.ts
+
+      # --- ARTIFACTS ON FAILURE ---
+      - name: Upload Playwright report (HTML)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Upload raw test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: test-results
+          if-no-files-found: ignore
+          retention-days: 7
+
+  deploy:
+    needs: ci
+    runs-on: ubuntu-latest
+    if: ${{ needs.ci.result == 'success' }}
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install Vercel CLI
+        run: pnpm add -g vercel@latest
+
+      # Deploy to Vercel Production (only if CI passed)
+      - name: Vercel Pull (prod env)
+        run: vercel pull --yes --environment=production --token ${{ secrets.VERCEL_TOKEN }}
+
+      - name: Vercel Build (prebuilt)
+        run: vercel build --prod --token ${{ secrets.VERCEL_TOKEN }}
+
+      - name: Vercel Deploy (promote to prod)
+        run: vercel deploy --prebuilt --prod --token ${{ secrets.VERCEL_TOKEN }}

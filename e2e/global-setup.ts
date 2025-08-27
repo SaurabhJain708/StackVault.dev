@@ -7,7 +7,7 @@ async function waitForServer(url: string, timeout = 180000) {
       const res = await fetch(url);
       if (res.ok) return;
     } catch (err) {}
-    await new Promise((r) => setTimeout(r, 2000)); // wait 2s
+    await new Promise((r) => setTimeout(r, 2000));
   }
   throw new Error(`Server did not respond at ${url} within ${timeout}ms`);
 }
