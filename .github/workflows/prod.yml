@@ -109,35 +109,27 @@ jobs:
           : "${DATABASE_URL:?env var missing}"
 
       - name: Start server and run E2E
-        env:
-          NODE_ENV: production
-          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
-          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
-          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          export NODE_ENV=production
-          export NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
-          export NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
-          export GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
-          export GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
-          export CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}
-          export CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}
-          export CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
-          export DATABASE_URL=${{ secrets.DATABASE_URL }}
-          export GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
+          # Create temporary .env.production for Next.js
+          cat <<EOF > .env.production
+          NODE_ENV=production
+          NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
+          NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
+          DATABASE_URL=${{ secrets.DATABASE_URL }}
+          GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+          CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}
+          GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
+          EOF
 
-          # install concurrently once
+          # install concurrently locally
           pnpm add -D concurrently -w
 
-          # run server + playwright together
+          # Run server + playwright in parallel with proper env
           npx concurrently \
-            "pnpm turbo run start --filter=web" \
+            "pnpm turbo run start --filter=web -- --dotenv .env.production" \
             "for i in {1..30}; do nc -z localhost 3000 && break; sleep 1; done && npx playwright test --config=./e2e/playwright.config.ts" \
             --names "server,e2e" \
             --prefix "[{name}]" \
