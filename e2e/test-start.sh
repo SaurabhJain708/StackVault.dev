@@ -14,7 +14,7 @@ if fuser -n tcp $PORT >/dev/null 2>&1; then
 fi
 
 echo "Starting Turbo dev server..."
-pnpm turbo run dev --filter=web --no-persistent --cache=local:r,remote:r &
+pnpm turbo run dev --filter=web --output-logs=full &
 SERVER_PID=$!
 
 # Ensure server is killed on script exit
