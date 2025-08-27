@@ -1,0 +1,41 @@
+# ---------------------------
+# Node & package artifacts
+# ---------------------------
+node_modules/
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# ---------------------------
+# Turbo / build cache
+# ---------------------------
+node_modules/.cache/turbo
+.dist/
+.build/
+
+# ---------------------------
+# Prisma generated files
+# ---------------------------
+packages/db/generated/
+
+# ---------------------------
+# Test outputs
+# ---------------------------
+e2e/test-results/
+playwright-report/
+coverage/
+
+# ---------------------------
+# IDE / system files
+# ---------------------------
+.vscode/
+.idea/
+.DS_Store
+*.log
+
+# ---------------------------
+# Temporary files
+# ---------------------------
+*.tmp
+*.temp
+*.bak
