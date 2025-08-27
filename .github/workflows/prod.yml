@@ -79,7 +79,7 @@ jobs:
       - name: Lint
         run: pnpm lint
 
-      - name: Start web server (Turbo dev) in foreground
+      - name: Start web server in background
         env:
           NODE_ENV: production
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
@@ -92,10 +92,10 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          cp .env.ci .env.local
-          npx concurrently -k -s first -n "SERVER,TEST" \
-            "pnpm turbo run dev --filter=web --force" \
-            "bash -c 'until nc -z localhost 3000; do sleep 1; done && npx playwright test --config=./e2e/playwright.config.ts'"
+          pnpm turbo run dev --filter=web &
+          until nc -z localhost 3000; do sleep 1; done
+          echo "Server is up"
+
 
       - name: Wait for port 3000
         run: |
