@@ -91,6 +91,14 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      - name: Start web server (Turbo dev) in foreground
+        run: npx concurrently -k -s first -n "SERVER,TEST" \"pnpm turbo run dev --filter=web" \ "bash -c 'until nc -z localhost 3000; do sleep 1; done && npx playwright test --config=./e2e/playwright.config.ts'"
+
+      - name: Wait for port 3000
+        run: |
+          until nc -z localhost 3000; do
+          sleep 1
+          done
       # --- E2E ---
       - name: Run Playwright E2E
         run: npx playwright test --config=./e2e/playwright.config.ts
