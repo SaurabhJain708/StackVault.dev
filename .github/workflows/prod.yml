@@ -99,29 +99,32 @@ jobs:
 
 
       - name: Start web server in background
-        env:
-          NODE_ENV: production
-          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
-          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
-          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: |
-          pnpm turbo run start --filter=web &
-          for i in {1..30}; do
-            nc -z localhost 3000 && echo "Server is up!" && exit 0
-            sleep 1
-          done
-          echo "Server did not start in time" >&2
-          exit 1
+          env:
+            NODE_ENV: production
+            NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+            NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+            GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+            GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+            CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+            CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+            CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+            DATABASE_URL: ${{ secrets.DATABASE_URL }}
+            GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          run: |
+            pnpm turbo run start --filter=web > server.log 2>&1 &
+            for i in {1..30}; do
+              nc -z localhost 3000 && echo "Server is up!" && break
+              sleep 1
+            done
+
 
       # --- Run E2E ---
       - name: Run Playwright E2E
         run: npx playwright test --config=./e2e/playwright.config.ts
+
+      - name: Print server logs if E2E fails
+        if: failure()
+        run: cat server.log
 
       # --- Stop server ---
       - name: Stop server
