@@ -23,11 +23,18 @@
     "paths": {
       "@/*": ["./src/*"],
       "@repo/db": ["../../packages/db/src"],
-      "@repo/types": ["../../packages/types"],
+      "@repo/types": ["../../packages/types"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts","next-env.d.ts","types/**/*.d.ts"
-, "script/icongen.js"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "next-env.d.ts",
+    "types/**/*.d.ts",
+    "script/icongen.js"
+  ],
   "exclude": ["node_modules"],
   "references": [
     { "path": "../../packages/types" },

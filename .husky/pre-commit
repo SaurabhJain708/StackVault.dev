@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+npx prettier --write "**/*.{ts,tsx,js,jsx,json,css,scss,md}"
 pnpm format
 pnpm lint
 git add .

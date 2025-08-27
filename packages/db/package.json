@@ -25,5 +25,8 @@
     }
   },
   "types": "generated/prisma/index.d.ts",
-  "files": ["dist", "generated"]
+  "files": [
+    "dist",
+    "generated"
+  ]
 }
