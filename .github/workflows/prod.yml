@@ -89,7 +89,7 @@ jobs:
           CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: pnpm turbo run build --filter=web
+        run: pnpm turbo run build --filter=web &
 
       - name: Check env vars
         env:
