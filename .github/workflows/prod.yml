@@ -77,7 +77,7 @@ jobs:
 
       # --- QUALITY GATES ---
       - name: Check formatting
-        run: npx prettier --check "**/*.{ts,tsx,js,jsx,json,css,scss,md}"
+        run: npx prettier --check "**/*.{ts,tsx,js,jsx,json,css,scss,md}" \"!packages/db/generated/**" \"!e2e/test-results/**"
 
       - name: Lint
         run: pnpm lint
