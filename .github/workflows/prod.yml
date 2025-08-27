@@ -11,18 +11,6 @@ concurrency:
 permissions:
   contents: read
 
-env:
-  NODE_ENV: production
-  NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-  NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
-  GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-  GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-  CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
-  CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
-  CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
-  DATABASE_URL: ${{ secrets.DATABASE_URL }}
-  GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-
 jobs:
   ci:
     runs-on: ubuntu-latest
@@ -92,10 +80,21 @@ jobs:
         run: pnpm lint
 
       - name: Start web server (Turbo dev) in foreground
+        env:
+          NODE_ENV: production
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           npx concurrently -k -s first -n "SERVER,TEST" \
             "pnpm turbo run dev --filter=web" \
-            "bash -c 'until nc -z localhost 3000; do sleep 1;'"
+            "bash -c 'until nc -z localhost 3000; do sleep 1; done && npx playwright test --config=./e2e/playwright.config.ts'"
 
       - name: Wait for port 3000
         run: |
