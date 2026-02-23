@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.54.1",
-    "husky": "^8.0.0",
+    "husky": "^9.1.7",
     "prettier": "^3.6.2",
     "turbo": "^2.5.5",
     "typescript": "5.8.3"
